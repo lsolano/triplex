@@ -28,4 +28,4 @@ Sometimes we need to check internal state before or after certain operation to e
 ### Object's state ###
 
 ---
-We like to get help from everybody, if you want to contribute to this tool, found some issue or just want a feature request please read, first, the [Contributing guide](.\docs\CONTRIBUTING.md).
+We like to get help from everybody, if you want to contribute to this tool, found some issue or just want a feature request please read, first, the [Contributing guide](./docs/CONTRIBUTING.md).
