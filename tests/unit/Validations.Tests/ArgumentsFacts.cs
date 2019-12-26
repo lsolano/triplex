@@ -15,8 +15,13 @@ namespace Triplex.Validations.Tests
         private const string ParamName = "username";
         private static readonly string CustomMessage = $"Look caller: '{ParamName}' can't be null.";
 
-        private static string BuildFinalMessage(string customMessagePrefix, string paramName)
-            => $"{customMessagePrefix}{Environment.NewLine}Parameter name: {paramName}";
+        private static string BuildFinalMessage(string customMessagePrefix)
+#if NETFRAMEWORK
+            => $"{customMessagePrefix}{Environment.NewLine}Parameter name: {ParamName}";
+#endif
+#if NETCOREAPP
+            => $"{customMessagePrefix} (Parameter '{ParamName}')";
+#endif
 
         [TestFixture]
         internal sealed class NotNullDataOnlyMessageFacts
@@ -34,7 +39,7 @@ namespace Triplex.Validations.Tests
             [Test]
             public void With_Null_Throws_ArgumentNullException_Using_Param_Name()
             {
-                string expectedMessage = BuildFinalMessage(DefaultPrefix, ParamName);
+                string expectedMessage = BuildFinalMessage(DefaultPrefix);
                 Assert.That(() => Arguments.NotNull(null, ParamName),
                             Throws.ArgumentNullException.With.Message.EqualTo(expectedMessage));
             }
@@ -49,7 +54,7 @@ namespace Triplex.Validations.Tests
             [Test]
             public void With_Null_Throws_ArgumentNullException_Using_Param_Name()
             {
-                string expectedMessage = BuildFinalMessage(CustomMessage, ParamName);
+                string expectedMessage = BuildFinalMessage(CustomMessage);
                 Assert.That(() => Arguments.NotNull(null, ParamName, CustomMessage),
                             Throws.ArgumentNullException.With.Message.EqualTo(expectedMessage));
             }
