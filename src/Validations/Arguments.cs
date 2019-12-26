@@ -54,5 +54,7 @@ namespace Triplex.Validations
 
             throw new ArgumentNullException(message: customMessage, paramName: paramName);
         }
+
+        //private static void somethingnotused() { }
     }
 }

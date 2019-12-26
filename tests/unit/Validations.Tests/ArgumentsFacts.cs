@@ -6,8 +6,9 @@ namespace Triplex.Validations.Tests
     /// <summary>
     /// Messages variants are: DataOnly (monadic), DataAndName (diadic), DataNameAndCustomMessage (triadic).
     /// </summary>
+#pragma warning disable CA1812 // Allow internal classes not used "anywhere" but by test framework.
     [TestFixture]
-    internal static class ArgumentsFacts
+    public static class ArgumentsFacts
     {
         private const string DefaultPrefix = "Value cannot be null.";
 
@@ -15,7 +16,7 @@ namespace Triplex.Validations.Tests
         private static readonly string CustomMessage = $"Look caller: '{ParamName}' can't be null.";
 
         private static string BuildFinalMessage(string customMessagePrefix, string paramName)
-            => $"{customMessagePrefix}{Environment.NewLine}Parameter name: {ParamName}";
+            => $"{customMessagePrefix}{Environment.NewLine}Parameter name: {paramName}";
 
         [TestFixture]
         internal sealed class NotNullDataOnlyMessageFacts
@@ -57,4 +58,5 @@ namespace Triplex.Validations.Tests
             public void With_Peter_Throws_Nothing() => Assert.That(() => Arguments.NotNull("Peter", ParamName, CustomMessage), Throws.Nothing);
         }
     }
+#pragma warning restore CA1812 // Allow internal classes not used "anywhere" but by test framework.
 }
