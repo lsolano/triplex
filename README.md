@@ -62,4 +62,6 @@ All methods has two forms:
 1. Data only, no custom message. Like `State.StillHolds(somePostActionValidation);`
 2. Data, argument name, but no custom message. Like `State.StillHolds(somePostActionValidation, "Your custom exception message goes here");`
 
-There is no argument name, because `State` is used to validate objects internal state, as a hole, or invariants. 
+There is no argument name, because `State` is used to validate objects internal state, as a hole, or invariants.
+
+We like to get help from everybody, if you want to contribute to this tool, found some issue or just want a feature request please read, first, the [Contributing guide](./docs/CONTRIBUTING.md).
