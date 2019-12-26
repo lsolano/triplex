@@ -15,7 +15,12 @@ namespace Triplex.Validations.Tests
         private static readonly string CustomMessage = $"Look caller: '{ParamName}' can't be null.";
 
         private static string BuildFinalMessage(string customMessagePrefix, string paramName)
+#if NETFRAMEWORK
             => $"{customMessagePrefix}{Environment.NewLine}Parameter name: {ParamName}";
+#endif
+#if NETCOREAPP
+        => $"{customMessagePrefix} (Parameter '{ParamName}')";
+#endif
 
         [TestFixture]
         internal sealed class NotNullDataOnlyMessageFacts
