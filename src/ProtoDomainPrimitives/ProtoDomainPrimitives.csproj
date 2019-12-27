@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net48</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
+    <IsTestProject>false</IsTestProject>
+    <RootNamespace>Triplex.ProtoDomainPrimitives</RootNamespace>
+    <AssemblyName>Triplex.ProtoDomainPrimitives</AssemblyName>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+</Project>

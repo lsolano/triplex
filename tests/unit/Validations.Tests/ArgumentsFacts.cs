@@ -1,10 +1,9 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Triplex.Validations.Tests
 {
     /// <summary>
-    /// Messages variants are: DataOnly (monadic), DataAndName (diadic), DataNameAndCustomMessage (triadic).
+    /// Messages variants are: DataOnly (monadic), DataAndName (dyadic), DataNameAndCustomMessage (triadic).
     /// </summary>
 #pragma warning disable CA1812 // Allow internal classes not used "anywhere" but by test framework.
     [TestFixture]
@@ -17,7 +16,7 @@ namespace Triplex.Validations.Tests
 
         private static string BuildFinalMessage(string customMessagePrefix)
 #if NETFRAMEWORK
-            => $"{customMessagePrefix}{Environment.NewLine}Parameter name: {ParamName}";
+            => $"{customMessagePrefix}{System.Environment.NewLine}Parameter name: {ParamName}";
 #endif
 #if NETCOREAPP
             => $"{customMessagePrefix} (Parameter '{ParamName}')";
