@@ -105,8 +105,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
             [Test]
             public void With_Same_Value_Returns_True()
             {
-                var positiveIntA = new PositiveInteger(DefaultRawValue);
-                var positiveIntB = new PositiveInteger(DefaultRawValue);
+                var (positiveIntA, positiveIntB) = (new PositiveInteger(DefaultRawValue), new PositiveInteger(DefaultRawValue));
 
                 Assert.That(positiveIntA.Equals(positiveIntB), Is.True);
             }
@@ -134,8 +133,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
             [Test]
             public void Same_As_Raw_Value([Values(1, 2)] int rawValueA, [Values(1, 2)] int rawValueB)
             {
-                var positiveIntA = new PositiveInteger(rawValueA);
-                var positiveIntB = new PositiveInteger(rawValueB);
+                var (positiveIntA, positiveIntB) = (new PositiveInteger(rawValueA), new PositiveInteger(rawValueB));
 
                 Assert.That(positiveIntA.CompareTo(positiveIntB), Is.EqualTo(rawValueA.CompareTo(rawValueB)));
             }
