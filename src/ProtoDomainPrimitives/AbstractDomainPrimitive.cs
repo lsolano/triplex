@@ -34,7 +34,7 @@ namespace Triplex.ProtoDomainPrimitives
         /// </summary>
         /// <param name="obj">Comparison target.</param>
         /// <returns></returns>
-        public override bool Equals(object obj) => Equals(obj as AbstractDomainPrimitive<TRawType>);
+        public override bool Equals(object? obj) => Equals(obj as AbstractDomainPrimitive<TRawType>);
 
         /// <summary>
         /// Same as <see cref="Value"/>'s hash-code.
@@ -46,7 +46,7 @@ namespace Triplex.ProtoDomainPrimitives
         /// Same as <see cref="Value"/>'s ToString.
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => Value.ToString();
+        public override string ToString() => (Value?.ToString() ?? string.Empty);
 
         /// <summary>
         /// 
