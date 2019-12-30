@@ -3,22 +3,12 @@ using NUnit.Framework.Constraints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Triplex.ProtoDomainPrimitives.Tests.Temporal.TemporalExtensions;
 
 namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
 {
     internal static class PastOrPresentTimestampFacts
     {
-        public enum TimeMagnitude
-        {
-            Millisecond = 1,
-            Second = 2,
-            Minute = 3,
-            Hour = 4,
-            Day = 5,
-            Month = 6,
-            Year = 7
-        }
-
         [TestFixture]
         internal sealed class ConstructorMessage
         {
@@ -196,18 +186,5 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
 
             return (new PastOrPresentTimestamp(rawValue), rawValue);
         }
-
-        private static DateTimeOffset FromMagnitude(this DateTimeOffset offset, TimeMagnitude timeMagnitude, int delta)
-            => timeMagnitude switch
-            {
-                TimeMagnitude.Millisecond => offset.AddMilliseconds(delta),
-                TimeMagnitude.Second => offset.AddSeconds(delta),
-                TimeMagnitude.Minute => offset.AddMinutes(delta),
-                TimeMagnitude.Day => offset.AddDays(delta),
-                TimeMagnitude.Hour => offset.AddHours(delta),
-                TimeMagnitude.Month => offset.AddMonths(delta),
-                TimeMagnitude.Year => offset.AddYears(delta),
-                _ => throw new ArgumentOutOfRangeException(nameof(timeMagnitude), timeMagnitude, "Unknown time magnitude.")
-            };
     }
 }
