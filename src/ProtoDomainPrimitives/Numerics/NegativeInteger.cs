@@ -4,14 +4,14 @@ using Triplex.ProtoDomainPrimitives.Exceptions;
 namespace Triplex.ProtoDomainPrimitives.Numerics
 {
     /// <summary>
-    /// Valid positive integer, meaning <code>&gt;= 1</code> (greater than or equals to one).
+    /// Valid negative integer, meaning <code>&lt; 0</code> (less than zero).
     /// </summary>
-    public sealed class PositiveInteger : AbstractDomainPrimitive<int>
+    public sealed class NegativeInteger : AbstractDomainPrimitive<int>
     {
         /// <summary>
         /// Error message used when not provided.
         /// </summary>
-        public static readonly Message DefaultErrorMessage = new Message("'rawValue' must be positive.");
+        public static readonly Message DefaultErrorMessage = new Message("'rawValue' must be negative.");
 
         /// <summary>
         /// Error message used when <code>errorMessage</code> parameter is invalid.
@@ -21,9 +21,9 @@ namespace Triplex.ProtoDomainPrimitives.Numerics
         /// <summary>
         /// Wraps the raw value and returns a new instance.
         /// </summary>
-        /// <param name="rawValue">Must be positive</param>
-        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="rawValue"/> is zero or negative.</exception>
-        public PositiveInteger(int rawValue) : this(rawValue, DefaultErrorMessage)
+        /// <param name="rawValue">Must be negative</param>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="rawValue"/> is zero or positive.</exception>
+        public NegativeInteger(int rawValue) : this(rawValue, DefaultErrorMessage)
         {
         }
 
@@ -32,20 +32,15 @@ namespace Triplex.ProtoDomainPrimitives.Numerics
         /// </summary>
         /// <param name="rawValue">Must be positive</param>
         /// <param name="errorMessage">Custom error message</param>
-        /// <exception cref="ArgumentOutOfRangeException">When <paramref name="rawValue"/> is zero or negative.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">When <paramref name="rawValue"/> is zero or positive.</exception>
         /// <exception cref="ArgumentNullException">When <paramref name="errorMessage"/> is <see langword="null"/>.</exception>
-        public PositiveInteger(int rawValue, Message errorMessage) : base(rawValue, errorMessage, Validate)
+        public NegativeInteger(int rawValue, Message errorMessage) : base(rawValue, errorMessage, Validate)
         {
         }
 
         private static int Validate(int rawValue, Message errorMessage)
         {
-            if (errorMessage == null)
-            {
-                throw new ArgumentNullException(nameof(errorMessage), InvalidCustomErrorMessageMessage.Value);
-            }
-
-            if (rawValue < 1)
+            if (rawValue >= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue, errorMessage.Value);
             }

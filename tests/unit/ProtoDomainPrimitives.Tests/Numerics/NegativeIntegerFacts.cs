@@ -5,9 +5,9 @@ using Triplex.ProtoDomainPrimitives.Numerics;
 
 namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
 {
-    internal static class PositiveIntegerFacts
+    internal static class NegativeIntegerFacts
     {
-        private const int DefaultRawValue = 1024;
+        private const int DefaultRawValue = -1024;
         private static  readonly Message CustomErrorMessage = new Message("Some dummy error message.");
 
         internal sealed class ConstructorMessage : RawValueAndErrorMessageBaseFixture
@@ -16,11 +16,11 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
 
             public ConstructorMessage(bool useCustomMessage) : base(useCustomMessage)
             {
-                _expectedErrorMessage = useCustomMessage ? CustomErrorMessage : PositiveInteger.DefaultErrorMessage;
+                _expectedErrorMessage = useCustomMessage ? CustomErrorMessage : NegativeInteger.DefaultErrorMessage;
             }
 
             [Test]
-            public void Rejects_Negatives_And_Zero([Values(int.MinValue, -1, 0)] int rawValue)
+            public void Rejects_Positives_And_Zero([Values(int.MaxValue, 1, 0)] int rawValue)
                 => Assert.That(() => Build(rawValue, UseCustomMessage),
                                Throws.InstanceOf<ArgumentOutOfRangeException>()
                                      .With
@@ -28,7 +28,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
                                      .StartsWith(_expectedErrorMessage.Value));
 
             [Test]
-            public void Accepts_Positives([Values(1, DefaultRawValue, int.MaxValue)] int rawValue)
+            public void Accepts_Negatives([Values(-1, DefaultRawValue, int.MinValue)] int rawValue)
                 => Assert.That(() => Build(rawValue, UseCustomMessage), Throws.Nothing);
         }
 
@@ -53,9 +53,9 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
             [Test]
             public void Returns_Constructor_Provided_Value()
             {
-                PositiveInteger ps = Build(DefaultRawValue, UseCustomMessage);
+                NegativeInteger ns = Build(DefaultRawValue, UseCustomMessage);
 
-                Assert.That(ps.Value, Is.EqualTo(DefaultRawValue));
+                Assert.That(ns.Value, Is.EqualTo(DefaultRawValue));
             }
         }
 
@@ -68,9 +68,9 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
             [Test]
             public void Same_As_Raw_Value()
             {
-                PositiveInteger ps = Build(DefaultRawValue, UseCustomMessage);
+                NegativeInteger ns = Build(DefaultRawValue, UseCustomMessage);
 
-                Assert.That(ps.ToString(), Is.EqualTo(DefaultRawValue.ToString()));
+                Assert.That(ns.ToString(), Is.EqualTo(DefaultRawValue.ToString()));
             }
         }
 
@@ -83,9 +83,9 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
             [Test]
             public void Same_As_Raw_Value()
             {
-                PositiveInteger ps = Build(DefaultRawValue, UseCustomMessage);
+                NegativeInteger ns = Build(DefaultRawValue, UseCustomMessage);
 
-                Assert.That(ps.GetHashCode(), Is.EqualTo(DefaultRawValue.GetHashCode()));
+                Assert.That(ns.GetHashCode(), Is.EqualTo(DefaultRawValue.GetHashCode()));
             }
         }
 
@@ -98,17 +98,17 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
             [Test]
             public void With_Null_Returns_False()
             {
-                PositiveInteger ps = Build(DefaultRawValue, UseCustomMessage);
+                NegativeInteger ns = Build(DefaultRawValue, UseCustomMessage);
 
-                Assert.That(ps.Equals(null), Is.False);
+                Assert.That(ns.Equals(null), Is.False);
             }
 
             [Test]
             public void With_Self_Returns_True()
             {
-                PositiveInteger ps = Build(DefaultRawValue, UseCustomMessage);
+                NegativeInteger ns = Build(DefaultRawValue, UseCustomMessage);
 
-                Assert.That(ps.Equals(ps), Is.True);
+                Assert.That(ns.Equals(ns), Is.True);
             }
 
             [TestCase(DefaultRawValue)]
@@ -117,15 +117,15 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
             [TestCase(1.25)]
             public void With_Other_Types_Returns_False(object other)
             {
-                PositiveInteger ps = Build(DefaultRawValue, UseCustomMessage);
+                NegativeInteger ns = Build(DefaultRawValue, UseCustomMessage);
 
-                Assert.That(ps.Equals(other), Is.False);
+                Assert.That(ns.Equals(other), Is.False);
             }
 
             [Test]
             public void With_Same_Value_Returns_True()
             {
-                (PositiveInteger positiveIntA, PositiveInteger positiveIntB)
+                (NegativeInteger positiveIntA, NegativeInteger positiveIntB)
                     = (Build(DefaultRawValue, UseCustomMessage), Build(DefaultRawValue, UseCustomMessage));
 
                 Assert.That(positiveIntA.Equals(positiveIntB), Is.True);
@@ -134,7 +134,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
             [Test]
             public void With_Different_Values_Returns_False()
             {
-                (PositiveInteger positiveIntA, PositiveInteger positiveIntB)
+                (NegativeInteger positiveIntA, NegativeInteger positiveIntB)
                     = (Build(DefaultRawValue, UseCustomMessage), Build(DefaultRawValue + 2, UseCustomMessage));
 
                 Assert.That(positiveIntA.Equals(positiveIntB), Is.False);
@@ -150,32 +150,32 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
             [Test]
             public void With_Null_Returns_Positive()
             {
-                PositiveInteger ps = Build(DefaultRawValue, UseCustomMessage);
+                NegativeInteger ns = Build(DefaultRawValue, UseCustomMessage);
 
-                Assert.That(ps.CompareTo(null), Is.GreaterThan(0));
+                Assert.That(ns.CompareTo(null), Is.GreaterThan(0));
             }
 
             [Test]
             public void With_Self_Returns_Zero()
             {
-                PositiveInteger ps = Build(DefaultRawValue, UseCustomMessage);
+                NegativeInteger ns = Build(DefaultRawValue, UseCustomMessage);
 
-                Assert.That(ps.CompareTo(ps), Is.Zero);
+                Assert.That(ns.CompareTo(ns), Is.Zero);
             }
 
             [Test]
-            public void Same_As_Raw_Value([Values(1, 2)] int rawValueA, [Values(1, 2)] int rawValueB)
+            public void Same_As_Raw_Value([Values(-1, -2)] int rawValueA, [Values(-1, -2)] int rawValueB)
             {
-                (PositiveInteger positiveIntA, PositiveInteger positiveIntB)
+                (NegativeInteger positiveIntA, NegativeInteger positiveIntB)
                     = (Build(rawValueA, UseCustomMessage), Build(rawValueB, UseCustomMessage));
 
                 Assert.That(positiveIntA.CompareTo(positiveIntB), Is.EqualTo(rawValueA.CompareTo(rawValueB)));
             }
         }
 
-        private static PositiveInteger Build(int rawValue, bool useCustomMessage)
+        private static NegativeInteger Build(int rawValue, bool useCustomMessage)
         {
-            return useCustomMessage ? new PositiveInteger(rawValue, CustomErrorMessage) : new PositiveInteger(rawValue);
+            return useCustomMessage ? new NegativeInteger(rawValue, CustomErrorMessage) : new NegativeInteger(rawValue);
         }
     }
 }

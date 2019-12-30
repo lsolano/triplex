@@ -16,16 +16,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Strings
                 : new NonEmptyOrWhiteSpaceString(rawValue);
         }
 
-        [TestFixture(false)]
-        [TestFixture(true)]
-        internal abstract class BaseFixture
-        {
-            protected BaseFixture(bool useCustomMessage) => UseCustomMessage = useCustomMessage;
-
-            protected bool UseCustomMessage { get; }
-        }
-
-        internal sealed class ConstructorMessage : BaseFixture
+        internal sealed class ConstructorMessage : RawValueAndErrorMessageBaseFixture
         {
             private const string ParamName = "rawValue";
             private const string ErrorMessageParamName = "errorMessage";
@@ -82,7 +73,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Strings
             public void Accepts_Valid_Values(string rawValue) => Assert.That(() => Build(rawValue, UseCustomMessage), Throws.Nothing);
         }
 
-        internal  sealed class ValueProperty : BaseFixture
+        internal  sealed class ValueProperty : RawValueAndErrorMessageBaseFixture
         {
             public ValueProperty(bool useCustomMessage) : base(useCustomMessage)
             {
@@ -97,7 +88,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Strings
             }
         }
 
-        internal sealed class ToStringMessage : BaseFixture
+        internal sealed class ToStringMessage : RawValueAndErrorMessageBaseFixture
         {
             public ToStringMessage(bool useCustomMessage) : base(useCustomMessage)
             {
@@ -112,7 +103,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Strings
             }
         }
 
-        internal sealed class GetHashCodeMessage : BaseFixture
+        internal sealed class GetHashCodeMessage : RawValueAndErrorMessageBaseFixture
         {
             public GetHashCodeMessage(bool useCustomMessage) : base(useCustomMessage)
             {
@@ -127,7 +118,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Strings
             }
         }
 
-        internal sealed class EqualsMessage : BaseFixture
+        internal sealed class EqualsMessage : RawValueAndErrorMessageBaseFixture
         {
             public EqualsMessage(bool useCustomMessage) : base(useCustomMessage)
             {
@@ -179,7 +170,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Strings
             }
         }
 
-        internal sealed class CompareToMessage : BaseFixture
+        internal sealed class CompareToMessage : RawValueAndErrorMessageBaseFixture
         {
             public CompareToMessage(bool useCustomMessage) : base(useCustomMessage)
             {
