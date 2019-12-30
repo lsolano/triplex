@@ -80,6 +80,123 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
             }
         }
 
+        [TestFixture]
+        internal sealed class ValueProperty
+        {
+            [Test]
+            public void Returns_Constructor_Provided_Value()
+            {
+                DateTimeOffset rawValue = DateTimeOffset.UtcNow;
+                var pastOrPresentTimestamp = new PastOrPresentTimestamp(rawValue);
+
+                Assert.That(pastOrPresentTimestamp.Value, Is.EqualTo(rawValue));
+            }
+        }
+
+        [TestFixture]
+        internal sealed class ToStringMessage
+        {
+            [Test]
+            public void Same_As_Raw_Value()
+            {
+                DateTimeOffset rawValue = DateTimeOffset.UtcNow;
+                var pastOrPresentTimestamp = new PastOrPresentTimestamp(rawValue);
+
+                Assert.That(pastOrPresentTimestamp.ToString(), Is.EqualTo(rawValue.ToString()));
+            }
+        }
+
+        [TestFixture]
+        internal sealed class GetHashCodeMessage
+        {
+            [Test]
+            public void Same_As_Raw_Value()
+            {
+                (PastOrPresentTimestamp pastOrPresentTimestamp, DateTimeOffset rawValue) = CreateFromNow();
+
+                Assert.That(pastOrPresentTimestamp.GetHashCode(), Is.EqualTo(rawValue.GetHashCode()));
+            }
+        }
+
+        [TestFixture]
+        internal sealed class EqualsMessage
+        {
+            [Test]
+            public void With_Null_Returns_False()
+            {
+                (PastOrPresentTimestamp pastOrPresentTimestamp, _) = CreateFromNow();
+
+                Assert.That(pastOrPresentTimestamp.Equals(null), Is.False);
+            }
+
+
+
+            [Test]
+            public void With_Self_Returns_True()
+            {
+                (PastOrPresentTimestamp pastOrPresentTimestamp, _) = CreateFromNow();
+
+                Assert.That(pastOrPresentTimestamp.Equals(pastOrPresentTimestamp), Is.True);
+            }
+
+            [TestCase(1024)]
+            [TestCase("peter")]
+            [TestCase(true)]
+            [TestCase(1.25)]
+            public void With_Other_Types_Returns_False(object other)
+            {
+                (PastOrPresentTimestamp pastOrPresentTimestamp, _) = CreateFromNow();
+
+                Assert.That(pastOrPresentTimestamp.Equals(other), Is.False);
+            }
+
+            [Test]
+            public void With_Same_Value_Returns_True()
+            {
+                DateTimeOffset rawValue = DateTimeOffset.UtcNow;
+                var (pastOrPresentTimestampA, pastOrPresentTimestampB) = (new PastOrPresentTimestamp(rawValue), new PastOrPresentTimestamp(rawValue));
+
+                Assert.That(pastOrPresentTimestampA.Equals(pastOrPresentTimestampB), Is.True);
+            }
+        }
+
+        [TestFixture]
+        internal sealed class CompareToMessage
+        {
+            [Test]
+            public void With_Null_Returns_Positive()
+            {
+                var pastOrPresentTimestamp = new PastOrPresentTimestamp(DateTimeOffset.UtcNow);
+
+                Assert.That(pastOrPresentTimestamp.CompareTo(null), Is.GreaterThan(0));
+            }
+
+            [Test]
+            public void With_Self_Returns_Zero()
+            {
+                var pastOrPresentTimestamp = new PastOrPresentTimestamp(DateTimeOffset.UtcNow);
+
+                Assert.That(pastOrPresentTimestamp.CompareTo(pastOrPresentTimestamp), Is.Zero);
+            }
+
+            [Test]
+            public void Same_As_Raw_Value()
+            {
+                DateTimeOffset rawValueA = DateTimeOffset.UtcNow.AddDays(-5);
+                DateTimeOffset rawValueB = DateTimeOffset.UtcNow.AddDays(-10);
+                var (pastOrPresentTimestampA, pastOrPresentTimestampB) = (new PastOrPresentTimestamp(rawValueA), new PastOrPresentTimestamp(rawValueB));
+
+                Assert.That(pastOrPresentTimestampA.CompareTo(pastOrPresentTimestampB), Is.EqualTo(rawValueA.CompareTo(rawValueB)));
+            }
+        }
+
+        private static (PastOrPresentTimestamp pastOrPresentTimestamp, DateTimeOffset rawValue) CreateFromNow()
+        {
+            DateTimeOffset rawValue = DateTimeOffset.UtcNow;
+
+            return (new PastOrPresentTimestamp(rawValue), rawValue);
+        }
+
         private static DateTimeOffset FromMagnitude(this DateTimeOffset offset, TimeMagnitude timeMagnitude, int delta)
             => timeMagnitude switch
             {
