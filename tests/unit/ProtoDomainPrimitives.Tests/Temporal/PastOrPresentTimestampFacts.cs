@@ -3,6 +3,8 @@ using NUnit.Framework.Constraints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Triplex.ProtoDomainPrimitives.Exceptions;
+using Triplex.ProtoDomainPrimitives.Temporal;
 using static Triplex.ProtoDomainPrimitives.Tests.Temporal.TemporalExtensions;
 
 namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
@@ -12,16 +14,16 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
         [TestFixture]
         internal sealed class ConstructorMessage
         {
-            public static IEnumerable<TimeMagnitude> Magnitudes = Enum.GetValues(typeof(TimeMagnitude)).Cast<TimeMagnitude>().ToList();
+            private static readonly IEnumerable<TimeMagnitude> Magnitudes = Enum.GetValues(typeof(TimeMagnitude)).Cast<TimeMagnitude>().ToList();
 
             private const string ParamName = "rawValue";
-            private const string CustomErrorMessage = "Some custom error message";
+            private static readonly Message CustomErrorMessage = new Message("Some custom error message");
 
             [Test]
             public void Rejects_Future_Values_With_Default_Error_Message(
                 [ValueSource(nameof(Magnitudes))] TimeMagnitude timeMagnitude)
             {
-                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, 1);
+                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, 100);
 
                 Assert.That(() => new PastOrPresentTimestamp(rawValue),
                             BuildArgumentOutOfRangeExceptionConstraint(rawValue, PastOrPresentTimestamp.DefaultErrorMessage));
@@ -31,16 +33,16 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
             public void Rejects_Future_Values_With_Custom_Error_Message(
                 [ValueSource(nameof(Magnitudes))] TimeMagnitude timeMagnitude)
             {
-                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, 1);
+                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, 100);
                 
 
                 Assert.That(() => new PastOrPresentTimestamp(rawValue, CustomErrorMessage),
                             BuildArgumentOutOfRangeExceptionConstraint(rawValue, CustomErrorMessage));
             }
 
-            private static IResolveConstraint BuildArgumentOutOfRangeExceptionConstraint(DateTimeOffset rawValue, string errorMessage)
+            private static IResolveConstraint BuildArgumentOutOfRangeExceptionConstraint(DateTimeOffset rawValue, Message errorMessage)
             {
-                return Throws.InstanceOf<ArgumentOutOfRangeException>().With.Message.StartsWith(errorMessage)
+                return Throws.InstanceOf<ArgumentOutOfRangeException>().With.Message.StartsWith(errorMessage.Value)
                                                                        .And.Message.Contains(ParamName)
                                                                        .And.Message.Contains(rawValue.ToString());
             }
@@ -147,6 +149,17 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
                 var (pastOrPresentTimestampA, pastOrPresentTimestampB) = (new PastOrPresentTimestamp(rawValue), new PastOrPresentTimestamp(rawValue));
 
                 Assert.That(pastOrPresentTimestampA.Equals(pastOrPresentTimestampB), Is.True);
+            }
+
+            [Test]
+            public void With_Different_Values_Returns_False()
+            {
+                DateTimeOffset rawValueA = DateTimeOffset.UtcNow;
+                DateTimeOffset rawValueB = DateTimeOffset.UtcNow.AddMinutes(-5);
+                var (pastOrPresentTimestampA, pastOrPresentTimestampB) 
+                    = (new PastOrPresentTimestamp(rawValueA), new PastOrPresentTimestamp(rawValueB));
+
+                Assert.That(pastOrPresentTimestampA.Equals(pastOrPresentTimestampB), Is.False);
             }
         }
 

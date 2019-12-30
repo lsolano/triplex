@@ -1,4 +1,5 @@
 ﻿using System;
+using Triplex.ProtoDomainPrimitives.Exceptions;
 
 namespace Triplex.ProtoDomainPrimitives
 {
@@ -12,16 +13,22 @@ namespace Triplex.ProtoDomainPrimitives
         /// Builds a new instance calling <paramref name="validator"/> first.
         /// </summary>
         /// <param name="rawValue">Value to wrap.</param>
+        /// <param name="errorMessage">Value to wrap.</param>
         /// <param name="validator">Validator function, must perform all validations and throw exceptions, if everything is OK returns the <paramref name="rawValue"/></param>
         /// <exception cref="ArgumentNullException">When <paramref name="validator"/> is <see langword="null"/>.</exception>
-        protected AbstractDomainPrimitive(TRawType rawValue, Func<TRawType, TRawType> validator)
+        protected AbstractDomainPrimitive(TRawType rawValue, Message errorMessage, Func<TRawType, Message, TRawType> validator)
         {
+            if (errorMessage == null)
+            {
+                throw new ArgumentNullException(nameof(errorMessage));
+            }
+
             if (validator == null)
             {
                 throw new ArgumentNullException(nameof(validator));
             }
 
-            Value = validator(rawValue);
+            Value = validator(rawValue, errorMessage);
         }
 
         /// <summary>
@@ -49,7 +56,7 @@ namespace Triplex.ProtoDomainPrimitives
         public override string ToString() => (Value?.ToString() ?? string.Empty);
 
         /// <summary>
-        /// 
+        /// Same as wrapped instance CompareTo.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
@@ -75,8 +82,7 @@ namespace Triplex.ProtoDomainPrimitives
                 return false;
             }
 
-            // ReSharper disable once SimplifyConditionalTernaryExpression
-            return ReferenceEquals(this, other) ? true : Value.Equals(other.Value);
+            return ReferenceEquals(this, other) || Value.Equals(other.Value);
         }
     }
 }

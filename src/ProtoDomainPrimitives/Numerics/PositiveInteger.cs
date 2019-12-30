@@ -1,4 +1,5 @@
 ﻿using System;
+using Triplex.ProtoDomainPrimitives.Exceptions;
 
 namespace Triplex.ProtoDomainPrimitives.Numerics
 {
@@ -10,7 +11,7 @@ namespace Triplex.ProtoDomainPrimitives.Numerics
         /// <summary>
         /// Error message used when not provided.
         /// </summary>
-        public const string DefaultErrorMessage = "'rawValue' must be positive.";
+        public static readonly Message DefaultErrorMessage = new Message("'rawValue' must be positive.");
 
         /// <summary>
         /// Wraps the raw value and returns a new instance.
@@ -28,11 +29,11 @@ namespace Triplex.ProtoDomainPrimitives.Numerics
         /// <param name="errorMessage">Custom error message</param>
         /// <exception cref="ArgumentOutOfRangeException">When <paramref name="rawValue"/> is zero or negative.</exception>
         /// <exception cref="ArgumentNullException">When <paramref name="errorMessage"/> is <see langword="null"/>.</exception>
-        public PositiveInteger(int rawValue, string errorMessage) : base(rawValue, (val) => Validate(val, errorMessage))
+        public PositiveInteger(int rawValue, Message errorMessage) : base(rawValue, errorMessage, Validate)
         {
         }
 
-        private static int Validate(int rawValue, string errorMessage)
+        private static int Validate(int rawValue, Message errorMessage)
         {
             if (errorMessage == null)
             {
@@ -41,7 +42,7 @@ namespace Triplex.ProtoDomainPrimitives.Numerics
 
             if (rawValue < 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue, errorMessage);
+                throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue, errorMessage.Value);
             }
 
             return rawValue;

@@ -3,6 +3,8 @@ using NUnit.Framework.Constraints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Triplex.ProtoDomainPrimitives.Exceptions;
+using Triplex.ProtoDomainPrimitives.Temporal;
 using static Triplex.ProtoDomainPrimitives.Tests.Temporal.TemporalExtensions;
 
 namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
@@ -12,10 +14,10 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
         [TestFixture]
         internal sealed class ConstructorMessage
         {
-            public static IEnumerable<TimeMagnitude> Magnitudes = Enum.GetValues(typeof(TimeMagnitude)).Cast<TimeMagnitude>().ToList();
+            private static readonly IEnumerable<TimeMagnitude> Magnitudes = Enum.GetValues(typeof(TimeMagnitude)).Cast<TimeMagnitude>().ToList();
 
             private const string ParamName = "rawValue";
-            private const string CustomErrorMessage = "Some custom error message";
+            private static readonly Message CustomErrorMessage = new Message("Some custom error message");
 
             [Test]
             public void Rejects_Past_Values_With_Default_Error_Message(
@@ -51,9 +53,9 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
                 Assert.That(() => new FutureTimestamp(DateTimeOffset.UtcNow, CustomErrorMessage), BuildArgumentOutOfRangeExceptionConstraint(rawValue, CustomErrorMessage));
             }
 
-            private static IResolveConstraint BuildArgumentOutOfRangeExceptionConstraint(DateTimeOffset rawValue, string errorMessage)
+            private static IResolveConstraint BuildArgumentOutOfRangeExceptionConstraint(DateTimeOffset rawValue, Message errorMessage)
             {
-                return Throws.InstanceOf<ArgumentOutOfRangeException>().With.Message.StartsWith(errorMessage)
+                return Throws.InstanceOf<ArgumentOutOfRangeException>().With.Message.StartsWith(errorMessage.Value)
                                                                        .And.Message.Contains(ParamName)
                                                                        .And.Message.Contains(rawValue.ToString());
             }
@@ -61,7 +63,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
             [Test]
             public void Accepts_Future_Values_With_Default_Error_Message([ValueSource(nameof(Magnitudes))] TimeMagnitude timeMagnitude)
             {
-                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, 1);
+                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, 100);
 
                 Assert.That(() => new FutureTimestamp(rawValue), Throws.Nothing);
             }
@@ -69,7 +71,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
             [Test]
             public void Accepts_Future_Values_With_Custom_Error_Message([ValueSource(nameof(Magnitudes))] TimeMagnitude timeMagnitude)
             {
-                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, 1);
+                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, 100);
 
                 Assert.That(() => new FutureTimestamp(rawValue, CustomErrorMessage), Throws.Nothing);
             }
@@ -127,9 +129,9 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
             [Test]
             public void With_Self_Returns_True()
             {
-                (FutureTimestamp futureTimestampp, _) = CreateWithFiveMinutesInTheFuture();
+                (FutureTimestamp futureTimestamp, _) = CreateWithFiveMinutesInTheFuture();
 
-                Assert.That(futureTimestampp.Equals(futureTimestampp), Is.True);
+                Assert.That(futureTimestamp.Equals(futureTimestamp), Is.True);
             }
 
             [TestCase(1024)]
@@ -147,9 +149,20 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
             public void With_Same_Value_Returns_True()
             {
                 DateTimeOffset rawValue = DateTimeOffset.UtcNow.AddMinutes(5);
-                var (pastOrPresentTimestampA, pastOrPresentTimestampB) = (new FutureTimestamp(rawValue), new FutureTimestamp(rawValue));
+                var (futureTimestampA, futureTimestampB) = (new FutureTimestamp(rawValue), new FutureTimestamp(rawValue));
 
-                Assert.That(pastOrPresentTimestampA.Equals(pastOrPresentTimestampB), Is.True);
+                Assert.That(futureTimestampA.Equals(futureTimestampB), Is.True);
+            }
+
+            [Test]
+            public void With_Different_Values_Returns_False()
+            {
+                DateTimeOffset rawValueA = DateTimeOffset.UtcNow.AddMinutes(5);
+                DateTimeOffset rawValueB = DateTimeOffset.UtcNow.AddMinutes(15);
+                var (futureTimestampA, futureTimestampB) 
+                    = (new FutureTimestamp(rawValueA), new FutureTimestamp(rawValueB));
+
+                Assert.That(futureTimestampA.Equals(futureTimestampB), Is.False);
             }
         }
 

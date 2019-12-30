@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using Triplex.ProtoDomainPrimitives.Exceptions;
 using Triplex.ProtoDomainPrimitives.Numerics;
 
 namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
@@ -7,7 +8,7 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
     internal static class PositiveIntegerFacts
     {
         private const int DefaultRawValue = 1024;
-        private const string CustomErrorMessage = "Some dummy error message.";
+        private static  readonly Message CustomErrorMessage = new Message("Some dummy error message.");
 
         [TestFixture]
         internal sealed class ConstructorMessage
@@ -18,14 +19,14 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
                                Throws.InstanceOf<ArgumentOutOfRangeException>()
                                      .With
                                      .Message
-                                     .StartsWith(PositiveInteger.DefaultErrorMessage));
+                                     .StartsWith(PositiveInteger.DefaultErrorMessage.Value));
             [Test]
             public void Rejects_Negatives_And_Zero_With_Custom_Message([Values(int.MinValue, -1, 0)] int rawValue)
                 => Assert.That(() => new PositiveInteger(rawValue, CustomErrorMessage),
                     Throws.InstanceOf<ArgumentOutOfRangeException>()
                         .With
                         .Message
-                        .StartsWith(CustomErrorMessage));
+                        .StartsWith(CustomErrorMessage.Value));
 
             [Test]
             public void Accepts_Positives([Values(1, DefaultRawValue, int.MaxValue)] int rawValue)
@@ -108,6 +109,14 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Numerics
                 var (positiveIntA, positiveIntB) = (new PositiveInteger(DefaultRawValue), new PositiveInteger(DefaultRawValue));
 
                 Assert.That(positiveIntA.Equals(positiveIntB), Is.True);
+            }
+
+            [Test]
+            public void With_Different_Values_Returns_False()
+            {
+                var (positiveIntA, positiveIntB) = (new PositiveInteger(DefaultRawValue), new PositiveInteger(DefaultRawValue + 2));
+
+                Assert.That(positiveIntA.Equals(positiveIntB), Is.False);
             }
         }
 
