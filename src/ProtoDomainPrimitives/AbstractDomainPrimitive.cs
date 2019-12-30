@@ -32,6 +32,15 @@ namespace Triplex.ProtoDomainPrimitives
         }
 
         /// <summary>
+        /// Allow derived classes to take control over validation and value setting.
+        /// </summary>
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        protected AbstractDomainPrimitive()
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        {
+        }
+
+        /// <summary>
         /// Wrapped value.
         /// </summary>
         public TRawType Value { get; }
