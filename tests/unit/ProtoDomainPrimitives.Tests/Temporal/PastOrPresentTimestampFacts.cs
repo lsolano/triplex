@@ -1,5 +1,8 @@
 ﻿using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
 {
@@ -7,7 +10,6 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
     {
         public enum TimeMagnitude
         {
-            Tick = 0,
             Millisecond = 1,
             Second = 2,
             Minute = 3,
@@ -17,43 +19,70 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
             Year = 7
         }
 
-        /*
-         * Must allow only present or past timestamps.
-
-         * 6. Accepts current date time
-         * 7. Accepts 30 seconds in the past
-         * 8. Accepts 1 minute in the past
-         * 9. Accepts 1 hour in the past
-         * 10. Accepts 1 day in the past
-         * 11. Accepts 1 month in the past
-         * 12. Accepts 1 year in the past
-         * 
-         */
-
         [TestFixture]
         internal sealed class ConstructorMessage
         {
-            [TestCase(TimeMagnitude.Second, 30)]
-            [TestCase(TimeMagnitude.Minute, 1)]
-            [TestCase(TimeMagnitude.Hour, 1)]
-            [TestCase(TimeMagnitude.Day, 1)]
-            [TestCase(TimeMagnitude.Month, 1)]
-            [TestCase(TimeMagnitude.Year, 1)]
-            public void Rejects_30_Seconds_In_The_Future(TimeMagnitude timeMagnitude, int delta)
-            {
-                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, delta);
+            public static IEnumerable<TimeMagnitude> Magnitudes = Enum.GetValues(typeof(TimeMagnitude)).Cast<TimeMagnitude>().ToList();
 
-                Assert.That(() => new PastOrPresentTimestamp(rawValue), Throws.InstanceOf<ArgumentOutOfRangeException>()
-                                                                              .With.Message.StartsWith(PastOrPresentTimestamp.DefaultErrorMessage)
-                                                                              .And.Message.Contains("rawValue")
-                                                                              .And.Message.Contains(rawValue.ToString()));
+            private const string ParamName = "rawValue";
+            private const string CustomErrorMessage = "Some custom error message";
+
+            [Test]
+            public void Rejects_Future_Values_With_Default_Error_Message(
+                [ValueSource(nameof(Magnitudes))] TimeMagnitude timeMagnitude)
+            {
+                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, 1);
+
+                Assert.That(() => new PastOrPresentTimestamp(rawValue),
+                            BuildArgumentOutOfRangeExceptionConstraint(rawValue, PastOrPresentTimestamp.DefaultErrorMessage));
+            }
+
+            [Test]
+            public void Rejects_Future_Values_With_Custom_Error_Message(
+                [ValueSource(nameof(Magnitudes))] TimeMagnitude timeMagnitude)
+            {
+                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, 1);
+                
+
+                Assert.That(() => new PastOrPresentTimestamp(rawValue, CustomErrorMessage),
+                            BuildArgumentOutOfRangeExceptionConstraint(rawValue, CustomErrorMessage));
+            }
+
+            private static IResolveConstraint BuildArgumentOutOfRangeExceptionConstraint(DateTimeOffset rawValue, string errorMessage)
+            {
+                return Throws.InstanceOf<ArgumentOutOfRangeException>().With.Message.StartsWith(errorMessage)
+                                                                       .And.Message.Contains(ParamName)
+                                                                       .And.Message.Contains(rawValue.ToString());
+            }
+
+            [Test]
+            public void Accepts_Present_Value_With_Default_Error_Message()
+                => Assert.That(() => new PastOrPresentTimestamp(DateTimeOffset.UtcNow), Throws.Nothing);
+
+            [Test]
+            public void Accepts_Present_Value_With_Custom_Error_Message()
+                => Assert.That(() => new PastOrPresentTimestamp(DateTimeOffset.UtcNow, CustomErrorMessage), Throws.Nothing);
+
+            [Test]
+            public void Accepts_Past_Values_With_Default_Error_Message([ValueSource(nameof(Magnitudes))] TimeMagnitude timeMagnitude)
+            {
+                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, -1);
+
+                Assert.That(() => new PastOrPresentTimestamp(rawValue), Throws.Nothing);
+            }
+
+            [Test]
+            public void Accepts_Past_Values_With_Custom_Error_Message([ValueSource(nameof(Magnitudes))] TimeMagnitude timeMagnitude)
+            {
+                DateTimeOffset rawValue = DateTimeOffset.UtcNow.FromMagnitude(timeMagnitude, -1);
+
+                Assert.That(() => new PastOrPresentTimestamp(rawValue, CustomErrorMessage), Throws.Nothing);
             }
         }
 
         private static DateTimeOffset FromMagnitude(this DateTimeOffset offset, TimeMagnitude timeMagnitude, int delta)
             => timeMagnitude switch
             {
-                TimeMagnitude.Tick => offset.AddTicks(delta),
                 TimeMagnitude.Millisecond => offset.AddMilliseconds(delta),
                 TimeMagnitude.Second => offset.AddSeconds(delta),
                 TimeMagnitude.Minute => offset.AddMinutes(delta),
