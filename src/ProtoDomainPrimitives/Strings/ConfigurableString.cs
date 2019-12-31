@@ -92,7 +92,11 @@ namespace Triplex.ProtoDomainPrimitives.Strings
             }
 
             /*
-             * Priority: 
+             * Priority:
+             * -4 EnsureTrimmed() => Allow-Trailing-WhiteSpace(false); Allow-Leading-WhiteSpace(false)
+             * -3 Allow-Trailing-WhiteSpace(bool)
+             * -2 Allow-Leading-WhiteSpace(bool)
+             * -1 Allow-WhiteSpace-Only(bool)
              * 0- With-InvalidChars-Regex|Pattern
              * 1- With-ValidFormat-Regex|Pattern
              * 2- With-CustomParser Action(rawValue: string) : void
