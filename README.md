@@ -1,5 +1,5 @@
 # Triplex #
-Validation library inspired by the concepts of ***Secure by Design***, by Dan Bergh Johnsson, Daniel Deogun, and Daniel Sawano (MEAP 2019 Manning Publications).
+Validation library inspired by the concepts of ***Secure by Design***, by Dan Bergh Johnsson, Daniel Deogun, and Daniel Sawano (MEAP 2019 Manning Publications). (Preconditions, Postconditions, Invariants & Proto-Primitives at [https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/code-contracts](https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/code-contracts "C# Code Contracts"))
 
 
 ## Types of validations ##
