@@ -14,7 +14,7 @@ namespace Triplex.ProtoDomainPrimitives.Numerics
         public StringLength Min { get; }
         public StringLength Max { get; }
 
-        private static void Validate(StringLength min, StringLength max)
+        internal static void Validate(StringLength min, StringLength max)
         {
             if (min == null)
             {
