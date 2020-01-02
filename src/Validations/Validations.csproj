@@ -10,6 +10,18 @@
         <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
         <Authors>Lorenzo Solano Martinez</Authors>
         <Description>Common validations.</Description>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <Year>$([System.DateTime]::Now.Year.ToString("####"))</Year>
+        <CopyrightStartYear>2019</CopyrightStartYear>
+        <CopyrightEndYear Condition="$(Year) != '$(CopyrightStartYear)'">-$(Year)</CopyrightEndYear>
+        <Copyright>(C) Lorenzo Solano Martinez (https://lorenzosolano.com/) $(CopyrightStartYear)$(CopyrightEndYear). All Rights Reserved.</Copyright>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/lsolano/triplex</RepositoryUrl>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
+        <Version>0.1.0</Version>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,6 +29,13 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\..\LICENSE">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
     </ItemGroup>
 
 </Project>

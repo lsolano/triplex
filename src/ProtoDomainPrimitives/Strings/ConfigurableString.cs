@@ -3,33 +3,87 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Triplex.ProtoDomainPrimitives.Exceptions;
 using Triplex.ProtoDomainPrimitives.Numerics;
+using Triplex.Validations;
 
 namespace Triplex.ProtoDomainPrimitives.Strings
 {
+    /// <summary>
+    /// <para>
+    /// String wrapper with several format and structural validations upon construction.
+    /// Use <see cref="ConfigurableString.Builder"/> to create instances of this class.
+    /// </para>
+    /// <para>
+    /// Be aware that wrapped value van not be <see langword="null"/> above all other validations.
+    /// </para>
+    /// </summary>
     public sealed class ConfigurableString : IDomainPrimitive<string>
     {
         private readonly StringComparison _comparisonStrategy;
 
-        private ConfigurableString(string rawValue, StringComparison comparisonStrategy) {
+        private ConfigurableString(string rawValue, StringComparison comparisonStrategy)
+        {
             Value = rawValue;
             _comparisonStrategy = comparisonStrategy;
         }
 
+        /// <summary>
+        /// Actual value.
+        /// </summary>
         public string Value { get; }
 
+        /// <summary>
+        /// Compares using the strategy specified by builder <see cref="Builder.WithComparisonStrategy"/>.
+        /// </summary>
+        /// <param name="other">other</param>
+        /// <returns></returns>
         public int CompareTo(IDomainPrimitive<string> other)
         {
-            throw new NotImplementedException();
+            if (other == null)
+            {
+                return 1;
+            }
+
+            return ReferenceEquals(this, other) ? 0 : string.Compare(Value, other.Value, _comparisonStrategy);
         }
 
-        public bool Equals(IDomainPrimitive<string> other)
+        /// <summary>
+        /// Checks for equality using the strategy specified by builder <see cref="Builder.WithComparisonStrategy"/>.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object? obj) => Equals(obj as ConfigurableString);
+
+        /// <summary>
+        /// Checks for equality using the strategy specified by builder <see cref="Builder.WithComparisonStrategy"/>.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(IDomainPrimitive<string>? other)
         {
-            throw new NotImplementedException();
+            if (other == null)
+            {
+                return false;
+            }
+
+            return ReferenceEquals(this, other) || Value.Equals(other.Value, _comparisonStrategy);
         }
 
+        /// <summary>
+        /// Same as <see cref="Value"/>.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode() => Value.GetHashCode();
+
+        /// <inheritdoc cref="Object.ToString()"/>
+        public override string ToString() => Value;
+
+        /// <summary>
+        /// Fluent builder for <see cref="ConfigurableString"/>s.
+        /// This builder is for only one usage, after calling <see cref="Build(string)"/> or <see cref="Build(string,System.Action{string})"/>
+        /// subsequent calls will throw <see cref="InvalidOperationException"/>.
+        /// </summary>
         public  sealed class Builder
         {
-            private static readonly Message DefaultArgumentNullErrorMessage = new Message("Input string can not be null.");
             private static readonly Message DefaultTooShortErrorMessage = new Message("Input string is too short.");
             private static readonly Message DefaultTooLongErrorMessage = new Message("Input string is too long.");
             private static readonly Message DefaultInvalidCharactersErrorMessage = new Message("Input string contains invalid characters.");
@@ -37,185 +91,295 @@ namespace Triplex.ProtoDomainPrimitives.Strings
 
             private bool _built;
 
-            internal StringComparison ComparisonStrategy { get; private set; } = StringComparison.InvariantCulture;
-            internal Message ArgumentNullErrorMessage { get; private set; } = DefaultArgumentNullErrorMessage;
-            internal Message TooShortErrorMessage { get; private set; } = DefaultTooShortErrorMessage;
-            internal Message TooLongErrorMessage { get; private set; } = DefaultTooLongErrorMessage;
-            internal Message InvalidCharactersErrorMessage { get; private set; } = DefaultInvalidCharactersErrorMessage;
-            internal Message InvalidFormatErrorMessage { get; private set; } = DefaultInvalidFormatErrorMessage;
+            private StringComparison _comparisonStrategy = StringComparison.InvariantCulture;
+            private readonly Message _argumentNullErrorMessage;
+            private Message _tooShortErrorMessage = DefaultTooShortErrorMessage;
+            private Message _tooLongErrorMessage = DefaultTooLongErrorMessage;
+            private Message _invalidCharactersErrorMessage = DefaultInvalidCharactersErrorMessage;
+            private Message _invalidFormatErrorMessage = DefaultInvalidFormatErrorMessage;
 
-            internal StringLength MinLength { get; private set; }
-            internal StringLength MaxLength { get; private set; }
-            internal bool RequiresTrimmed { get; private set; }
-            internal bool AllowLeadingWhiteSpace { get; private set; } = true;
-            private bool DoesNotAllowLeadingWhiteSpace => !AllowLeadingWhiteSpace;
-            internal bool AllowTrailingWhiteSpace { get; private set; } = true;
-            private bool DoesNotAllowTrailingWhiteSpace => !AllowTrailingWhiteSpace;
-            internal bool AllowWhiteSpacesOnly { get; private set; } = true;
-            private bool DoesNotAllowWhiteSpacesOnly => !AllowWhiteSpacesOnly;
-            internal Regex InvalidCharsRegex { get; private set; }
-            internal Regex ValidFormatRegex { get; private set; }
+            private StringLength? _minLength;
+            private StringLength? _maxLength;
+            private bool _requiresTrimmed;
+            private bool _allowLeadingWhiteSpace = true;
+            private bool _allowTrailingWhiteSpace = true;
+            private bool _allowWhiteSpacesOnly = true;
+            private Regex? _invalidCharsRegex;
+            private Regex? _validFormatRegex;
 
+            private bool DoesNotAllowLeadingWhiteSpace => !_allowLeadingWhiteSpace;
+            private bool DoesNotAllowTrailingWhiteSpace => !_allowTrailingWhiteSpace;
+            private bool DoesNotAllowWhiteSpacesOnly => !_allowWhiteSpacesOnly;
+
+            /// <summary>
+            /// Creates a builder with the error message to be used when input value is <see langword="null"/>.
+            /// </summary>
+            /// <param name="argumentNullErrorMessage">Required</param>
+            /// <exception cref="ArgumentNullException">When <paramref name="argumentNullErrorMessage"/> is <see langword="null"/></exception>
             public Builder(Message argumentNullErrorMessage)
-            {
-                ArgumentNullErrorMessage = argumentNullErrorMessage ??
-                                           throw new ArgumentNullException(nameof(argumentNullErrorMessage));
-            }
+                => _argumentNullErrorMessage = Arguments.NotNull(argumentNullErrorMessage, nameof(argumentNullErrorMessage));
 
             /// <summary>
             /// If not set, defaults to <see cref="StringComparison.InvariantCulture"/>.
             /// </summary>
             /// <param name="comparisonStrategy"></param>
-            /// <returns></returns>
+            /// <returns>Self</returns>
+            /// <exception cref="ArgumentOutOfRangeException">When <paramref name="comparisonStrategy"/> is not a valid enumeration member.</exception>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithComparisonStrategy(StringComparison comparisonStrategy)
-            {
-                return CheckPreconditionsAndExecute(() =>
-                {
-                    bool notDefined = Enum.IsDefined(typeof(StringComparison), comparisonStrategy);
-                    if (notDefined)
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(comparisonStrategy), comparisonStrategy, $"Value is not a member of enum {nameof(StringComparison)}.");
-                    }
+                => CheckPreconditionsAndExecute(() => _comparisonStrategy = Arguments.ValidEnumerationMember(comparisonStrategy, nameof(comparisonStrategy)));
 
-                    ComparisonStrategy = comparisonStrategy;
-                });
-            }
-
+            /// <summary>
+            /// Sets the minimum allowed length and associated violation message.
+            /// </summary>
+            /// <param name="minLength">Can not be <see langword="null"/>.</param>
+            /// <param name="tooShortErrorMessage">Can not be <see langword="null"/>.</param>
+            /// <returns>Self</returns>
+            /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithMinLength(StringLength minLength, Message tooShortErrorMessage)
             {
                 return CheckPreconditionsAndExecute(() =>
                 {
-                    TooShortErrorMessage = tooShortErrorMessage ?? throw new ArgumentNullException(nameof(tooShortErrorMessage));
-                    MinLength = minLength ?? throw new ArgumentNullException(nameof(minLength));
+                    _tooShortErrorMessage = Arguments.NotNull(tooShortErrorMessage, nameof(tooShortErrorMessage));
+                    _minLength = Arguments.NotNull(minLength, nameof(minLength));
                 });
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="maxLength"></param>
+            /// <param name="tooLongErrorMessage"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithMaxLength(StringLength maxLength, Message tooLongErrorMessage)
             {
                 return CheckPreconditionsAndExecute(() =>
                 {
-                    TooLongErrorMessage = tooLongErrorMessage ?? throw new ArgumentNullException(nameof(tooLongErrorMessage));
-                    MaxLength = maxLength ?? throw new ArgumentNullException(nameof(maxLength));
+                    _tooLongErrorMessage = Arguments.NotNull(tooLongErrorMessage, nameof(tooLongErrorMessage));
+                    _maxLength = Arguments.NotNull(maxLength, nameof(maxLength));
                 });
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="lengthRange"></param>
+            /// <param name="tooShortErrorMessage"></param>
+            /// <param name="tooLongErrorMessage"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithLengthRange(StringLengthRange lengthRange, Message tooShortErrorMessage, Message tooLongErrorMessage)
             {
                 return CheckPreconditionsAndExecute(() =>
                 {
-                    if (lengthRange == null)
-                    {
-                        throw new ArgumentNullException(nameof(lengthRange));
-                    }
+                    Arguments.NotNull(lengthRange, nameof(lengthRange));
 
-                    TooShortErrorMessage = tooShortErrorMessage ?? throw new ArgumentNullException(nameof(tooShortErrorMessage));
-                    TooLongErrorMessage = tooLongErrorMessage ?? throw new ArgumentNullException(nameof(tooLongErrorMessage));
-                    MinLength = lengthRange.Min;
-                    MaxLength = lengthRange.Max;
+                    _tooShortErrorMessage = Arguments.NotNull(tooShortErrorMessage, nameof(tooShortErrorMessage));
+                    _tooLongErrorMessage = Arguments.NotNull(tooLongErrorMessage, nameof(tooLongErrorMessage));
+                    _minLength = lengthRange.Min;
+                    _maxLength = lengthRange.Max;
                 });
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="requiresTrimmed"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithRequiresTrimmed(bool requiresTrimmed)
                 => WithRequiresTrimmed(requiresTrimmed, DefaultInvalidFormatErrorMessage);
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="requiresTrimmed"></param>
+            /// <param name="invalidFormatErrorMessage"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithRequiresTrimmed(bool requiresTrimmed, Message invalidFormatErrorMessage)
             {
                 return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, () =>
                 {
+                    _requiresTrimmed = requiresTrimmed;
                     if (requiresTrimmed)
                     {
-                        AllowLeadingWhiteSpace = AllowTrailingWhiteSpace = AllowWhiteSpacesOnly = false;
+                        _allowLeadingWhiteSpace = _allowTrailingWhiteSpace = _allowWhiteSpacesOnly = false;
                     }
                 });
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="allowLeadingWhiteSpace"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithAllowLeadingWhiteSpace(bool allowLeadingWhiteSpace)
                 => WithAllowLeadingWhiteSpace(allowLeadingWhiteSpace, DefaultInvalidFormatErrorMessage);
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="allowLeadingWhiteSpace"></param>
+            /// <param name="invalidFormatErrorMessage"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithAllowLeadingWhiteSpace(bool allowLeadingWhiteSpace, Message invalidFormatErrorMessage)
             {
                 return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, () =>
                 {
-                    AllowLeadingWhiteSpace = allowLeadingWhiteSpace;
+                    _allowLeadingWhiteSpace = allowLeadingWhiteSpace;
                 });
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="allowTrailingWhiteSpace"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithAllowTrailingWhiteSpace(bool allowTrailingWhiteSpace)
                 => WithAllowTrailingWhiteSpace(allowTrailingWhiteSpace, DefaultInvalidFormatErrorMessage);
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="allowTrailingWhiteSpace"></param>
+            /// <param name="invalidFormatErrorMessage"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithAllowTrailingWhiteSpace(bool allowTrailingWhiteSpace, Message invalidFormatErrorMessage)
             {
-                return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, () =>
-                {
-                    AllowTrailingWhiteSpace = allowTrailingWhiteSpace;
-                });
+                return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, 
+                    () => _allowTrailingWhiteSpace = allowTrailingWhiteSpace);
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="allowWhiteSpacesOnly"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithAllowWhiteSpacesOnly(bool allowWhiteSpacesOnly)
                 => WithAllowWhiteSpacesOnly(allowWhiteSpacesOnly, DefaultInvalidFormatErrorMessage);
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="allowWhiteSpacesOnly"></param>
+            /// <param name="invalidFormatErrorMessage"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithAllowWhiteSpacesOnly(bool allowWhiteSpacesOnly, Message invalidFormatErrorMessage)
             {
                 return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, () =>
                 {
-                    AllowWhiteSpacesOnly = allowWhiteSpacesOnly;
+                    _allowWhiteSpacesOnly = allowWhiteSpacesOnly;
 
                     if (allowWhiteSpacesOnly)
                     {
-                        AllowLeadingWhiteSpace = AllowTrailingWhiteSpace = true;
+                        _allowLeadingWhiteSpace = _allowTrailingWhiteSpace = true;
                     }
                 });
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="pattern"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithInvalidCharsPattern(string pattern)
                 => WithInvalidCharsPattern(pattern, DefaultInvalidCharactersErrorMessage);
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="pattern"></param>
+            /// <param name="invalidCharactersErrorMessage"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithInvalidCharsPattern(string pattern, Message invalidCharactersErrorMessage)
             {
                 return CheckPreconditionsAndExecute(() =>
                 {
-                    InvalidCharactersErrorMessage = invalidCharactersErrorMessage ?? throw new ArgumentNullException(nameof(invalidCharactersErrorMessage));
-                    InvalidCharsRegex = new Regex(
-                        pattern ?? throw new ArgumentNullException(nameof(pattern)),
+                    _invalidCharactersErrorMessage = Arguments.NotNull(invalidCharactersErrorMessage, nameof(invalidCharactersErrorMessage));
+                    _invalidCharsRegex = new Regex(
+                        Arguments.NotNull(pattern, nameof(pattern)),
                         RegexOptions.Compiled | RegexOptions.CultureInvariant, Regex.InfiniteMatchTimeout);
                 });
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="regex"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithInvalidCharsRegex(Regex regex)
                 => WithInvalidCharsRegex(regex, DefaultInvalidCharactersErrorMessage);
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="regex"></param>
+            /// <param name="invalidCharactersErrorMessage"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithInvalidCharsRegex(Regex regex, Message invalidCharactersErrorMessage)
             {
                 return CheckPreconditionsAndExecute(() =>
                 {
-                    InvalidCharactersErrorMessage = invalidCharactersErrorMessage ?? throw new ArgumentNullException(nameof(invalidCharactersErrorMessage));
-                    InvalidCharsRegex = regex ?? throw new ArgumentNullException(nameof(regex));
+                    _invalidCharactersErrorMessage = Arguments.NotNull(invalidCharactersErrorMessage, nameof(invalidCharactersErrorMessage));
+                    _invalidCharsRegex = Arguments.NotNull(regex, nameof(regex));
                 });
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="pattern"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithValidFormatPattern(string pattern)
                 => WithValidFormatPattern(pattern, DefaultInvalidFormatErrorMessage);
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="pattern"></param>
+            /// <param name="invalidFormatErrorMessage"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithValidFormatPattern(string pattern, Message invalidFormatErrorMessage)
             {
-                return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, () =>
-                {
-                    ValidFormatRegex = new Regex(
-                        pattern ?? throw new ArgumentNullException(nameof(pattern)),
-                        RegexOptions.Compiled | RegexOptions.CultureInvariant, Regex.InfiniteMatchTimeout);
-                });
+                return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, 
+                    () => _validFormatRegex = new Regex(Arguments.NotNull(pattern, nameof(pattern)),
+                        RegexOptions.Compiled | RegexOptions.CultureInvariant, Regex.InfiniteMatchTimeout));
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="regex"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithValidFormatRegex(Regex regex)
                 => WithValidFormatRegex(regex, DefaultInvalidFormatErrorMessage);
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="regex"></param>
+            /// <param name="invalidFormatErrorMessage"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithValidFormatRegex(Regex regex, Message invalidFormatErrorMessage)
-            {
-                return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, () =>
-                {
-                    ValidFormatRegex = regex ?? throw new ArgumentNullException(nameof(regex));
-                });
-            }
+                => CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, 
+                    () => _validFormatRegex = Arguments.NotNull(regex, nameof(regex)));
 
             private Builder CheckPreconditionsAndExecute(Action checkAndSet)
             {
@@ -230,13 +394,28 @@ namespace Triplex.ProtoDomainPrimitives.Strings
             {
                 EnsureNotBuilt();
 
-                InvalidFormatErrorMessage = invalidFormatErrorMessage ?? throw new ArgumentNullException(nameof(invalidFormatErrorMessage));
+                _invalidFormatErrorMessage =
+                    Arguments.NotNull(invalidFormatErrorMessage, nameof(invalidFormatErrorMessage));
 
                 checkAndSet();
 
                 return this;
             }
 
+            /// <summary>
+            /// Validates input against all configured options, if all are met, creates the <see cref="ConfigurableString"/> instance, otherwise throws exception.
+            /// </summary>
+            /// <param name="rawValue">Can not be <see langowrd="null"/></param>
+            /// <returns><see cref="ConfigurableString"/> or throws exception</returns>
+            public ConfigurableString Build(string rawValue)
+                => Build(rawValue, (val) => { /*no-op parser*/ });
+
+            /// <summary>
+            /// Validates input against all configured options, if all are met, creates the <see cref="ConfigurableString"/> instance, otherwise throws exception.
+            /// </summary>
+            /// <param name="rawValue">Can not be <see langowrd="null"/></param>
+            /// <param name="customParser">Can not be <see langowrd="null"/>. Applied after all options, as a final validation.</param>
+            /// <returns></returns>
             public ConfigurableString Build(string rawValue, Action<string> customParser)
             {
                 EnsureNotBuilt();
@@ -257,7 +436,7 @@ namespace Triplex.ProtoDomainPrimitives.Strings
 
                 _built = true;
 
-                return new ConfigurableString(rawValue, ComparisonStrategy);
+                return new ConfigurableString(rawValue, _comparisonStrategy);
             }
 
             private void EnsureNotBuilt()
@@ -270,29 +449,22 @@ namespace Triplex.ProtoDomainPrimitives.Strings
 
             private void CheckForNull(string rawValue, Action<string> customParser)
             {
-                if (customParser == null)
-                {
-                    throw new ArgumentNullException(nameof(customParser));
-                }
-
-                if (rawValue == null)
-                {
-                    throw new ArgumentNullException(nameof(rawValue), ArgumentNullErrorMessage.Value);
-                }
+                Arguments.NotNull(customParser, nameof(customParser));
+                Arguments.NotNull(rawValue, nameof(rawValue), _argumentNullErrorMessage.Value);
             }
 
             private void CheckLengthRange(string rawValue)
             {
-                StringLengthRange.Validate(MinLength ?? StringLength.Min, MaxLength ?? StringLength.Max);
+                StringLengthRange.Validate(_minLength ?? StringLength.Min, _maxLength ?? StringLength.Max);
 
-                if (MinLength != null && rawValue.Length < MinLength.Value)
+                if (_minLength != null && rawValue.Length < _minLength.Value)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue.Length, TooShortErrorMessage.Value);
+                    throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue.Length, _tooShortErrorMessage.Value);
                 }
 
-                if (MaxLength != null && rawValue.Length > MaxLength.Value)
+                if (_maxLength != null && rawValue.Length > _maxLength.Value)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue.Length, TooLongErrorMessage.Value);
+                    throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue.Length, _tooLongErrorMessage.Value);
                 }
             }
 
@@ -306,55 +478,61 @@ namespace Triplex.ProtoDomainPrimitives.Strings
                     return;
                 }
 
-                if (RequiresTrimmed)
+                if (_requiresTrimmed)
                 {
                     if (HasLeadingWhiteSpace() || HasTrailingWhiteSpace())
                     {
-                        throw new FormatException(InvalidFormatErrorMessage.Value);
+                        throw new FormatException(_invalidFormatErrorMessage.Value);
                     }
                 }
                 else
                 {
                     if (DoesNotAllowLeadingWhiteSpace && HasLeadingWhiteSpace())
                     {
-                        throw new FormatException(InvalidFormatErrorMessage.Value);
+                        throw new FormatException(_invalidFormatErrorMessage.Value);
                     }
 
                     if (DoesNotAllowTrailingWhiteSpace && HasTrailingWhiteSpace())
                     {
-                        throw new FormatException(InvalidFormatErrorMessage.Value);
+                        throw new FormatException(_invalidFormatErrorMessage.Value);
                     }
                 }
             }
 
             private void CheckForInvalidChars(string rawValue)
             {
-                if (InvalidCharsRegex == null)
+                if (_invalidCharsRegex == null)
                 {
                     return;
                 }
 
-                throw new NotImplementedException();
+                if (_invalidCharsRegex.IsMatch(rawValue))
+                {
+                    throw new FormatException(_invalidCharactersErrorMessage.Value);
+                }
             }
 
             private void CheckForValidFormat(string rawValue)
             {
-                if (ValidFormatRegex == null)
+                if (_validFormatRegex == null)
                 {
                     return;
                 }
 
-                throw new NotImplementedException();
+                if (!_validFormatRegex.IsMatch(rawValue))
+                {
+                    throw new FormatException(_invalidFormatErrorMessage.Value);
+                }
             }
 
             private void CheckForWhiteSpaces(string rawValue)
             {
-                bool CanNotBeEmpty() => MinLength != null && MinLength.Value > 0;
-                bool IsWhiteSpaceOnly() => rawValue.All(ch => char.IsWhiteSpace(ch));
+                bool CanNotBeEmpty() => _minLength != null && _minLength.Value > 0;
+                bool IsWhiteSpaceOnly() => rawValue.All(char.IsWhiteSpace);
 
                 if (DoesNotAllowWhiteSpacesOnly && CanNotBeEmpty() && IsWhiteSpaceOnly())
                 {
-                    throw new FormatException(InvalidFormatErrorMessage.Value);
+                    throw new FormatException(_invalidFormatErrorMessage.Value);
                 }
             }
         }
