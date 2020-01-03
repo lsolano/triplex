@@ -1,5 +1,6 @@
 ﻿using System;
 using Triplex.ProtoDomainPrimitives.Strings;
+using Triplex.Validations;
 
 namespace Triplex.ProtoDomainPrimitives.Exceptions
 {
@@ -8,33 +9,43 @@ namespace Triplex.ProtoDomainPrimitives.Exceptions
     /// </summary>
     public sealed class Message : IDomainPrimitive<string>
     {
-        private readonly NonEmptyOrWhiteSpaceString _wrapped;
-
         /// <summary>
         /// Validates input and returns new instance if everything is OK.
         /// </summary>
         /// <param name="rawValue">Can not be <see langword="null"/> or empty</param>
         /// <exception cref="ArgumentNullException">When <paramref name="rawValue"/> is <see langword="null"/>.</exception>
         /// <exception cref="FormatException">When <paramref name="rawValue"/> is empty or contains only white-spaces.</exception>
-        public Message(string rawValue) => _wrapped = new NonEmptyOrWhiteSpaceString(rawValue);
+        public Message(string rawValue)
+        {
+            Arguments.NotNull(rawValue, nameof(rawValue));
+
+            if (string.IsNullOrWhiteSpace(rawValue))
+            {
+                throw new FormatException("Cant be empty or white-space only.");
+            }
+
+            Value = rawValue;
+        }
 
         /// <summary>
         /// Wrapped value.
         /// </summary>
-        public string Value => _wrapped.Value;
+        public string Value { get; }
 
         /// <summary>
         /// Same as wrapped value comparison.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public int CompareTo(IDomainPrimitive<string> other) => _wrapped.CompareTo(other);
+        int IComparable<IDomainPrimitive<string>>.CompareTo(IDomainPrimitive<string> other) => CompareTo(other as Message);
+
+        public int CompareTo(Message? other) => string.CompareOrdinal(Value, other?.Value);
 
         /// <summary>
         /// Same as wrapped value equality.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IDomainPrimitive<string> other) => _wrapped.Equals(other);
+        public bool Equals(IDomainPrimitive<string> other) => Value.Equals(other?.Value, StringComparison.Ordinal);
     }
 }

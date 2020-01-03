@@ -1,4 +1,6 @@
 ﻿using System;
+using Triplex.ProtoDomainPrimitives.Exceptions;
+using Triplex.Validations;
 
 namespace Triplex.ProtoDomainPrimitives.Strings
 {
@@ -22,13 +24,15 @@ namespace Triplex.ProtoDomainPrimitives.Strings
         /// </summary>
         public const string InvalidCustomErrorMessageMessage = "'errorMessage' could not be null, empty or white-space only.";
 
+        private readonly ConfigurableString _value;
+
         /// <summary>
         /// Validates input and returns new instance if everything is OK.
         /// </summary>
         /// <param name="rawValue">Can not be <see langword="null"/> or empty</param>
         /// <exception cref="ArgumentNullException">When <paramref name="rawValue"/> is <see langword="null"/>.</exception>
         /// <exception cref="FormatException">When <paramref name="rawValue"/> is empty or contains only white-spaces.</exception>
-        public NonEmptyOrWhiteSpaceString(string rawValue) => Value = Validate(rawValue, DefaultErrorMessage);
+        public NonEmptyOrWhiteSpaceString(string rawValue) => _value = Validate(rawValue, DefaultErrorMessage);
 
         /// <summary>
         /// Validates input and returns new instance if everything is OK.
@@ -37,76 +41,70 @@ namespace Triplex.ProtoDomainPrimitives.Strings
         /// <param name="errorMessage">Custom error message</param>
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/>.</exception>
         /// <exception cref="FormatException">When <paramref name="rawValue"/> is empty or contains only white-spaces.</exception>
-        public NonEmptyOrWhiteSpaceString(string rawValue, string errorMessage) => Value = Validate(rawValue, errorMessage);
+        public NonEmptyOrWhiteSpaceString(string rawValue, string errorMessage) => _value = Validate(rawValue, errorMessage);
 
-        private static string Validate(string rawValue, string errorMessage)
+        private static ConfigurableString Validate(string rawValue, string errorMessage)
         {
-            if (errorMessage == null)
-            {
-                throw new ArgumentNullException(nameof(errorMessage), InvalidCustomErrorMessageMessage);
-            }
+            Arguments.NotNull(errorMessage, nameof(errorMessage), InvalidCustomErrorMessageMessage);
 
             if (string.IsNullOrWhiteSpace(errorMessage))
             {
                 throw  new FormatException(InvalidCustomErrorMessageMessage);
             }
 
-            if (rawValue == null)
-            {
-                throw new ArgumentNullException(nameof(rawValue), errorMessage);
-            }
+            Arguments.NotNull(rawValue, nameof(rawValue), errorMessage);
 
-            if (string.IsNullOrWhiteSpace(rawValue))
-            {
-                throw new FormatException(errorMessage);
-            }
+            ConfigurableString.Builder builder = new ConfigurableString.Builder(new Message(errorMessage))
+                .WithAllowWhiteSpacesOnly(false)
+                .WithComparisonStrategy(ComparisonStrategy);
 
-            return rawValue;
+            return builder.Build(rawValue);
         }
 
         ///<inheritdoc cref="IDomainPrimitive{TRawType}.Value"/>
-        public string Value { get; }
+        public string Value => _value.Value;
+
+        string IDomainPrimitive<string>.Value => _value.Value;
 
         /// <summary>
         /// Same as wrapped value.
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode() => Value.GetHashCode();
+        public override int GetHashCode() => _value.GetHashCode();
 
         /// <summary>
         /// Same as wrapped value.
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => Value;
+        public override string ToString() => _value.ToString();
+
+        int IComparable<IDomainPrimitive<string>>.CompareTo(IDomainPrimitive<string> other)
+            => CompareTo(other as NonEmptyOrWhiteSpaceString);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(NonEmptyOrWhiteSpaceString? other)
+            => _value.CompareTo(other);
 
         /// <summary>
         /// Same as wrapped value.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public override bool Equals(object? obj) => Equals(obj as NonEmptyOrWhiteSpaceString);
+        public override bool Equals(object? obj)
+            => Equals(obj as NonEmptyOrWhiteSpaceString);
+
+        bool IEquatable<IDomainPrimitive<string>>.Equals(IDomainPrimitive<string> other)
+            => Equals(other as NonEmptyOrWhiteSpaceString);
 
         /// <summary>
-        /// Same as wrapped value.
+        /// 
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public int CompareTo(IDomainPrimitive<string> other)
-            => string.Compare(Value, other?.Value, ComparisonStrategy);
-
-        /// <summary>
-        /// Same as wrapped value.
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IDomainPrimitive<string>? other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-
-            return ReferenceEquals(this, other) || Value.Equals(other.Value, ComparisonStrategy);
-        }
+        public bool Equals(NonEmptyOrWhiteSpaceString? other) => _value.Equals(other);
     }
 }

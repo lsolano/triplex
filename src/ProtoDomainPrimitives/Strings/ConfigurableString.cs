@@ -36,7 +36,7 @@ namespace Triplex.ProtoDomainPrimitives.Strings
         /// </summary>
         /// <param name="other">other</param>
         /// <returns></returns>
-        public int CompareTo(IDomainPrimitive<string> other)
+        public int CompareTo(IDomainPrimitive<string>? other)
         {
             if (other == null)
             {
