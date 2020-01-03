@@ -457,14 +457,16 @@ namespace Triplex.ProtoDomainPrimitives.Strings
             {
                 StringLengthRange.Validate(_minLength ?? StringLength.Min, _maxLength ?? StringLength.Max);
 
-                if (_minLength != null && rawValue.Length < _minLength.Value)
+                if (_minLength != null)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue.Length, _tooShortErrorMessage.Value);
+                    Arguments.GreaterThanOrEqualTo(rawValue.Length, _minLength.Value, nameof(rawValue),
+                        _tooShortErrorMessage.Value);
                 }
 
-                if (_maxLength != null && rawValue.Length > _maxLength.Value)
+                if (_maxLength != null)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue.Length, _tooLongErrorMessage.Value);
+                    Arguments.LessThanOrEqualTo(rawValue.Length, _maxLength.Value, nameof(rawValue),
+                        _tooLongErrorMessage.Value);
                 }
             }
 
