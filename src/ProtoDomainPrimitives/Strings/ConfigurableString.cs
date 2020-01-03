@@ -74,7 +74,7 @@ namespace Triplex.ProtoDomainPrimitives.Strings
         /// <returns></returns>
         public override int GetHashCode() => Value.GetHashCode();
 
-        /// <inheritdoc cref="Object.ToString()"/>
+        /// <inheritdoc cref="object.ToString()"/>
         public override string ToString() => Value;
 
         /// <summary>

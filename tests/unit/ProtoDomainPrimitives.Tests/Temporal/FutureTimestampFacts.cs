@@ -43,14 +43,14 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Temporal
             public void Rejects_Present_Value_With_Default_Error_Message()
             {
                 DateTimeOffset rawValue = DateTimeOffset.UtcNow;
-                Assert.That(() => new FutureTimestamp(DateTimeOffset.UtcNow), BuildArgumentOutOfRangeExceptionConstraint(rawValue, FutureTimestamp.DefaultErrorMessage));
+                Assert.That(() => new FutureTimestamp(rawValue), BuildArgumentOutOfRangeExceptionConstraint(rawValue, FutureTimestamp.DefaultErrorMessage));
             }
 
             [Test]
             public void Rejects_Present_Value_With_Custom_Error_Message()
             {
                 DateTimeOffset rawValue = DateTimeOffset.UtcNow;
-                Assert.That(() => new FutureTimestamp(DateTimeOffset.UtcNow, CustomErrorMessage), BuildArgumentOutOfRangeExceptionConstraint(rawValue, CustomErrorMessage));
+                Assert.That(() => new FutureTimestamp(rawValue, CustomErrorMessage), BuildArgumentOutOfRangeExceptionConstraint(rawValue, CustomErrorMessage));
             }
 
             private static IResolveConstraint BuildArgumentOutOfRangeExceptionConstraint(DateTimeOffset rawValue, Message errorMessage)

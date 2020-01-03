@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
+using Triplex.Validations.Utilities;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
 namespace Triplex.Validations
 {
     /// <summary>
@@ -17,7 +20,8 @@ namespace Triplex.Validations
         /// <param name="paramName">Parameter name, from caller's context.</param>
         /// <returns><paramref name="value"/></returns>
         /// <exception type="System.ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
-        public static TParamType NotNull<TParamType>(TParamType value, string paramName) where TParamType : class
+        [DebuggerStepThrough]
+        public static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType value, string paramName) where TParamType : class
             => value ?? ThrowArgumentNullException<TParamType>(paramName, null);
 
         /// <summary>
@@ -37,8 +41,16 @@ namespace Triplex.Validations
         /// <param name="customMessage">Custom exception error message</param>
         /// <returns><paramref name="value"/></returns>
         /// <exception type="System.ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
-        public static TParamType NotNull<TParamType>(TParamType value, string paramName, string customMessage) where TParamType : class
-            => value ?? ThrowArgumentNullException<TParamType>(paramName, customMessage);
+        [DebuggerStepThrough]
+        public static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType value, string paramName, string customMessage) where TParamType : class
+        {
+            if (customMessage == null)
+            {
+                throw new ArgumentNullException(nameof(customMessage));
+            }
+
+            return value ?? ThrowArgumentNullException<TParamType>(paramName, customMessage);
+        }
 
         private static TParamType ThrowArgumentNullException<TParamType>(string paramName, string? customMessage) where TParamType : class
         {
@@ -53,6 +65,7 @@ namespace Triplex.Validations
         #endregion
 
         #region Enumerations Checks
+
         /// <summary>
         /// Checks that the actual value is a valid enumeration constant.
         /// </summary>
@@ -61,6 +74,7 @@ namespace Triplex.Validations
         /// <param name="paramName">Parameter name</param>
         /// <returns><paramref name="value"/></returns>
         /// <exception cref="ArgumentOutOfRangeException">When <paramref name="value"/> is not within <typeparamref name="TEnumType"/></exception>
+        [DebuggerStepThrough]
         public static TEnumType ValidEnumerationMember<TEnumType>(TEnumType value, string paramName) where TEnumType : Enum
             => Enum.IsDefined(typeof(TEnumType), value) ? value : ThrowArgumentOutOfRangeExceptionForEnum(value, paramName, null);
 
@@ -73,6 +87,7 @@ namespace Triplex.Validations
         /// <param name="customMessage">Custom error message</param>
         /// <returns><paramref name="value"/></returns>
         /// <exception cref="ArgumentOutOfRangeException">When <paramref name="value"/> is not within <typeparamref name="TEnumType"/></exception>
+        [DebuggerStepThrough]
         public static TEnumType ValidEnumerationMember<TEnumType>(TEnumType value, string paramName, string customMessage) where TEnumType : Enum
             => Enum.IsDefined(typeof(TEnumType), value) ? value : ThrowArgumentOutOfRangeExceptionForEnum(value, paramName, customMessage);
 
@@ -82,7 +97,7 @@ namespace Triplex.Validations
 
             string finalMessage = customMessage
                                   ?? valueNotWithinEnumMessageTemplate.Replace("{enumType}", typeof(TEnumType).Name
-                                      #if NETSTANDARD
+                                      #if NETSTANDARD || NETCOREAPP
                                       ,StringComparison.Ordinal
                                       #endif
                                       );
@@ -94,103 +109,215 @@ namespace Triplex.Validations
 
         #region Out-of-range Checks
 
-        private sealed class ComparableRange<TComparable> where TComparable : struct, IComparable<TComparable>
+        /// <summary>
+        /// Checks that the given <paramref name="value"/> is less than <paramref name="other"/>. This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.
+        /// </summary>
+        /// <typeparam name="TComparable"></typeparam>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="other">Comparison target, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not less than <paramref name="other"/></exception>
+        public static TComparable LessThan<TComparable>([ValidatedNotNull] TComparable value,
+            [ValidatedNotNull] TComparable other, [ValidatedNotNull] string paramName)
+            where TComparable : IComparable<TComparable>
         {
-            internal ComparableRange(TComparable? min, TComparable? max) :this (min, true, max, true)
+            if (other == null)
             {
+                throw new ArgumentNullException(nameof(other));
             }
 
-            internal ComparableRange(TComparable? min, bool minInclusive, TComparable? max, bool maxInclusive)
-            {
-                if (!min.HasValue && !max.HasValue)
-                {
-                    throw new ArgumentException("Useless range detected, no min or max boundaries.");
-                }
-
-                if (min.HasValue && max.HasValue)
-                {
-                    bool minIsEqualsToOrGreaterThanMax = min.Value.CompareTo(max.Value) >= 0;
-                    if (minIsEqualsToOrGreaterThanMax)
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(min), min, "Must be less than {max}.");
-                    }
-                }
-
-                Min = min;
-                Max = max;
-                MinInclusive = minInclusive;
-                MaxInclusive = maxInclusive;
-            }
-
-            private TComparable? Min { get; }
-            private TComparable? Max { get; }
-            private bool MinInclusive { get; }
-            private bool MaxInclusive { get; }
-
-            internal TComparable IsWithin(TComparable value, string paramName, string customMessage)
-            {
-                CheckLowerBoundary(value, paramName, customMessage);
-
-                CheckUpperBoundary(value, paramName, customMessage);
-
-                return value;
-            }
-
-            private void CheckLowerBoundary(TComparable value, string paramName, string customMessage)
-            {
-                if (!Min.HasValue)
-                {
-                    return;
-                }
-
-                int valueVersusMinimum = value.CompareTo(Min.Value);
-                bool valueBelowMinimum = MinInclusive ? valueVersusMinimum < 0 : valueVersusMinimum <= 0;
-
-                if (!valueBelowMinimum)
-                {
-                    return;
-                }
-
-                string orEqualToOption = MinInclusive ? "or equal to " : string.Empty;
-                throw new ArgumentOutOfRangeException(paramName, value, customMessage ?? $"Must be greater than {orEqualToOption}{Min}.");
-            }
-
-            private void CheckUpperBoundary(TComparable value, string paramName, string customMessage)
-            {
-                if (!Max.HasValue)
-                {
-                    return;
-                }
-
-                int valueVersusMaximum = value.CompareTo(Max.Value);
-                bool valueIsAboveMaximum = MaxInclusive ? valueVersusMaximum > 0 : valueVersusMaximum >= 0;
-
-                if (!valueIsAboveMaximum)
-                {
-                    return;
-                }
-
-                string orEqualToOption = MaxInclusive ? "or equal to " : string.Empty;
-                throw new ArgumentOutOfRangeException(paramName, value, customMessage ?? $"Must be less than {orEqualToOption}{Max}.");
-            }
+            ComparableRange<TComparable> range = ComparableRangeFactory.WithMaxExclusiveOnly(SimpleOption.SomeNotNull(other));
+            return CheckBoundaries(value, range, paramName, null);
         }
 
-        public static TComparable LessThan<TComparable>(TComparable value, TComparable other, string paramName,
-            string customMessage) where TComparable : struct, IComparable<TComparable>
+        /// <summary>
+        /// Checks that the given <paramref name="value"/> is less than <paramref name="other"/>. This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.
+        /// </summary>
+        /// <typeparam name="TComparable"></typeparam>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="other">Comparison target, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <param name="customMessage">Custom error message, can not be <see langword="null"/></param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not less than <paramref name="other"/></exception>
+        [DebuggerStepThrough]
+        public static TComparable LessThan<TComparable>([ValidatedNotNull] TComparable value, [ValidatedNotNull] TComparable other, [ValidatedNotNull] string paramName,
+            [ValidatedNotNull] string customMessage) where TComparable : IComparable<TComparable>
         {
-            return CheckBoundaries(value, null, other, paramName, customMessage);
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            NotNull(customMessage, nameof(customMessage));
+
+            ComparableRange<TComparable> range = ComparableRangeFactory.WithMaxExclusiveOnly(SimpleOption.SomeNotNull(other));
+            return CheckBoundaries(value, range, paramName, customMessage);
         }
 
-        public static TComparable GreaterThan<TComparable>(TComparable value, TComparable other, string paramName,
-            string customMessage) where TComparable : struct, IComparable<TComparable>
+        /// <summary>
+        /// Checks that the given <paramref name="value"/> is less than or equal to <paramref name="other"/>.
+        /// This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.
+        /// </summary>
+        /// <typeparam name="TComparable"></typeparam>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="other">Comparison target, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not less than or equal to <paramref name="other"/></exception>
+        public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable value,
+            [ValidatedNotNull] TComparable other, [ValidatedNotNull] string paramName)
+            where TComparable : IComparable<TComparable>
         {
-            return CheckBoundaries(value, other, null, paramName, customMessage);
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            ComparableRange<TComparable> range = ComparableRangeFactory.WithMaxInclusiveOnly(SimpleOption.SomeNotNull(other));
+            return CheckBoundaries(value, range, paramName, null);
         }
 
-        private static TComparable CheckBoundaries<TComparable>(TComparable value, TComparable? min, TComparable? max,
-            string paramName, string customMessage) where TComparable : struct, IComparable<TComparable>
+        /// <summary>
+        /// Checks that the given <paramref name="value"/> is less than or equal to <paramref name="other"/>.
+        /// This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.
+        /// </summary>
+        /// <typeparam name="TComparable"></typeparam>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="other">Comparison target, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <param name="customMessage">Custom error message, can not be <see langword="null"/></param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not less than or equal to <paramref name="other"/></exception>
+        public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable value,
+            [ValidatedNotNull] TComparable other, string paramName, [ValidatedNotNull] string customMessage)
+            where TComparable : IComparable<TComparable>
         {
-            var range = new ComparableRange<TComparable>(min, max);
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+            NotNull(customMessage, nameof(customMessage));
+
+            ComparableRange<TComparable> range = ComparableRangeFactory.WithMaxInclusiveOnly(SimpleOption.SomeNotNull(other));
+            return CheckBoundaries(value, range, paramName, customMessage);
+        }
+
+        /// <summary>
+        /// Checks that the given <paramref name="value"/> is greater than <paramref name="other"/>.
+        /// This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.
+        /// </summary>
+        /// <typeparam name="TComparable"></typeparam>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="other">Comparison target, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not greater than <paramref name="other"/></exception>
+        [DebuggerStepThrough]
+        public static TComparable GreaterThan<TComparable>([ValidatedNotNull] TComparable value, [ValidatedNotNull] TComparable other, [ValidatedNotNull] string paramName) where TComparable : IComparable<TComparable>
+        {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            ComparableRange<TComparable> range = ComparableRangeFactory.WithMinExclusiveOnly(SimpleOption.SomeNotNull(other));
+            return CheckBoundaries(value, range, paramName, null);
+        }
+
+        /// <summary>
+        /// Checks that the given <paramref name="value"/> is greater than <paramref name="other"/>.
+        /// This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.
+        /// </summary>
+        /// <typeparam name="TComparable"></typeparam>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="other">Comparison target, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <param name="customMessage">Custom error message, can not be <see langword="null"/></param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not greater than <paramref name="other"/></exception>
+        [DebuggerStepThrough]
+        public static TComparable GreaterThan<TComparable>([ValidatedNotNull] TComparable value, [ValidatedNotNull] TComparable other, [ValidatedNotNull] string paramName,
+            [ValidatedNotNull] string customMessage) where TComparable : IComparable<TComparable>
+        {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+            NotNull(customMessage, nameof(customMessage));
+
+            ComparableRange<TComparable> range = ComparableRangeFactory.WithMinExclusiveOnly(SimpleOption.SomeNotNull(other));
+            return CheckBoundaries(value, range, paramName, customMessage);
+        }
+
+        /// <summary>
+        /// Checks that the given <paramref name="value"/> is greater than or equal to <paramref name="other"/>.
+        /// This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.
+        /// </summary>
+        /// <typeparam name="TComparable"></typeparam>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="other">Comparison target, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not greater than or equal to <paramref name="other"/></exception>
+        [DebuggerStepThrough]
+        public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable value, [ValidatedNotNull] TComparable other, [ValidatedNotNull] string paramName) where TComparable : IComparable<TComparable>
+        {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            ComparableRange<TComparable> range = ComparableRangeFactory.WithMinInclusiveOnly(SimpleOption.SomeNotNull(other));
+            return CheckBoundaries(value, range, paramName, null);
+        }
+
+        /// <summary>
+        /// Checks that the given <paramref name="value"/> is greater than or equal to <paramref name="other"/>.
+        /// This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.
+        /// </summary>
+        /// <typeparam name="TComparable"></typeparam>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="other">Comparison target, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <param name="customMessage">Custom error message, can not be <see langword="null"/></param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not greater than or equal to <paramref name="other"/></exception>
+        [DebuggerStepThrough]
+        public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable value, [ValidatedNotNull] TComparable other, [ValidatedNotNull] string paramName,
+            [ValidatedNotNull] string customMessage) where TComparable : IComparable<TComparable>
+        {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+            NotNull(customMessage, nameof(customMessage));
+
+            ComparableRange<TComparable> range = ComparableRangeFactory.WithMinInclusiveOnly(SimpleOption.SomeNotNull(other));
+            return CheckBoundaries(value, range, paramName, customMessage);
+        }
+
+        private static TComparable CheckBoundaries<TComparable>(
+            [ValidatedNotNull] TComparable value,
+            ComparableRange<TComparable> range,
+            [ValidatedNotNull] string paramName,
+            string? customMessage) where TComparable : IComparable<TComparable>
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            NotNull(paramName, nameof(paramName));
 
             return range.IsWithin(value, paramName, customMessage);
         }
@@ -198,3 +325,4 @@ namespace Triplex.Validations
         #endregion
     }
 }
+#pragma warning restore CA1303 // Do not pass literals as localized parameters
