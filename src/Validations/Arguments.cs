@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using Triplex.Validations.Exceptions;
 using Triplex.Validations.Utilities;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
@@ -11,7 +13,7 @@ namespace Triplex.Validations
     /// </summary>
     public static class Arguments
     {
-        #region Null Checks
+        #region Null and Empty Checks
         /// <summary>
         /// Checks that the provided value is not <see langword="null" />.
         /// </summary>
@@ -19,10 +21,10 @@ namespace Triplex.Validations
         /// <param name="value">Value to check</param>
         /// <param name="paramName">Parameter name, from caller's context.</param>
         /// <returns><paramref name="value"/></returns>
-        /// <exception type="System.ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
         [DebuggerStepThrough]
-        public static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType value, string paramName) where TParamType : class
-            => value ?? ThrowArgumentNullException<TParamType>(paramName, null);
+        public static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType value, [ValidatedNotNull] string paramName) where TParamType : class
+            => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)));
 
         /// <summary>
         /// Checks that the provided value is not <see langword="null" />.
@@ -40,27 +42,50 @@ namespace Triplex.Validations
         /// <param name="paramName">Parameter name, from caller's context.</param>
         /// <param name="customMessage">Custom exception error message</param>
         /// <returns><paramref name="value"/></returns>
-        /// <exception type="System.ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
         [DebuggerStepThrough]
-        public static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType value, string paramName, string customMessage) where TParamType : class
-        {
-            if (customMessage == null)
-            {
-                throw new ArgumentNullException(nameof(customMessage));
-            }
+        public static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType value, [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage) where TParamType : class
+            => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)), customMessage.ValueOrThrowIfNull(nameof(customMessage)));
 
-            return value ?? ThrowArgumentNullException<TParamType>(paramName, customMessage);
-        }
+        /// <summary>
+        /// Checks that the provided value is not <see langword="null" />, empty (zero length), or contains whie-space only characteres.
+        /// </summary>
+        /// <param name="value">Value to check</param>
+        /// <param name="paramName">Parameter name, from caller's context.</param>
+        /// <param name="customMessage">Custom exception error message</param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">If any paramete is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
+        /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
+        public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] string value, [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage)
+            => NotNullOrEmpty(value, paramName, customMessage)
+                    .ValueOrThrowIfWhiteSpaceOnly(paramName, customMessage);
 
-        private static TParamType ThrowArgumentNullException<TParamType>(string paramName, string? customMessage) where TParamType : class
-        {
-            if (customMessage == null)
-            {
-                throw new ArgumentNullException(paramName);
-            }
+        /// <summary>
+        /// Checks that the provided value is not <see langword="null" /> or empty (zero length).
+        /// </summary>
+        /// <param name="value">Value to check</param>
+        /// <param name="paramName">Parameter name, from caller's context.</param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">If any paramete is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
+        /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
+        public static string NotNullOrEmpty([ValidatedNotNull] string value, [ValidatedNotNull] string paramName)
+            => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)))
+                    .ValueOrThrowIfZeroLength<string>(paramName);
 
-            throw new ArgumentNullException(paramName, customMessage);
-        }
+        /// <summary>
+        /// Checks that the provided value is not <see langword="null" /> or empty (zero length).
+        /// </summary>
+        /// <param name="value">Value to check</param>
+        /// <param name="paramName">Parameter's name, can not be <see langword="null" /></param>
+        /// <param name="customMessage">Custom message, can not be <see langword="null" /></param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">If any paramete is <see langword = "null" />.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
+        public static string NotNullOrEmpty([ValidatedNotNull] string value, [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage)
+            => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)), customMessage.ValueOrThrowIfNull(nameof(customMessage)))
+                        .ValueOrThrowIfZeroLength<string>(paramName, customMessage);
 
         #endregion
 
@@ -106,6 +131,7 @@ namespace Triplex.Validations
         }
 
         #endregion
+
 
         #region Out-of-range Checks
 
@@ -321,6 +347,67 @@ namespace Triplex.Validations
 
             return range.IsWithin(value, paramName, customMessage);
         }
+
+        #endregion
+
+
+        #region Extionsion methods
+        private static T ValueOrThrowIfNull<T>(this T value, string paramName)
+        {
+            if (value != null)
+            {
+                return value;
+            }
+
+            throw new ArgumentNullException(paramName);
+        }
+
+        private static T ValueOrThrowIfNull<T>(this T value, string paramName, string customMessage)
+        {
+            if (value != null)
+            {
+                return value;
+            }
+
+            throw new ArgumentNullException(paramName, customMessage);
+        }
+
+        private static string ValueOrThrowIfZeroLength<T>(this string value, string paramName)
+        {
+            if (value.Length != 0)
+            {
+                return value;
+            }
+
+            throw new ArgumentOutOfRangeException(paramName, value.Length, "String can not be empty (zero length).");
+        }
+
+        private static string ValueOrThrowIfZeroLength<T>(this string value, string paramName, string customMessage)
+        {
+            if (value.Length != 0)
+            {
+                return value;
+            }
+
+            throw new ArgumentOutOfRangeException(paramName, value.Length, customMessage);
+        }
+
+        private static string ValueOrThrowIfWhiteSpaceOnly(this string value, string paramName)
+        {
+            return ValueOrThrowIfWhiteSpaceOnly(value, paramName, "Can not be white-space only.");
+        }
+
+        private static string ValueOrThrowIfWhiteSpaceOnly(this string value, string paramName, string customMessage)
+        {
+            if (value.Any(ch => ch.IsNotWhiteSpace()))
+            {
+                return value;
+            }
+
+            throw new ArgumentFormatException(paramName: paramName, message: customMessage);
+        }
+
+        private static bool IsNotWhiteSpace(this char ch) => !char.IsWhiteSpace(ch);
 
         #endregion
     }

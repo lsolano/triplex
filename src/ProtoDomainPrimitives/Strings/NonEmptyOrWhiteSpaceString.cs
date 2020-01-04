@@ -49,12 +49,11 @@ namespace Triplex.ProtoDomainPrimitives.Strings
 
             if (string.IsNullOrWhiteSpace(errorMessage))
             {
-                throw  new FormatException(InvalidCustomErrorMessageMessage);
+                throw new FormatException(InvalidCustomErrorMessageMessage);
             }
 
-            Arguments.NotNull(rawValue, nameof(rawValue), errorMessage);
-
-            ConfigurableString.Builder builder = new ConfigurableString.Builder(new Message(errorMessage))
+            ConfigurableString.Builder builder = new ConfigurableString.Builder(new Message(errorMessage), useSingleMessage: true)
+                .WithMinLength(new Numerics.StringLength(1))
                 .WithAllowWhiteSpacesOnly(false)
                 .WithComparisonStrategy(ComparisonStrategy);
 

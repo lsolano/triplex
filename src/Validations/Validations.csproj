@@ -20,9 +20,9 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
-        <Version>0.2.0</Version>
+        <Version>0.3.0</Version>
         <Nullable>enable</Nullable>
-        <PackageReleaseNotes>Adding out of range arguments checks: LessThan, LessThanOrEqualTo, GreaterThan, GreaterThanOrEqualto</PackageReleaseNotes>
+        <PackageReleaseNotes>Emptyness check for strings: NotNullOrEmpty(), NotNullEmptyOrWhiteSpaceOnly()</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

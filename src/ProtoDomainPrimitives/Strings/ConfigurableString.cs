@@ -82,7 +82,7 @@ namespace Triplex.ProtoDomainPrimitives.Strings
         /// This builder is for only one usage, after calling <see cref="Build(string)"/> or <see cref="Build(string,System.Action{string})"/>
         /// subsequent calls will throw <see cref="InvalidOperationException"/>.
         /// </summary>
-        public  sealed class Builder
+        public sealed class Builder
         {
             private static readonly Message DefaultTooShortErrorMessage = new Message("Input string is too short.");
             private static readonly Message DefaultTooLongErrorMessage = new Message("Input string is too long.");
@@ -120,6 +120,24 @@ namespace Triplex.ProtoDomainPrimitives.Strings
                 => _argumentNullErrorMessage = Arguments.NotNull(argumentNullErrorMessage, nameof(argumentNullErrorMessage));
 
             /// <summary>
+            /// Creates a builder with the error message to be used when input value is <see langword="null"/>.
+            /// </summary>
+            /// <param name="argumentNullErrorMessage">Required</param>
+            /// <param name="useSingleMessage">If <see langword="true"/> the same error message (<paramref name="argumentNullErrorMessage"/>) will be used on all exception situations.</param>
+            public Builder(Message argumentNullErrorMessage, bool useSingleMessage)
+            {
+                _argumentNullErrorMessage = Arguments.NotNull(argumentNullErrorMessage, nameof(argumentNullErrorMessage));
+
+                if (useSingleMessage)
+                {
+                    _tooShortErrorMessage = _argumentNullErrorMessage;
+                    _tooLongErrorMessage = _argumentNullErrorMessage;
+                    _invalidCharactersErrorMessage = _argumentNullErrorMessage;
+                    _invalidFormatErrorMessage = _argumentNullErrorMessage;
+                }
+            }
+
+            /// <summary>
             /// If not set, defaults to <see cref="StringComparison.InvariantCulture"/>.
             /// </summary>
             /// <param name="comparisonStrategy"></param>
@@ -128,6 +146,16 @@ namespace Triplex.ProtoDomainPrimitives.Strings
             /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithComparisonStrategy(StringComparison comparisonStrategy)
                 => CheckPreconditionsAndExecute(() => _comparisonStrategy = Arguments.ValidEnumerationMember(comparisonStrategy, nameof(comparisonStrategy)));
+
+            /// <summary>
+            /// Sets the minimum allowed length.
+            /// </summary>
+            /// <param name="minLength">Can not be <see langword="null"/>.</param>
+            /// <returns>Self</returns>
+            /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+            /// <exception cref="InvalidOperationException">If already built.</exception>
+            public Builder WithMinLength(StringLength minLength)
+                => CheckPreconditionsAndExecute(() => _minLength = Arguments.NotNull(minLength, nameof(minLength)));
 
             /// <summary>
             /// Sets the minimum allowed length and associated violation message.
@@ -228,12 +256,7 @@ namespace Triplex.ProtoDomainPrimitives.Strings
             /// <returns></returns>
             /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithAllowLeadingWhiteSpace(bool allowLeadingWhiteSpace, Message invalidFormatErrorMessage)
-            {
-                return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, () =>
-                {
-                    _allowLeadingWhiteSpace = allowLeadingWhiteSpace;
-                });
-            }
+                => CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, () => _allowLeadingWhiteSpace = allowLeadingWhiteSpace);
 
             /// <summary>
             /// 
@@ -253,7 +276,7 @@ namespace Triplex.ProtoDomainPrimitives.Strings
             /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithAllowTrailingWhiteSpace(bool allowTrailingWhiteSpace, Message invalidFormatErrorMessage)
             {
-                return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, 
+                return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage,
                     () => _allowTrailingWhiteSpace = allowTrailingWhiteSpace);
             }
 
@@ -264,7 +287,7 @@ namespace Triplex.ProtoDomainPrimitives.Strings
             /// <returns></returns>
             /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithAllowWhiteSpacesOnly(bool allowWhiteSpacesOnly)
-                => WithAllowWhiteSpacesOnly(allowWhiteSpacesOnly, DefaultInvalidFormatErrorMessage);
+                => CheckPreconditionsAndExecute(() => SetAllowWhiteSpacesOnly(allowWhiteSpacesOnly));
 
             /// <summary>
             /// 
@@ -274,16 +297,17 @@ namespace Triplex.ProtoDomainPrimitives.Strings
             /// <returns></returns>
             /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithAllowWhiteSpacesOnly(bool allowWhiteSpacesOnly, Message invalidFormatErrorMessage)
-            {
-                return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, () =>
-                {
-                    _allowWhiteSpacesOnly = allowWhiteSpacesOnly;
+                => CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage,
+                    () => SetAllowWhiteSpacesOnly(allowWhiteSpacesOnly));
 
-                    if (allowWhiteSpacesOnly)
-                    {
-                        _allowLeadingWhiteSpace = _allowTrailingWhiteSpace = true;
-                    }
-                });
+            private void SetAllowWhiteSpacesOnly(bool allowWhiteSpacesOnly)
+            {
+                _allowWhiteSpacesOnly = allowWhiteSpacesOnly;
+
+                if (allowWhiteSpacesOnly)
+                {
+                    _allowLeadingWhiteSpace = _allowTrailingWhiteSpace = true;
+                }
             }
 
             /// <summary>
@@ -356,7 +380,7 @@ namespace Triplex.ProtoDomainPrimitives.Strings
             /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithValidFormatPattern(string pattern, Message invalidFormatErrorMessage)
             {
-                return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, 
+                return CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage,
                     () => _validFormatRegex = new Regex(Arguments.NotNull(pattern, nameof(pattern)),
                         RegexOptions.Compiled | RegexOptions.CultureInvariant, Regex.InfiniteMatchTimeout));
             }
@@ -378,7 +402,7 @@ namespace Triplex.ProtoDomainPrimitives.Strings
             /// <returns></returns>
             /// <exception cref="InvalidOperationException">If already built.</exception>
             public Builder WithValidFormatRegex(Regex regex, Message invalidFormatErrorMessage)
-                => CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage, 
+                => CheckPreconditionsTrySetInvalidFormatErrorMessageAndExecute(invalidFormatErrorMessage,
                     () => _validFormatRegex = Arguments.NotNull(regex, nameof(regex)));
 
             private Builder CheckPreconditionsAndExecute(Action checkAndSet)

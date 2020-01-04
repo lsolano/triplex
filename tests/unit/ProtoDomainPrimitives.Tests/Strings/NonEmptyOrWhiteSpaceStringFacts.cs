@@ -38,11 +38,19 @@ namespace Triplex.ProtoDomainPrimitives.Tests.Strings
 
             [Test]
             public void Rejects_Invalid_Values(
-                [Values("", " ", "\n", "\r", "\t")] string rawValue)
+                [Values(" ", "\n", "\r", "\t")] string rawValue)
                 => Assert.That(() => Build(rawValue, UseCustomMessage), 
                     Throws.InstanceOf<FormatException>()
                         .With.Message.StartWith(_expectedErrorMessage)
                         .And.Message.Contain(ParamName));
+
+            [Test]
+            public void Rejects_Empty_With_ArgumentOutOfRangeException() {
+                Assert.That(() => Build(string.Empty, UseCustomMessage),
+                    Throws.InstanceOf<ArgumentOutOfRangeException>()
+                        .With.Message.StartWith(_expectedErrorMessage)
+                        .And.Message.Contain(ParamName));
+            }
 
             [Test]
             public void Rejects_Null_Error_Message()
