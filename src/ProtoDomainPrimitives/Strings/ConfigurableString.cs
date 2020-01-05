@@ -116,14 +116,16 @@ namespace Triplex.ProtoDomainPrimitives.Strings
             /// </summary>
             /// <param name="argumentNullErrorMessage">Required</param>
             /// <exception cref="ArgumentNullException">When <paramref name="argumentNullErrorMessage"/> is <see langword="null"/></exception>
-            public Builder(Message argumentNullErrorMessage)
-                => _argumentNullErrorMessage = Arguments.NotNull(argumentNullErrorMessage, nameof(argumentNullErrorMessage));
+            public Builder(Message argumentNullErrorMessage) : this(argumentNullErrorMessage, false)
+            {
+            }
 
             /// <summary>
             /// Creates a builder with the error message to be used when input value is <see langword="null"/>.
             /// </summary>
             /// <param name="argumentNullErrorMessage">Required</param>
             /// <param name="useSingleMessage">If <see langword="true"/> the same error message (<paramref name="argumentNullErrorMessage"/>) will be used on all exception situations.</param>
+            /// <exception cref="ArgumentNullException">When <paramref name="argumentNullErrorMessage"/> is <see langword="null"/></exception>
             public Builder(Message argumentNullErrorMessage, bool useSingleMessage)
             {
                 _argumentNullErrorMessage = Arguments.NotNull(argumentNullErrorMessage, nameof(argumentNullErrorMessage));
