@@ -1,5 +1,6 @@
 ﻿using System;
 using Triplex.ProtoDomainPrimitives.Exceptions;
+using Triplex.Validations;
 
 namespace Triplex.ProtoDomainPrimitives.Numerics
 {
@@ -38,14 +39,6 @@ namespace Triplex.ProtoDomainPrimitives.Numerics
         {
         }
 
-        private static int Validate(int rawValue, Message errorMessage)
-        {
-            if (rawValue >= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue, errorMessage.Value);
-            }
-
-            return rawValue;
-        }
+        private static int Validate(int rawValue, Message errorMessage) => Arguments.LessThan(rawValue, 0, nameof(rawValue), errorMessage.Value);
     }
 }

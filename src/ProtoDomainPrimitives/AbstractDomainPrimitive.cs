@@ -1,5 +1,6 @@
 ﻿using System;
 using Triplex.ProtoDomainPrimitives.Exceptions;
+using Triplex.Validations;
 
 namespace Triplex.ProtoDomainPrimitives
 {
@@ -18,17 +19,7 @@ namespace Triplex.ProtoDomainPrimitives
         /// <exception cref="ArgumentNullException">When <paramref name="validator"/> is <see langword="null"/>.</exception>
         protected AbstractDomainPrimitive(TRawType rawValue, Message errorMessage, Func<TRawType, Message, TRawType> validator)
         {
-            if (errorMessage == null)
-            {
-                throw new ArgumentNullException(nameof(errorMessage));
-            }
-
-            if (validator == null)
-            {
-                throw new ArgumentNullException(nameof(validator));
-            }
-
-            Value = validator(rawValue, errorMessage);
+            Value = Arguments.NotNull(validator, nameof(validator)).Invoke(rawValue, Arguments.NotNull(errorMessage, nameof(errorMessage)));
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using Triplex.ProtoDomainPrimitives.Exceptions;
+using Triplex.Validations;
 
 namespace Triplex.ProtoDomainPrimitives.Numerics
 {
@@ -39,18 +40,6 @@ namespace Triplex.ProtoDomainPrimitives.Numerics
         }
 
         private static int Validate(int rawValue, Message errorMessage)
-        {
-            if (errorMessage == null)
-            {
-                throw new ArgumentNullException(nameof(errorMessage), InvalidCustomErrorMessageMessage.Value);
-            }
-
-            if (rawValue < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue, errorMessage.Value);
-            }
-
-            return rawValue;
-        }
+            => Arguments.GreaterThan(rawValue, 0, nameof(rawValue), errorMessage.Value);
     }
 }

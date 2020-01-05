@@ -1,5 +1,6 @@
 ﻿using System;
 using Triplex.ProtoDomainPrimitives.Exceptions;
+using Triplex.Validations;
 
 namespace Triplex.ProtoDomainPrimitives.Temporal
 {
@@ -33,16 +34,7 @@ namespace Triplex.ProtoDomainPrimitives.Temporal
         {
         }
 
-        private static DateTimeOffset Validate(DateTimeOffset rawValue, Message errorMessage) {
-            if (errorMessage == null) {
-                throw new ArgumentNullException(nameof(errorMessage));
-            }
-
-            if (rawValue.ToUniversalTime() <= DateTimeOffset.UtcNow) {
-                throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue, errorMessage.Value);
-            }
-
-            return rawValue;
-        }
+        private static DateTimeOffset Validate(DateTimeOffset rawValue, Message errorMessage)
+            => Arguments.GreaterThan(rawValue, DateTimeOffset.UtcNow, nameof(rawValue), errorMessage.Value);
     }
 }
