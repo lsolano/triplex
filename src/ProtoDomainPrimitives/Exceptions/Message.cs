@@ -39,6 +39,11 @@ namespace Triplex.ProtoDomainPrimitives.Exceptions
         /// <returns></returns>
         int IComparable<IDomainPrimitive<string>>.CompareTo(IDomainPrimitive<string> other) => CompareTo(other as Message);
 
+        /// <summary>
+        /// Compares with <see cref="StringComparison.Ordinal"/> strategy both wrapped values.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public int CompareTo(Message? other) => string.CompareOrdinal(Value, other?.Value);
 
         /// <summary>
