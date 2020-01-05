@@ -15,7 +15,7 @@ namespace Triplex.Validations.ArgumentsHelpers
                     .ValueOrThrowIfWhiteSpaceOnly(paramName, customMessage);
 
         internal static string NotNullOrEmpty([ValidatedNotNull] string value, [ValidatedNotNull] string paramName)
-            => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)))
+            => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)).ValueOrThrowIfZeroLength<string>(nameof(paramName)))
                     .ValueOrThrowIfZeroLength<string>(paramName);
 
         internal static string NotNullOrEmpty([ValidatedNotNull] string value, [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage)
