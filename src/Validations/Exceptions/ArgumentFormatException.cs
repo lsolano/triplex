@@ -8,6 +8,7 @@ namespace Triplex.Validations.Exceptions
     /// usually refering to a <see cref="String"/> or simmilar.
     /// </summary>
 #pragma warning disable CA1032 // Implement standard exception constructors
+    [Serializable]
     public sealed class ArgumentFormatException : ArgumentException
 #pragma warning restore CA1032 // Implement standard exception constructors
     {
@@ -46,6 +47,10 @@ namespace Triplex.Validations.Exceptions
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
         public ArgumentFormatException(string paramName, string message, Exception innerException) : base(paramName: paramName, message: message, innerException: innerException)
+        {
+        }
+
+        private ArgumentFormatException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext) : base(serializationInfo, streamingContext)
         {
         }
     }

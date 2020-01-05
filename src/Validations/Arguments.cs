@@ -52,6 +52,18 @@ namespace Triplex.Validations
         /// </summary>
         /// <param name="value">Value to check</param>
         /// <param name="paramName">Parameter name, from caller's context.</param>
+        /// <returns><paramref name="value"/></returns>
+        /// <exception cref="ArgumentNullException">If any paramete is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
+        /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
+        public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] string value, [ValidatedNotNull] string paramName)
+            => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName);
+
+        /// <summary>
+        /// Checks that the provided value is not <see langword="null" />, empty (zero length), or contains whie-space only characteres.
+        /// </summary>
+        /// <param name="value">Value to check</param>
+        /// <param name="paramName">Parameter name, from caller's context.</param>
         /// <param name="customMessage">Custom exception error message</param>
         /// <returns><paramref name="value"/></returns>
         /// <exception cref="ArgumentNullException">If any paramete is <see langword="null"/>.</exception>
