@@ -52,16 +52,6 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         }
 
 
-        //[TestCase(" ")]
-        //[TestCase("\n")]
-        //[TestCase("\r")]
-        //[TestCase("\t")]
-        //[TestCase("\n\r\t ")]
-        //public void With_Common_White_Space_Value_Throws_ArgumentFormatException(string dummyParam)
-        //{
-        //    Assert.That(() => Arguments.NotNullOrEmpty(dummyParam, nameof(dummyParam)),
-        //        Throws.InstanceOf<Exceptions.ArgumentFormatException>()
-        //        .With.Property(nameof(ArgumentException.ParamName)).EqualTo(nameof(dummyParam)));
-        //}
+
     }
 }
