@@ -76,7 +76,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [TestCase("peter")]
         [TestCase("parker ")]
         [TestCase(" Peter Parker Is Spiderman ")]
-        public void With_Valid_Values_Returns_Input_Value(string someValue)
+        public void With_Valid_Values_Returns_Input_Value(in string someValue)
         {
             string validatedValue = Arguments.NotNullEmptyOrWhiteSpaceOnly(someValue, nameof(someValue), CustomMessage);
 

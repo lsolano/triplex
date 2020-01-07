@@ -85,7 +85,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
                 Assert.That(() => NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage), exceptionConstraint);
             }
 
-            private static Constraint AddMessageConstraint(Constraint messageConstraint, bool useCustomErrorMessage)
+            private static Constraint AddMessageConstraint(in Constraint messageConstraint, in bool useCustomErrorMessage)
                 => useCustomErrorMessage ? messageConstraint.With.Message.StartsWith(CustomMessage) : messageConstraint;
         }
 
@@ -100,7 +100,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
             [TestCase("\r")]
             [TestCase("\t")]
             [TestCase("\n\r\t ")]
-            public void With_Common_White_Space_Sequences_Value_Throws_Nothing(string dummyParam)
+            public void With_Common_White_Space_Sequences_Value_Throws_Nothing(in string dummyParam)
             {
                 string myDummyValue = NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage);
 
@@ -110,7 +110,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
             [TestCase("peter")]
             [TestCase("parker ")]
             [TestCase(" Peter Parker Is Spiderman ")]
-            public void With_Non_Empty_Values_Throws_Nothing(string someParam)
+            public void With_Non_Empty_Values_Throws_Nothing(in string someParam)
             {
                 string myDummyValue = NotNullOrEmpty(someParam, nameof(someParam), CustomMessage, UseCustomErrorMessage);
 
@@ -118,7 +118,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
             }
         }
 
-        private static string NotNullOrEmpty(string value, string paramName, string customMessage, bool useCustomErrorMessage)
+        private static string NotNullOrEmpty(in string value, in string paramName, in string customMessage, in bool useCustomErrorMessage)
             => useCustomErrorMessage ? Arguments.NotNullOrEmpty(value, paramName, customMessage) : Arguments.NotNullOrEmpty(value, paramName);
     }
 }

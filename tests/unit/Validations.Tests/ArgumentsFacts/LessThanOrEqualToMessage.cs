@@ -19,21 +19,21 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [TestCase(0, 1)]
         [TestCase(1, 1)]
         [TestCase(-2, 1)]
-        public void With_Valid_Integers_Throws_Nothing(int theValue, int other)
+        public void With_Valid_Integers_Throws_Nothing(in int theValue, in int other)
         {
             int validatedValue = Arguments.LessThanOrEqualTo(theValue, other, nameof(theValue), CustomError);
 
             Assert.That(validatedValue, Is.EqualTo(theValue));
         }
 
-        [TestCase(-2, -1)]
-        [TestCase(-1, -1)]
-        [TestCase(-1, 0)]
-        [TestCase(0, 0)]
-        [TestCase(0, 1)]
-        [TestCase(1, 1)]
-        [TestCase(-2, 1)]
-        public void With_Valid_Longs_Throws_Nothing(long theValue, long other)
+        [TestCase(-2L, -1L)]
+        [TestCase(-1L, -1L)]
+        [TestCase(-1L, 0L)]
+        [TestCase(0L, 0L)]
+        [TestCase(0L, 1L)]
+        [TestCase(1L, 1L)]
+        [TestCase(-2L, 1L)]
+        public void With_Valid_Longs_Throws_Nothing(in long theValue, in long other)
         {
             long validatedValue = LessThanOrEqualTo(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage);
 
@@ -45,7 +45,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [TestCase("b", "c")]
         [TestCase("c", "c")]
         [TestCase("a", "c")]
-        public void With_Valid_Strings_Throws_Nothing(string theValue, string other)
+        public void With_Valid_Strings_Throws_Nothing(in string theValue, in string other)
         {
             string validatedValue = LessThanOrEqualTo(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage);
 
@@ -72,7 +72,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
                 throwsOutOfRange);
         }
 
-        private Constraint BuildConstraint(object theValue, object other, string paramName, string customError)
+        private Constraint BuildConstraint(in object theValue, in object other, in string paramName, in string customError)
         {
             Constraint throwsOutOfRange = Throws.InstanceOf<ArgumentOutOfRangeException>()
                 .With.Property(nameof(ArgumentOutOfRangeException.ActualValue)).EqualTo(theValue)
@@ -116,7 +116,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
                     .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
         }
 
-        private static TComparable LessThanOrEqualTo<TComparable>(TComparable value, TComparable other, string paramName, string customError, bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
+        private static TComparable LessThanOrEqualTo<TComparable>(in TComparable value, in TComparable other, in string paramName, in string customError, in bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
         {
             return useCustomErrorMessage
                 ? Arguments.LessThanOrEqualTo(value, other, paramName, customError)

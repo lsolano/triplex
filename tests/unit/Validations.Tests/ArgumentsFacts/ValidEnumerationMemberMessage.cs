@@ -34,7 +34,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
 
         [TestCase(Color.Black)]
         [TestCase(Color.White)]
-        public void With_Valid_Constants_Returns_Value(Color someColor)
+        public void With_Valid_Constants_Returns_Value(in Color someColor)
         {
             Color validatedColor =
                 ValidEnumerationMember(someColor, nameof(someColor), "some custom error msg", UseCustomErrorMessage);
@@ -50,7 +50,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         private static readonly string DefaultErrorTemplate = $"Value is not a member of enum {{typeName}}. (Parameter '{{paramName}}'){Environment.NewLine}Actual value was {{actualValue}}.";
         private static readonly string CustomErrorTemplate = $"{{prefix}} (Parameter '{{paramName}}'){Environment.NewLine}Actual value was {{actualValue}}.";
 #endif
-        private static string BuildExpectedMessageForValidEnumerationMember(object value, string typeName, string paramName, string customErrorMessage, bool useCustomErrorMessage)
+        private static string BuildExpectedMessageForValidEnumerationMember(in object value, in string typeName, in string paramName, in string customErrorMessage, in bool useCustomErrorMessage)
         {
             string baseMessage = useCustomErrorMessage
                 ? CustomErrorTemplate.Replace("{prefix}", customErrorMessage)
@@ -60,8 +60,8 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
                               .Replace("{actualValue}", value.ToString());
         }
 
-        private static TValue ValidEnumerationMember<TValue>(TValue value, string paramName, string customMessage,
-            bool useCustomMessage) where TValue : Enum
+        private static TValue ValidEnumerationMember<TValue>(in TValue value, in string paramName, in string customMessage,
+            in bool useCustomMessage) where TValue : Enum
         {
             return useCustomMessage ? Arguments.ValidEnumerationMember(value, paramName, customMessage) : Arguments.ValidEnumerationMember(value, paramName);
         }

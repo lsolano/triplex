@@ -4,7 +4,7 @@ namespace Triplex.Validations.Utilities
 {
     internal static class SimpleOption
     {
-        internal static SimpleOption<T> SomeNotNull<T>(T value)
+        internal static SimpleOption<T> SomeNotNull<T>(in T value)
             => new SimpleOption<T>(value, value != null);
 
         internal static SimpleOption<T> None<T>()
@@ -15,7 +15,7 @@ namespace Triplex.Validations.Utilities
     {
         private readonly T _value;
 
-        internal SimpleOption(T value, bool hasValue) {
+        internal SimpleOption(in T value, in bool hasValue) {
             _value = value;
             HasValue = hasValue;
         }
