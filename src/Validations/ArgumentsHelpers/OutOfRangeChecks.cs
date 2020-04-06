@@ -69,6 +69,23 @@ namespace Triplex.Validations.ArgumentsHelpers
             return CheckBoundaries(value, range, paramName, customMessage.ValueOrThrowIfNull(nameof(customMessage)));
         }
 
+        internal static TComparable Between<TComparable>(
+            [ValidatedNotNull] in TComparable value,
+            [ValidatedNotNull] in TComparable fromInclusive,
+            [ValidatedNotNull] in TComparable toInclusive,
+            [ValidatedNotNull] in string paramName,
+            [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>{
+                ComparableRange<TComparable> range = new ComparableRange<TComparable>(
+                    SimpleOption.SomeNotNull(fromInclusive.ValueOrThrowIfNull(nameof(fromInclusive))),
+                    SimpleOption.SomeNotNull(toInclusive.ValueOrThrowIfNull(nameof(toInclusive))));
+
+                return range.IsWithin(
+                            value.ValueOrThrowIfNull(nameof(value)),
+                            paramName.ValueOrThrowIfNull(nameof(customMessage)),
+                            customMessage.ValueOrThrowIfNull(nameof(customMessage)));
+                
+        }
+
         private static TComparable CheckBoundaries<TComparable>(
             [ValidatedNotNull] in TComparable value,
             in ComparableRange<TComparable> range,

@@ -3,6 +3,9 @@ using System.Diagnostics;
 using Triplex.Validations.ArgumentsHelpers;
 using Triplex.Validations.Exceptions;
 using Triplex.Validations.Utilities;
+using System.Text.RegularExpressions;
+using System.Linq;
+using Triplex.Validations.Algorithms.Checksum;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
 namespace Triplex.Validations
@@ -130,7 +133,6 @@ namespace Triplex.Validations
 
         #endregion
 
-
         #region Out-of-range Checks
 
         /// <summary>
@@ -249,8 +251,8 @@ namespace Triplex.Validations
             => OutOfRangeChecks.GreaterThanOrEqualTo(value, other, paramName);
 
         /// <summary>
-        /// Checks that the given <paramref name="value"/> is greater than or equal to <paramref name="other"/>.
-        /// This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.
+        /// <p>Checks that the given <paramref name="value"/> is greater than or equal to <paramref name="other"/>.</p>
+        /// <p>This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.</p>
         /// </summary>
         /// <typeparam name="TComparable"></typeparam>
         /// <param name="value">Value to check, can not be <see langword="null"/></param>
@@ -264,6 +266,75 @@ namespace Triplex.Validations
         public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable value, [ValidatedNotNull] in TComparable other, [ValidatedNotNull] in string paramName,
             [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.GreaterThanOrEqualTo(value, other, paramName, customMessage);
+
+        /// <summary>
+        /// <p>Checks that the given <paramref name="value"/> is between [<paramref name="fromInclusive"/>, <paramref name="toInclusive"/>] (closed range).</p>
+        /// <p>This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.</p>
+        /// </summary>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="fromInclusive">Lower bound, can not be <see langword="null"/></param>
+        /// <param name="toInclusive">Upper bound, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <param name="customMessage">Custom error message, can not be <see langword="null"/></param>
+        /// <typeparam name="TComparable"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not between [<paramref name="fromInclusive"/>, <paramref name="toInclusive"/>]</exception>
+        [DebuggerStepThrough]
+        public static TComparable Between<TComparable>(
+            [ValidatedNotNull] in TComparable value,
+            [ValidatedNotNull] in TComparable fromInclusive,
+            [ValidatedNotNull] in TComparable toInclusive,
+            [ValidatedNotNull] in string paramName,
+            [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>
+                => OutOfRangeChecks.Between(value, fromInclusive, toInclusive, paramName, customMessage);
+
+        #endregion
+
+        #region Checksum algorithms
+
+        private static Regex LuhnDigitsRegex = new Regex("[0-9]{2}", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Validates that the given argument (<paramref name="value" />) has a valid checksum digit as described by the Luhn algorithm or Luhn formula.
+        /// </summary>
+        /// <remarks>
+        /// See https://en.wikipedia.org/wiki/Luhn_algorithm and https://www.investopedia.com/terms/l/luhn-algorithm.asp
+        /// </remarks>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <param name="customMessage">Custom error message, can not be <see langword="null"/></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="ArgumentFormatException">If <paramref name="value"/> is not valid as described by the Luhn algorithm.</exception>
+        [DebuggerStepThrough]
+        public static string ValidLuhnChecksum([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+        {
+            (string validParamName, string validCustomMessage) =
+                (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
+                 customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(customMessage)));
+
+            string notNullValue = NullAndEmptyChecks.NotNull(value, validParamName);
+
+            ValidateLuhnSequenceFormat(notNullValue, validCustomMessage);
+
+            return LuhnFormula.IsValid(ToDigitsArray(notNullValue)) ? notNullValue : throw new FormatException(validCustomMessage);
+        }
+
+        private static void ValidateLuhnSequenceFormat(in string notNullValue, in string validCustomMessage)
+        {
+            bool hasInvalidFormat = !LuhnDigitsRegex.IsMatch(notNullValue);
+            if (hasInvalidFormat)
+            {
+                throw new FormatException(validCustomMessage);
+            }
+        }
+        
+        private static int[] ToDigitsArray(string notNullValue)
+        {
+            const int zeroAsciiCode = '0';
+            return notNullValue.Select(ch => ch - zeroAsciiCode).ToArray();
+        }
 
         #endregion
     }

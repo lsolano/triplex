@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Triplex.Validations.Exceptions;
-using System.CodeDom.Compiler;
 
 namespace Triplex.Validations.ArgumentsHelpers
 {
@@ -94,6 +93,12 @@ namespace Triplex.Validations.ArgumentsHelpers
                                       );
 
             throw new ArgumentOutOfRangeException(paramName, value, finalMessage);
+        }
+
+        internal static TType[] ValueOrThrowIfNullOrWithLessThanElements<TType>(this TType[] value, in int minimumElements, in string paramName) {
+            OutOfRangeChecks.GreaterThanOrEqualTo(ValueOrThrowIfNull(value, paramName).Length, minimumElements, paramName);
+
+            return value;
         }
     }
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
