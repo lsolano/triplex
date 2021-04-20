@@ -15,7 +15,7 @@ namespace Triplex.Validations.Algorithms.Checksum
         /// <param name="fullDigits">Can not be <see langword="null"/></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">If <paramref name="fullDigits"/> is <see langword="null"/></exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">If <paramref name="fullDigits"/> is hass less than two digits.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">If <paramref name="fullDigits"/> is has less than two digits.</exception>
         public static bool IsValid([ValidatedNotNull] in int[] fullDigits) {
             const int minimumElements = 2;
 
@@ -34,7 +34,7 @@ namespace Triplex.Validations.Algorithms.Checksum
         /// <param name="digitsWithoutCheck">Can not be <see langword="null"/></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">If <paramref name="digitsWithoutCheck"/> is <see langword="null"/></exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">If <paramref name="digitsWithoutCheck"/> is hass less than one digits.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">If <paramref name="digitsWithoutCheck"/> is has less than one digits.</exception>
         public static int GetCheckDigit([ValidatedNotNull] in int[] digitsWithoutCheck)
         {
             const int minimumElements = 1;

@@ -34,12 +34,22 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
 
         [TestCase(Color.Black)]
         [TestCase(Color.White)]
-        public void With_Valid_Constants_Returns_Value(in Color someColor)
+        public void With_Valid_Color_Constants_Returns_Value(in Color someColor)
         {
             Color validatedColor =
                 ValidEnumerationMember(someColor, nameof(someColor), "some custom error msg", UseCustomErrorMessage);
 
             Assert.That(validatedColor, Is.EqualTo(someColor));
+        }
+
+        [TestCase(StringComparison.CurrentCulture)]
+        [TestCase(StringComparison.OrdinalIgnoreCase)]
+        public void With_Valid_StringComparison_Constants_Returns_Value(in StringComparison someComparison)
+        {
+            StringComparison validatedComparisonStrategy =
+                ValidEnumerationMember(someComparison, nameof(someComparison), "some custom error msg", UseCustomErrorMessage);
+
+            Assert.That(validatedComparisonStrategy, Is.EqualTo(someComparison));
         }
 
 #if NETFRAMEWORK
