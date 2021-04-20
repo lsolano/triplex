@@ -22,7 +22,7 @@
         <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
         <Version>0.4.0</Version>
         <Nullable>enable</Nullable>
-        <PackageReleaseNotes>Upgrade to .NET 5 (net5.0) and fix some warnings)</PackageReleaseNotes>
+        <PackageReleaseNotes>Upgrade to .NET 5 (net5.0) and fix some warnings</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
