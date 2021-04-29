@@ -16,7 +16,15 @@ then
    echo "Use the second command line argument to set the source if you like to set override the default."
 fi
 
-dotnet clean
+# Cleaning dotnet build output
+dotnet clean --configuration Release
+
+# Removing previous packages
+rm src/Validations/bin/Release/Triplex.Validations*.nupkg
+
+# Building and creating packages
 dotnet build --configuration Release
+
+# Move to packages root and issue publish command
 cd src/Validations/bin/Release
 dotnet nuget push *.nupkg -k $1 -s $SOURCE
