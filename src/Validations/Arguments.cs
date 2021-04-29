@@ -306,7 +306,7 @@ namespace Triplex.Validations
         /// <param name="customMessage">Custom error message, can not be <see langword="null"/></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
-        /// <exception cref="ArgumentFormatException">If <paramref name="value"/> is not valid as described by the Luhn algorithm.</exception>
+        /// <exception cref="FormatException">If <paramref name="value"/> is not valid as described by the Luhn algorithm.</exception>
         [DebuggerStepThrough]
         public static string ValidLuhnChecksum([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
         {
@@ -337,6 +337,52 @@ namespace Triplex.Validations
         }
 
         #endregion
+
+        #region Known Encodings
+
+        /// <summary>
+        /// Validates that the given argument (<paramref name="value" />) is a valid Base64 String.
+        /// </summary>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <returns><paramref name="value" /> or an exception</returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
+        public static string ValidBase64([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName) {
+            string validParamName =
+                paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
+
+            string notNullValue = value.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(validParamName);
+            
+            return IsBase64String(notNullValue) ? notNullValue : throw new FormatException($"{validParamName} is not a valid Base64 String.");
+        }
+
+        /// <summary>
+        /// Validates that the given argument (<paramref name="value" />) is a valid Base64 String.
+        /// </summary>
+        /// <param name="value">Value to check, can not be <see langword="null"/></param>
+        /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+        /// <param name="customMessage">Custom error message, can not be <see langword="null"/></param>
+        /// <returns><paramref name="value" /> or an exception</returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+        /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
+        public static string ValidBase64([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage) {
+            (string validParamName, string validCustomMessage) =
+                (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
+                 customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(customMessage)));
+            
+            string notNullValue = value.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(validParamName, validCustomMessage);
+
+            return IsBase64String(notNullValue) ? notNullValue : throw new FormatException(validCustomMessage);
+        }
+
+        private static bool IsBase64String(in string base64)
+        {
+            Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
+            return Convert.TryFromBase64String(base64, buffer , out int bytesParsed);
+        }
+
+        #endregion // Known Encodings
     }
 }
 #pragma warning restore CA1303 // Do not pass literals as localized parameters

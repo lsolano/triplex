@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Triplex.Validations.Utilities;
+﻿using Triplex.Validations.Utilities;
 
 namespace Triplex.Validations.ArgumentsHelpers
 {
@@ -20,8 +19,8 @@ namespace Triplex.Validations.ArgumentsHelpers
                     .ValueOrThrowIfWhiteSpaceOnly(paramName, customMessage);
 
         internal static string NotNullOrEmpty([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName)
-            => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)).ValueOrThrowIfZeroLength(nameof(paramName)))
-                    .ValueOrThrowIfZeroLength(paramName);
+            => value.ValueOrThrowIfNullOrZeroLength(
+                paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)));
 
         internal static string NotNullOrEmpty([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
             => value.ValueOrThrowIfNullOrZeroLength(
