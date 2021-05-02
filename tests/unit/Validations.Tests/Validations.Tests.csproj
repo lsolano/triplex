@@ -7,6 +7,9 @@
         <AssemblyName>Triplex.Validations.Tests</AssemblyName>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
         <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <AnalysisMode>Default</AnalysisMode>
     </PropertyGroup>
 
     <ItemGroup>

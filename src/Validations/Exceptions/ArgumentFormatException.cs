@@ -6,7 +6,7 @@ namespace Triplex.Validations.Exceptions
 {
     /// <summary>
     /// The exception that is thrown when one of the arguments provided to a method is not valid due to a format problem, 
-    /// usually refering to a <see cref="String"/> or simmilar.
+    /// usually refering to a <see cref="String"/> or similar.
     /// </summary>
 #pragma warning disable CA1032 // Implement standard exception constructors
     [Serializable]
@@ -19,6 +19,7 @@ namespace Triplex.Validations.Exceptions
         /// Initializes a new instance of the <see cref="ArgumentFormatException"/> class.
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the current exception.</param>
+        [CLSCompliant(false)]
         public ArgumentFormatException(in string paramName) : base(paramName: paramName, message: DefaultMessage)
         {
         }
@@ -28,6 +29,7 @@ namespace Triplex.Validations.Exceptions
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the current exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
+        [CLSCompliant(false)]
         public ArgumentFormatException(in string paramName, in Exception innerException) : this(paramName, DefaultMessage, innerException)
         {
         }
@@ -37,6 +39,7 @@ namespace Triplex.Validations.Exceptions
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the current exception.</param>
         /// <param name="message">The error message that explains the reason for the exception.</param>
+        [CLSCompliant(false)]
         public ArgumentFormatException(in string paramName, in string message) : base(paramName: paramName, message: message)
         {
         }
@@ -47,6 +50,7 @@ namespace Triplex.Validations.Exceptions
         /// <param name="paramName">The name of the parameter that caused the current exception.</param>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
+        [CLSCompliant(false)]
         public ArgumentFormatException(in string paramName, in string message, in Exception innerException) : base(paramName: paramName, message: message, innerException: innerException)
         {
         }

@@ -1,53 +1,44 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
+
+using NUnit.Framework;
 
 namespace Triplex.Validations.Tests.ArgumentsFacts
 {
     internal sealed class ValidEnumerationMemberMessage : BaseFixtureForOptionalCustomMessage
     {
+        private const string CustomMessage = "some custom error msg";
+
         public enum Color { Black = 0, White = 1 }
 
         public ValidEnumerationMemberMessage(bool useCustomErrorMessage) : base(useCustomErrorMessage)
         {
         }
 
-        [TestCase(Color.Black)]
-        [TestCase(Color.White)]
-        public void With_Valid_Constants_Throws_Nothing(Color someColor)
-        {
-            Assert.That(() => ValidEnumerationMember(someColor, nameof(someColor), null, UseCustomErrorMessage),
-                Throws.Nothing);
-        }
-
         [Test]
-        public void With_Invalid_Constants_Throws_ArgumentOutOfRangeException(
-            [Values(-1, 2)] Color someColor,
-            [Values("this is not OK", "Invalid value")] string customError)
+        public void With_Invalid_Constants_Throws_ArgumentOutOfRangeException([Values(-1, 2)] Color someColor)
         {
             string expectedMessage = BuildExpectedMessageForValidEnumerationMember(someColor, nameof(Color),
-                nameof(someColor), customError, UseCustomErrorMessage);
+                nameof(someColor), CustomMessage, UseCustomErrorMessage);
 
-            Assert.That(() => ValidEnumerationMember(someColor, nameof(someColor), customError, UseCustomErrorMessage),
+            Assert.That(() => ValidEnumerationMember(someColor, nameof(someColor), CustomMessage, UseCustomErrorMessage),
                 Throws.InstanceOf<ArgumentOutOfRangeException>()
                     .With.Message.EqualTo(expectedMessage));
         }
 
-        [TestCase(Color.Black)]
-        [TestCase(Color.White)]
-        public void With_Valid_Color_Constants_Returns_Value(in Color someColor)
+        [Test]
+        public void With_Valid_Color_Constants_Returns_Value([Values] in Color someColor)
         {
             Color validatedColor =
-                ValidEnumerationMember(someColor, nameof(someColor), "some custom error msg", UseCustomErrorMessage);
+                ValidEnumerationMember(someColor, nameof(someColor), CustomMessage, UseCustomErrorMessage);
 
             Assert.That(validatedColor, Is.EqualTo(someColor));
         }
 
-        [TestCase(StringComparison.CurrentCulture)]
-        [TestCase(StringComparison.OrdinalIgnoreCase)]
-        public void With_Valid_StringComparison_Constants_Returns_Value(in StringComparison someComparison)
+        [Test]
+        public void With_Valid_StringComparison_Constants_Returns_Value([Values] in StringComparison someComparison)
         {
             StringComparison validatedComparisonStrategy =
-                ValidEnumerationMember(someComparison, nameof(someComparison), "some custom error msg", UseCustomErrorMessage);
+                ValidEnumerationMember(someComparison, nameof(someComparison), CustomMessage, UseCustomErrorMessage);
 
             Assert.That(validatedComparisonStrategy, Is.EqualTo(someComparison));
         }

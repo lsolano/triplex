@@ -1,11 +1,10 @@
-﻿using System;
-using Triplex.Validations.ArgumentsHelpers;
+﻿using Triplex.Validations.ArgumentsHelpers;
 using Triplex.Validations.Utilities;
 
 namespace Triplex.Validations.Algorithms.Checksum
 {
     /// <summary>
-    /// Implementation of the Luhn algorith in its two variants: as validation and as checksum generator.
+    /// Implementation of the Luhn algorithm in its two variants: as validation and as checksum generator.
     /// </summary>
     public static class LuhnFormula
     {

@@ -9,7 +9,7 @@ namespace Triplex.Validations.ArgumentsHelpers
     {
         internal static T ValueOrThrowIfNull<T>(this T value, in string paramName)
         {
-            if (value != null)
+            if (value is not null)
             {
                 return value;
             }
@@ -19,7 +19,7 @@ namespace Triplex.Validations.ArgumentsHelpers
 
         internal static T ValueOrThrowIfNull<T>(this T value, in string paramName, in string customMessage)
         {
-            if (value != null)
+            if (value is not null)
             {
                 return value;
             }
@@ -32,7 +32,7 @@ namespace Triplex.Validations.ArgumentsHelpers
 
         internal static string ValueOrThrowIfZeroLength(this string value, in string paramName, in string customMessage)
         {
-            if (value.Length != 0)
+            if (value.Length is not 0)
             {
                 return value;
             }

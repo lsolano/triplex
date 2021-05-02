@@ -1,15 +1,13 @@
-using NUnit.Framework;
 using System;
+
+using NUnit.Framework;
 
 namespace Triplex.Validations.Tests.ArgumentsFacts
 {
-    internal sealed class BetweenMessageFacts : BaseFixtureForOptionalCustomMessage
+    internal sealed class BetweenMessageFacts
     {
         private const string CustomMessage = "Look caller: the number is not in range.";
         private const string DefaultParameterName = "length";
-
-        public BetweenMessageFacts(bool useCustomErrorMessage) : base(useCustomErrorMessage)
-            => Assume.That(useCustomErrorMessage, Is.True);
 
         [TestCase(-1, -1, 1)]
         [TestCase(-1, 0, 1)]

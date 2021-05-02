@@ -3,13 +3,10 @@ using System;
 
 namespace Triplex.Validations.Tests.ArgumentsFacts
 {
-    internal sealed class ValidLuhnChecksumMessageFacts : BaseFixtureForOptionalCustomMessage
+    [TestFixture]
+    internal sealed class ValidLuhnChecksumMessageFacts
     {
         private const string CustomMessage = "Look caller: the sequence is not valid.";
-        private const string DefaultParameterName = "creditCard";
-
-        public ValidLuhnChecksumMessageFacts(bool useCustomErrorMessage) : base(useCustomErrorMessage)
-            => Assume.That(useCustomErrorMessage, Is.True);
 
         [TestCase("12345678903")]
         [TestCase("12345678911")]

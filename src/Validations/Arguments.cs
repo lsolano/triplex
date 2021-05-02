@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+using Triplex.Validations.Algorithms.Checksum;
 using Triplex.Validations.ArgumentsHelpers;
 using Triplex.Validations.Exceptions;
 using Triplex.Validations.Utilities;
-using System.Text.RegularExpressions;
-using System.Linq;
-using Triplex.Validations.Algorithms.Checksum;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
 namespace Triplex.Validations
@@ -348,6 +349,7 @@ namespace Triplex.Validations
         /// <returns><paramref name="value" /> or an exception</returns>
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
+        [DebuggerStepThrough]
         public static string ValidBase64([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName) {
             string validParamName =
                 paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
@@ -366,6 +368,7 @@ namespace Triplex.Validations
         /// <returns><paramref name="value" /> or an exception</returns>
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
+        [DebuggerStepThrough]
         public static string ValidBase64([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage) {
             (string validParamName, string validCustomMessage) =
                 (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),

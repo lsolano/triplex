@@ -20,10 +20,19 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
-        <Version>0.6.0</Version>
+        <Version>0.7.0</Version>
         <Nullable>enable</Nullable>
-        <PackageReleaseNotes>Adding Arguments.ValidBase64 messages.</PackageReleaseNotes>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <PackageReleaseNotes>
+v0.7.0 
+  - Declaring assembly as CLS-Compliant.
+  - Adding null cheks with 'is' operator.
+  - Running tests in parallel.
+  - Enabling code analysis using new SDK mode (with EnableNETAnalyzers, AnalysisLevel, and AnalysisMode) for all projects.
+  - Removing duplicated or redundant unit tests. 
+        </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

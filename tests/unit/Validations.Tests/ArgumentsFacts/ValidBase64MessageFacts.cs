@@ -13,15 +13,13 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         }
 
         [Test]
-        public void With_Null_Throws_ArgumentNullException(
-            [Values("username", "someInput", "iAmAParameter")] string paramName,
-            [Values("not good", "check your input")] string customErrorMessage)
+        public void With_Null_Throws_ArgumentNullException()
         {
-            string expectedMessage = BuildFinalMessage(customErrorMessage, paramName, UseCustomErrorMessage);
+            string expectedMessage = BuildFinalMessage(CustomMessage, DefaultParameterName, UseCustomErrorMessage);
 
-            Assert.That(() => ValidBase64((string)null, paramName, customErrorMessage, UseCustomErrorMessage),
+            Assert.That(() => ValidBase64((string)null, DefaultParameterName, CustomMessage, UseCustomErrorMessage),
                         Throws.ArgumentNullException.With.Message.EqualTo(expectedMessage)
-                            .And.Property(nameof(ArgumentNullException.ParamName)).EqualTo(paramName));
+                            .And.Property(nameof(ArgumentNullException.ParamName)).EqualTo(DefaultParameterName));
         }
 
         [Test]

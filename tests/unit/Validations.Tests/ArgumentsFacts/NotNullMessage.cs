@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using NUnit.Framework;
 
 namespace Triplex.Validations.Tests.ArgumentsFacts
 {
@@ -14,15 +15,13 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         }
 
         [Test]
-        public void With_Null_Throws_ArgumentNullException(
-            [Values("username", "someInput", "iAmAParameter")] string paramName,
-            [Values("not good", "check your input")] string customErrorMessage)
+        public void With_Null_Throws_ArgumentNullException()
         {
-            string expectedMessage = BuildFinalMessage(customErrorMessage, paramName, UseCustomErrorMessage);
+            string expectedMessage = BuildFinalMessage(CustomMessage, DefaultParameterName, UseCustomErrorMessage);
 
-            Assert.That(() => NotNull((string)null, paramName, customErrorMessage, UseCustomErrorMessage),
+            Assert.That(() => NotNull((string)null, DefaultParameterName, CustomMessage, UseCustomErrorMessage),
                         Throws.ArgumentNullException.With.Message.EqualTo(expectedMessage)
-                            .And.Property(nameof(ArgumentNullException.ParamName)).EqualTo(paramName));
+                            .And.Property(nameof(ArgumentNullException.ParamName)).EqualTo(DefaultParameterName));
         }
 
         [Test]
@@ -36,7 +35,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         {
             string name = NotNull(value, nameof(value), CustomMessage, UseCustomErrorMessage);
 
-            Assert.That(name, Is.EqualTo(value));
+            Assert.That(name, Is.SameAs(value));
         }
 
         [Test]
@@ -45,7 +44,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
             var fibonacci = new List<int> { 1, 1, 2, 3, 5 };
             IList<int> myFibonacci = NotNull(fibonacci, nameof(fibonacci), CustomMessage, UseCustomErrorMessage);
 
-            CollectionAssert.AreEqual(fibonacci, myFibonacci);
+            Assert.That(myFibonacci, Is.SameAs(fibonacci));
         }
 
 #if NETFRAMEWORK
