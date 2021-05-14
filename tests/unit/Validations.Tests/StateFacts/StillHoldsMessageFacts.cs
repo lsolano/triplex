@@ -1,4 +1,5 @@
 using System;
+
 using NUnit.Framework;
 
 namespace Triplex.Validations.Tests.StateFacts
@@ -9,6 +10,7 @@ namespace Triplex.Validations.Tests.StateFacts
         [Test]
         public void With_Null_Message_Throws_ArgumentNullException([Values] bool invariant) {
             const string argumentName = "message";
+
             Assert.That(() => State.StillHolds(invariant, message: null), 
                 Throws.ArgumentNullException
                       .With.Message.Contains(argumentName)
@@ -23,6 +25,7 @@ namespace Triplex.Validations.Tests.StateFacts
         public void With_False_Invariant_And_Not_Null_Message_Throws_InvalidOperationException()
         {
             const string theMessage = "Message if not true.";
+            
             Assert.That(() => State.StillHolds(false, theMessage),
                 Throws.InvalidOperationException.With.Message.EqualTo(theMessage));
         }
