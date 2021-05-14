@@ -1,4 +1,8 @@
-﻿using Triplex.Validations.ArgumentsHelpers;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+using Triplex.Validations.ArgumentsHelpers;
 using Triplex.Validations.Utilities;
 
 namespace Triplex.Validations.Algorithms.Checksum
@@ -8,21 +12,68 @@ namespace Triplex.Validations.Algorithms.Checksum
     /// </summary>
     public static class LuhnFormula
     {
+        private const int MinimumElements = 2;
+        private static readonly Regex DigitsRegex = new Regex("^[0-9]+$", RegexOptions.Compiled);
+
         /// <summary>
         /// Indicates is a sequence of numbers is valid using the Luhn formula.
         /// </summary>
         /// <param name="fullDigits">Can not be <see langword="null"/></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">If <paramref name="fullDigits"/> is <see langword="null"/></exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">If <paramref name="fullDigits"/> is has less than two digits.</exception>
-        public static bool IsValid([ValidatedNotNull] in int[] fullDigits) {
-            const int minimumElements = 2;
+        /// <exception cref="System.ArgumentOutOfRangeException">If <paramref name="fullDigits"/> has less than two(2) digits.</exception>
+        /// <exception cref="System.FormatException">If <paramref name="fullDigits"/> contains elements not within range [0-9].</exception>
+        public static bool IsValid([ValidatedNotNull] in int[] fullDigits)
+        {
+            int[] validatedDigits = fullDigits.ValueOrThrowIfNullOrWithLessThanElements(MinimumElements, nameof(fullDigits));
+            
+            bool hasInvalidElements = validatedDigits.Any(d => d < 0 || d > 9);
+            if (hasInvalidElements) {
+                throw new FormatException("Only values between zero and nine ( [0-9] ) are allowed as input.");
+            }
 
-            int[] validatedDigits = fullDigits.ValueOrThrowIfNullOrWithLessThanElements(minimumElements, nameof(fullDigits));
-          
-            int check = CalculateCheck(validatedDigits, isFullSequence: true);
+            return DoDigitCheck(validatedDigits);
+        }
 
-            int lastDigit = validatedDigits[validatedDigits.Length - 1];
+        /// <summary>
+        /// Indicates the given string (containing a sequence of numbers) is valid using the Luhn formula.
+        /// </summary>
+        /// <param name="fullDigits">Can not be <see langword="null"/> or empty. Must contains digits only (0-9), and have a minimum of two (2) elements.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">If <paramref name="fullDigits"/> is <see langword="null"/></exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">If <paramref name="fullDigits"/> has less than two(2) digits.</exception>
+        /// <exception cref="System.FormatException">If <paramref name="fullDigits"/> contains characters other than digits.</exception>
+        public static bool IsValid([ValidatedNotNull] in string fullDigits)
+        {
+            string notNullDigits = ValidateDigitsAsString(fullDigits);
+
+            int[] validatedDigits = notNullDigits.Select(ch => ch - '0').ToArray();
+
+            return DoDigitCheck(validatedDigits);
+        }
+
+        private static string ValidateDigitsAsString(in string fullDigits)
+        {
+            string notNullDigits = fullDigits.ValueOrThrowIfNullOrZeroLength(nameof(fullDigits));
+
+            if (notNullDigits.Length < MinimumElements)
+            {
+                throw new ArgumentOutOfRangeException(nameof(fullDigits), $"Length must be at least {MinimumElements} elements.");
+            }
+
+            if (!DigitsRegex.IsMatch(notNullDigits))
+            {
+                throw new FormatException("Invalid input, only digits [0-9] are allowed.");
+            }
+
+            return notNullDigits;
+        }
+
+        private static bool DoDigitCheck(in int[] sanitizedDigits)
+        {
+            int check = CalculateCheck(sanitizedDigits, isFullSequence: true);
+
+            int lastDigit = sanitizedDigits[sanitizedDigits.Length - 1];
 
             return check == lastDigit;
         }

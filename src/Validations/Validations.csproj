@@ -20,14 +20,15 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
-        <Version>0.8.0</Version>
+        <Version>0.9.0</Version>
         <Nullable>enable</Nullable>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
         <AnalysisMode>AllEnabledByDefault</AnalysisMode>
         <PackageReleaseNotes>
 New Features
-  - Adding Guid Arguments.NotEmpty(Guid) members.
+  - Add FormatException to LuhnFormula.IsValid(int[]) at Triplex.Validations.Algorithms.Checksum when array elements are not within [0-9].
+  - Add overload to LuhnFormula.IsValid(int[]) with String input LuhnFormula.IsValid(string)
         </PackageReleaseNotes>
     </PropertyGroup>
 

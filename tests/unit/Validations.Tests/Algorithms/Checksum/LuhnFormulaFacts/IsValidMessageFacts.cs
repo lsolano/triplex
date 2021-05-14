@@ -1,6 +1,8 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Linq;
+
+using NUnit.Framework;
+
 using Triplex.Validations.Algorithms.Checksum;
 
 namespace Triplex.Validations.Tests.Algorithms.Checksum.LuhnFormulaFacts
@@ -10,8 +12,19 @@ namespace Triplex.Validations.Tests.Algorithms.Checksum.LuhnFormulaFacts
     {
         [Test]
         public void Rejects_Null()
-        {
-            Assert.That(() => LuhnFormula.IsValid(null), Throws.ArgumentNullException);
+            => Assert.That(() => LuhnFormula.IsValid((int[])null), Throws.ArgumentNullException);
+
+        [TestCase("1a01")]
+        [TestCase("1 01")]
+        [TestCase("1\t01")]
+        [TestCase("1-01")]
+        [TestCase("1+01")]
+        [TestCase("ab")]
+        public void With_Non_Digit_Characters_Throws_FormatException(string rawDigits){
+            const int zeroAsciiCode = '0';
+            int[] digits = rawDigits.Select(ch => ch - zeroAsciiCode).ToArray();
+
+            Assert.That(() => LuhnFormula.IsValid(digits), Throws.InstanceOf<FormatException>());
         }
 
         [Test]
@@ -66,5 +79,45 @@ namespace Triplex.Validations.Tests.Algorithms.Checksum.LuhnFormulaFacts
 
             Assert.That(LuhnFormula.IsValid(digits), Is.True);
         }
+
+        [TestCase("10000000091")]
+        [TestCase("10000000109")]
+        public void Returns_False_For_Invalid_Sequences(string rawDigits)
+        {
+            const int zeroAsciiCode = '0';
+            int[] digits = rawDigits.Select(ch => ch - zeroAsciiCode).ToArray();
+
+            Assert.That(LuhnFormula.IsValid(digits), Is.False);
+        }
+
+        [TestCase("10000000090")]
+        [TestCase("10000000108")]
+        public void Returns_True_For_Valid_Sequences_As_String(string rawDigits)
+            => Assert.That(LuhnFormula.IsValid(rawDigits), Is.True);
+
+        [TestCase("10000000091")]
+        [TestCase("10000000109")]
+        public void Returns_False_For_Invalid_Sequences_As_String(string rawDigits)
+            => Assert.That(LuhnFormula.IsValid(rawDigits), Is.False);
+
+        [Test]
+        public void With_Null_As_String_Throws_ArgumentNullException()
+            => Assert.That(() => LuhnFormula.IsValid((string)null), Throws.ArgumentNullException);
+
+        [TestCase("1a01")]
+        [TestCase("1 01")]
+        [TestCase("1\t01")]
+        [TestCase("1-01")]
+        [TestCase("1+01")]
+        [TestCase("ab")]
+        public void With_Non_Digit_Characters_Throws_FormatException_As_String(string rawDigits)
+            => Assert.That(() => LuhnFormula.IsValid(rawDigits), Throws.InstanceOf<FormatException>());
+
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("a")]
+        [TestCase("1")]
+        public void With_Less_Than_Two_Elements_Throws_ArgumentOutOfRangeException(string rawDigits)
+            => Assert.That(() => LuhnFormula.IsValid(rawDigits), Throws.InstanceOf<ArgumentOutOfRangeException>());
     }
 }
