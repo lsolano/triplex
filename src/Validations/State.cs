@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+
 using Triplex.Validations.Utilities;
 
 namespace Triplex.Validations
