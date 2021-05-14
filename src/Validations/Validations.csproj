@@ -6,6 +6,7 @@
         <IsTestProject>false</IsTestProject>
         <RootNamespace>Triplex.Validations</RootNamespace>
         <AssemblyName>Triplex.Validations</AssemblyName>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
         <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
         <Authors>Lorenzo Solano Martinez</Authors>
@@ -20,15 +21,15 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
-        <Version>0.9.0</Version>
+        <PackageIcon>icon.png</PackageIcon>
+        <Version>0.10.0</Version>
         <Nullable>enable</Nullable>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
         <AnalysisMode>AllEnabledByDefault</AnalysisMode>
         <PackageReleaseNotes>
 New Features
-  - Add FormatException to LuhnFormula.IsValid(int[]) at Triplex.Validations.Algorithms.Checksum when array elements are not within [0-9].
-  - Add overload to LuhnFormula.IsValid(int[]) with String input LuhnFormula.IsValid(string)
+  - Adding package icon.
         </PackageReleaseNotes>
     </PropertyGroup>
 
@@ -37,6 +38,7 @@ New Features
         <Pack>True</Pack>
         <PackagePath></PackagePath>
       </None>
+      <None Include="..\..\icon.png" Pack="true" PackagePath="/" />
     </ItemGroup>
 
 </Project>
