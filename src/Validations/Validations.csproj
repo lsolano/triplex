@@ -10,7 +10,7 @@
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
         <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
         <Authors>Lorenzo Solano Martinez</Authors>
-        <Description>Common validations.</Description>
+        <Description>Validation library inspired by the concepts of Secure by Design, by Dan Bergh Johnsson, Daniel Deogun, and Daniel Sawano (MEAP 2019 Manning Publications).</Description>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <Year>$([System.DateTime]::Now.Year.ToString("####"))</Year>
         <CopyrightStartYear>2019</CopyrightStartYear>
@@ -22,14 +22,14 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
         <PackageIcon>icon.png</PackageIcon>
-        <Version>0.10.0</Version>
+        <Version>1.0.0</Version>
         <Nullable>enable</Nullable>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
         <AnalysisMode>AllEnabledByDefault</AnalysisMode>
         <PackageReleaseNotes>
 New Features
-  - Adding package icon.
+  - Adding new package icon.
         </PackageReleaseNotes>
     </PropertyGroup>
 
