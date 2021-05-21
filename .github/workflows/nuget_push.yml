@@ -1,0 +1,32 @@
+name: Publish in Nuget.org V3 Package Registry
+
+on:  
+  push:
+    tags:
+      - '1.*'
+    tags-ignore:
+      - '2.*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.202
+    - name: Clean Last Build
+      run: dotnet clean --framework net5.0 --configuration Release
+    - name: Restore dependencies
+      run: dotnet restore --framework net5.0 --configuration Release
+    - name: Build
+      run: dotnet build --no-restore --framework net5.0 --configuration Release
+    - name: Test
+      run: dotnet test --no-build --verbosity normal --framework net5.0 --configuration Release
+    - name: Move To Release Dir
+      run: cd src/Validations/bin/Release
+    - name: Deploy To Nuget.org
+      run: dotnet nuget push *.nupkg -k ${{secrets.NUGET_DEPLOYMENT_KEY}} -s https://api.nuget.org/v3/index.json
