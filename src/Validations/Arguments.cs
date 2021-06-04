@@ -439,6 +439,26 @@ namespace Triplex.Validations
         private static bool IsEmpty(in Guid value) => value == default;
 
         #endregion //Emptyness
+
+        #region General Purpose Checks
+
+        /// <summary>
+        /// Succeeds if <paramref name="precondition"/> (value or expression) is <see langword="true"/>.
+        /// </summary>
+        /// <param name="precondition">Boolean expression that must be <see langword="true"/> for the argument check to succeed.</param>
+        /// <param name="paramName">Parameter name, from caller's context.</param>
+        /// <param name="preconditionDescription">Description for the custom precondition.</param>
+        public static void CompliesWith(in bool precondition, in string paramName, in string preconditionDescription) {
+            (string validParamName, string validPreconditionDescription) =
+                (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
+                 preconditionDescription.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(preconditionDescription)));
+
+            if (!precondition) {
+                throw new ArgumentException(paramName: validParamName, message: validPreconditionDescription);
+            }
+        }
+        
+        #endregion //General Purpose Checks
     }
 }
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
