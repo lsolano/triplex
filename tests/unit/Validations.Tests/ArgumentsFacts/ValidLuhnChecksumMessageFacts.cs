@@ -14,7 +14,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [TestCase("12345678937")]
         [TestCase("12345678945")]
         [TestCase("12345678952")]
-        public void With_Valid_Values_Throws_Nothing(in string value)
+        public void With_Valid_Values_Throws_Nothing(in string? value)
         {
             string validatedValue = Arguments.ValidLuhnChecksum(value, nameof(value), CustomMessage);
 
@@ -27,8 +27,9 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [TestCase("12345678938")]
         [TestCase("12345678946")]
         [TestCase("12345678953")]
-        public void With_Invalid_Value_Throws_FormatException(string value) {
-            Assert.That(() => Arguments.ValidLuhnChecksum(value, nameof(value), CustomMessage),
+        public void With_Invalid_Value_Throws_FormatException(in string? value) {
+            string? copy = value;
+            Assert.That(() => Arguments.ValidLuhnChecksum(copy, nameof(value), CustomMessage),
                 Throws.InstanceOf<FormatException>()
                     .With.Message.EqualTo(CustomMessage));
         }

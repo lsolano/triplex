@@ -22,14 +22,17 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
         <PackageIcon>icon.png</PackageIcon>
-        <Version>1.1.0</Version>
+        <Version>2.0.0</Version>
         <Nullable>enable</Nullable>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
         <AnalysisMode>AllEnabledByDefault</AnalysisMode>
         <PackageReleaseNotes>
-New Features
-  - Support custom preconditions using Triplex.Validations.Arguments.CompliesWith(bool, string, string).
+Breaking Changes
+  - Add declare all public parameters doing null-checks as TType? instead of TType to improve developers experience when working with Nullable Context (nullable reference types).
+
+Notes:
+  - This version does not introduces compiler errors for 1.x usages but it could introduce (or remove) compiler warnings and that can be considered a breaking change for some teams. Tha's why we changed from 1.x to 2.x, but most users won't experience breaking changes in their builds. 
         </PackageReleaseNotes>
     </PropertyGroup>
 

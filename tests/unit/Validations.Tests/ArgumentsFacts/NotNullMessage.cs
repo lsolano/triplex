@@ -19,7 +19,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         {
             string expectedMessage = BuildFinalMessage(CustomMessage, DefaultParameterName, UseCustomErrorMessage);
 
-            Assert.That(() => NotNull((string)null, DefaultParameterName, CustomMessage, UseCustomErrorMessage),
+            Assert.That(() => NotNull((string?)null, DefaultParameterName, CustomMessage, UseCustomErrorMessage),
                         Throws.ArgumentNullException.With.Message.EqualTo(expectedMessage)
                             .And.Property(nameof(ArgumentNullException.ParamName)).EqualTo(DefaultParameterName));
         }
@@ -60,10 +60,9 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
                 : DefaultErrorTemplate.Replace("{paramName}", paramName);
 #endif
 
-        private static TValue NotNull<TValue>(in TValue value, in string paramName, in string customMessage,
-            bool useCustomMessage)
+        private static TValue NotNull<TValue>(in TValue? value, in string? paramName, in string? customMessage, bool useCustomMessage)
             where TValue : class => useCustomMessage
-            ? Arguments.NotNull(value, paramName, customMessage)
-            : Arguments.NotNull(value, paramName);
+            ? Arguments.NotNull(value, paramName!, customMessage!)
+            : Arguments.NotNull(value, paramName!);
     }
 }

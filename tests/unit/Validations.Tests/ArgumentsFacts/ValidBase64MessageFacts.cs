@@ -17,7 +17,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         {
             string expectedMessage = BuildFinalMessage(CustomMessage, DefaultParameterName, UseCustomErrorMessage);
 
-            Assert.That(() => ValidBase64((string)null, DefaultParameterName, CustomMessage, UseCustomErrorMessage),
+            Assert.That(() => ValidBase64((string?)null, DefaultParameterName, CustomMessage, UseCustomErrorMessage),
                         Throws.ArgumentNullException.With.Message.EqualTo(expectedMessage)
                             .And.Property(nameof(ArgumentNullException.ParamName)).EqualTo(DefaultParameterName));
         }
@@ -28,7 +28,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
 
         [TestCase("cGV0ZXI=")]
         [TestCase("c3BpZGVyIG1hbg==")]
-        public void Returns_Value_When_No_Exception(in string value)
+        public void Returns_Value_When_No_Exception(in string? value)
         {
             string validatedValue = ValidBase64(value, nameof(value), CustomMessage, UseCustomErrorMessage);
 
@@ -48,10 +48,10 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
                 : DefaultErrorTemplate.Replace("{paramName}", paramName);
 #endif
 
-        private static string ValidBase64(in string value, in string paramName, in string customMessage,
+        private static string ValidBase64(in string? value, in string? paramName, in string? customMessage,
             bool useCustomMessage)
             => useCustomMessage
-                ? Arguments.ValidBase64(value, paramName, customMessage)
-                : Arguments.ValidBase64(value, paramName);
+                ? Arguments.ValidBase64(value, paramName!, customMessage!)
+                : Arguments.ValidBase64(value, paramName!);
     }
 }

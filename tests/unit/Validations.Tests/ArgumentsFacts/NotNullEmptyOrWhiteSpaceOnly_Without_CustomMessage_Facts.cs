@@ -9,16 +9,16 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [Test]
         public void With_Null_Value_Throws_ArgumentNullException()
         {
-            string dummyParam = null;
+            string? dummyParam = null;
 
-            Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam)),
+            Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly(dummyParam!, nameof(dummyParam)),
                 Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(nameof(dummyParam)));
         }
 
         [Test]
         public void With_Empty_Value_Throws_ArgumentOutOfRangeException()
         {
-            string dummyParam = string.Empty;
+            string? dummyParam = string.Empty;
 
             Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam)),
                 Throws.InstanceOf<ArgumentOutOfRangeException>()
@@ -30,9 +30,10 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [TestCase("\r")]
         [TestCase("\t")]
         [TestCase("\n\r\t ")]
-        public void With_Common_White_Space_Value_Throws_ArgumentFormatException(string dummyParam)
+        public void With_Common_White_Space_Value_Throws_ArgumentFormatException(in string? dummyParam)
         {
-            Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam)),
+            string? copy = dummyParam;
+            Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly(copy, nameof(dummyParam)),
                 Throws.InstanceOf<Exceptions.ArgumentFormatException>()
                 .With.Property(nameof(ArgumentException.ParamName)).EqualTo(nameof(dummyParam)));
         }
@@ -40,7 +41,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [TestCase("peter")]
         [TestCase("parker ")]
         [TestCase(" Peter Parker Is Spiderman ")]
-        public void With_Valid_Values_Returns_Input_Value(in string someValue)
+        public void With_Valid_Values_Returns_Input_Value(in string? someValue)
         {
             string validatedValue = Arguments.NotNullEmptyOrWhiteSpaceOnly(someValue, nameof(someValue));
 
@@ -50,7 +51,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [Test]
         public void With_Null_ParamName_Throws_ArgumentNullException()
         {
-            Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly("dummyValue", null),
+            Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly("dummyValue", null!),
                 Throws.ArgumentNullException
                 .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("paramName"));
         }
@@ -69,9 +70,10 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [TestCase("\r")]
         [TestCase("\t")]
         [TestCase("\n\r\t ")]
-        public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException(string paramName)
+        public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException(in string? paramName)
         {
-            Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly("dummyValue", paramName),
+            string? paramNameValue = paramName;
+            Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly("dummyValue", paramNameValue!),
                 Throws.InstanceOf<Exceptions.ArgumentFormatException>()
                 .With.Property(nameof(Exceptions.ArgumentFormatException.ParamName)).EqualTo("paramName"));
         }

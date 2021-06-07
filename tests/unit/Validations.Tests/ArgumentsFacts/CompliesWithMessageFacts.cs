@@ -23,15 +23,19 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         }
 
         [Test]
-        public void With_Invalid_ParamName_Throws_ArgumentException([Values(null, "", " ", "\n\r\t ")] string paramName, [Values] bool precondition) {
-            Assert.That(() => Arguments.CompliesWith(precondition, paramName, PreconditionDescription),
+        public void With_Invalid_ParamName_Throws_ArgumentException([Values(null, "", " ", "\n\r\t ")] in string paramName, [Values] bool precondition) {
+            string paramNameCopy = paramName;
+
+            Assert.That(() => Arguments.CompliesWith(precondition, paramNameCopy, PreconditionDescription),
                 Throws.InstanceOf<ArgumentException>()
                       .With.Property(nameof(ArgumentException.ParamName)).EqualTo("paramName"));
         }
 
         [Test]
-        public void With_Invalid_PreconditionDescription_Throws_ArgumentException([Values(null, "", " ", "\n\r\t ")] string preconditionDescription, [Values] bool precondition) {
-            Assert.That(() => Arguments.CompliesWith(precondition, "someParamName", preconditionDescription),
+        public void With_Invalid_PreconditionDescription_Throws_ArgumentException([Values(null, "", " ", "\n\r\t ")] in string preconditionDescription, [Values] bool precondition) {
+            string preconditionDescriptionCopy = preconditionDescription;
+
+            Assert.That(() => Arguments.CompliesWith(precondition, "someParamName", preconditionDescriptionCopy),
                 Throws.InstanceOf<ArgumentException>()
                       .With.Property(nameof(ArgumentException.ParamName)).EqualTo("preconditionDescription"));
         }

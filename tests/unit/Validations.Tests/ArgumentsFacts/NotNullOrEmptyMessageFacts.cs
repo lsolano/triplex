@@ -15,7 +15,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
             public void With_Null_Throws_ArgumentNullException()
             {
                 string someInput = "dummyValue";
-                Assert.That(() => Arguments.NotNullOrEmpty(someInput, nameof(someInput), null),
+                Assert.That(() => Arguments.NotNullOrEmpty(someInput, nameof(someInput), null!),
                     Throws.ArgumentNullException
                     .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
             }
@@ -63,7 +63,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
             [Test]
             public void With_Null_Value_Throws_ArgumentNullException()
             {
-                string dummyParam = null;
+                string? dummyParam = null;
 
                 Constraint exceptionConstraint = AddMessageConstraint(
                     Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(nameof(dummyParam)),
@@ -75,7 +75,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
             [Test]
             public void With_Empty_Value_Throws_ArgumentOutOfRangeException()
             {
-                string dummyParam = string.Empty;
+                string? dummyParam = string.Empty;
 
                 Constraint exceptionConstraint = AddMessageConstraint(
                     Throws.InstanceOf<ArgumentOutOfRangeException>()
@@ -100,7 +100,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
             [TestCase("\r")]
             [TestCase("\t")]
             [TestCase("\n\r\t ")]
-            public void With_Common_White_Space_Sequences_Value_Throws_Nothing(in string dummyParam)
+            public void With_Common_White_Space_Sequences_Value_Throws_Nothing(in string? dummyParam)
             {
                 string myDummyValue = NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage);
 
@@ -110,7 +110,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
             [TestCase("peter")]
             [TestCase("parker ")]
             [TestCase(" Peter Parker Is Spiderman ")]
-            public void With_Non_Empty_Values_Throws_Nothing(in string someParam)
+            public void With_Non_Empty_Values_Throws_Nothing(in string? someParam)
             {
                 string myDummyValue = NotNullOrEmpty(someParam, nameof(someParam), CustomMessage, UseCustomErrorMessage);
 
@@ -118,7 +118,12 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
             }
         }
 
-        private static string NotNullOrEmpty(in string value, in string paramName, in string customMessage, in bool useCustomErrorMessage)
-            => useCustomErrorMessage ? Arguments.NotNullOrEmpty(value, paramName, customMessage) : Arguments.NotNullOrEmpty(value, paramName);
+        private static string NotNullOrEmpty(
+            in string? value, 
+            in string? paramName, 
+            in string? customMessage, 
+            in bool useCustomErrorMessage)
+            => useCustomErrorMessage ? Arguments.NotNullOrEmpty(value, paramName!, customMessage!) 
+                                     : Arguments.NotNullOrEmpty(value, paramName!);
     }
 }

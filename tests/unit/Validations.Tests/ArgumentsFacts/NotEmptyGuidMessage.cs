@@ -42,14 +42,14 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         {
             Assume.That(UseCustomErrorMessage, Is.True);
 
-            Assert.That(() => NotEmpty(Guid.Empty, DefaultParameterName, null, UseCustomErrorMessage),
+            Assert.That(() => NotEmpty(Guid.Empty, DefaultParameterName, null!, UseCustomErrorMessage),
                 Throws.ArgumentNullException.With.Message.Contains("customMessage")
                 .And.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
         }
 
-        private static Guid NotEmpty(in Guid value, in string paramName, in string customMessage, bool useCustomMessage)
+        private static Guid NotEmpty(in Guid value, in string? paramName, in string? customMessage, bool useCustomMessage)
             => useCustomMessage?
-                Arguments.NotEmpty(value, paramName, customMessage)
-                :Arguments.NotEmpty(value, paramName);
+                Arguments.NotEmpty(value, paramName!, customMessage!)
+                :Arguments.NotEmpty(value, paramName!);
     }
 }
