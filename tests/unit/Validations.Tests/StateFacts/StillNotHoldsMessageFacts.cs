@@ -9,7 +9,7 @@ namespace Triplex.Validations.Tests.StateFacts
         [Test]
         public void With_Null_Message_Throws_ArgumentNullException([Values] bool invariant) {
             const string argumentName = "message";
-            Assert.That(() => State.StillNotHolds(invariant, message: null), 
+            Assert.That(() => State.StillNotHolds(invariant, message: null!), 
                 Throws.ArgumentNullException
                       .With.Message.Contains(argumentName)
                       .And.Property(nameof(ArgumentNullException.ParamName)).EqualTo(argumentName));

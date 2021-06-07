@@ -50,10 +50,12 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [TestCase(1, 0)]
         [TestCase(2, 2)]
         [TestCase(3, 2)]
-        public void With_Equal_Or_Greater_Integers_Throws_ArgumentOutOfRangeException(int theValue, int other)
+        public void With_Equal_Or_Greater_Integers_Throws_ArgumentOutOfRangeException(in int theValue, in int other)
         {
             Constraint throwsOutOfRange = BuildConstraint(theValue, other, nameof(theValue), CustomError);
-            Assert.That(() => LessThan(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage),
+            (int theValueCopy, int otherCopy) = (theValue, other);
+
+            Assert.That(() => LessThan(theValueCopy, otherCopy, nameof(theValue), CustomError, UseCustomErrorMessage),
                 throwsOutOfRange);
         }
 
@@ -63,10 +65,12 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [TestCase("c", "b")]
         [TestCase("c", "c")]
         [TestCase("d", "c")]
-        public void With_Equal_Or_Greater_Strings_Throws_ArgumentOutOfRangeException(string theValue, string other)
+        public void With_Equal_Or_Greater_Strings_Throws_ArgumentOutOfRangeException(in string theValue, in string other)
         {
             Constraint throwsOutOfRange = BuildConstraint(theValue, other, nameof(theValue), CustomError);
-            Assert.That(() => LessThan(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage),
+            (string theValueCopy, string otherCopy) = (theValue, other);
+
+            Assert.That(() => LessThan(theValueCopy, otherCopy, nameof(theValue), CustomError, UseCustomErrorMessage),
                 throwsOutOfRange);
         }
 
@@ -84,9 +88,8 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         [Test]
         public void With_Null_Value_Throws_ArgumentNullException()
         {
-            string someString = null;
+            string? someString = null;
 
-            // ReSharper disable once ExpressionIsAlwaysNull
             Assert.That(() => LessThan(someString, "abc", nameof(someString), CustomError, UseCustomErrorMessage),
                 Throws.ArgumentNullException
                     .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("value"));
@@ -109,16 +112,21 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
 
             const string someString = "abc";
 
-            Assert.That(() => LessThan(someString, "xyz", nameof(someString), null, UseCustomErrorMessage),
+            Assert.That(() => LessThan(someString, "xyz", nameof(someString), null!, UseCustomErrorMessage),
                 Throws.ArgumentNullException
                     .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
         }
 
-        private static TComparable LessThan<TComparable>(in TComparable value, in TComparable other, in string paramName, in string customError, in bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
+        private static TComparable LessThan<TComparable>(
+            in TComparable? value, 
+            in TComparable? other, 
+            in string? paramName, 
+            in string? customError, 
+            in bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
         {
             return useCustomErrorMessage
-                ? Arguments.LessThan(value, other, paramName, customError)
-                : Arguments.LessThan(value, other, paramName);
+                ? Arguments.LessThan(value, other!, paramName!, customError!)
+                : Arguments.LessThan(value, other!, paramName!);
         }
     }
 }

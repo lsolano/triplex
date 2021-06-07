@@ -23,7 +23,7 @@ namespace Triplex.Validations.Algorithms.Checksum
         /// <exception cref="System.ArgumentNullException">If <paramref name="fullDigits"/> is <see langword="null"/></exception>
         /// <exception cref="System.ArgumentOutOfRangeException">If <paramref name="fullDigits"/> has less than two(2) digits.</exception>
         /// <exception cref="System.FormatException">If <paramref name="fullDigits"/> contains elements not within range [0-9].</exception>
-        public static bool IsValid([ValidatedNotNull] in int[] fullDigits)
+        public static bool IsValid([ValidatedNotNull] in int[]? fullDigits)
         {
             int[] validatedDigits = fullDigits.ValueOrThrowIfNullOrWithLessThanElements(MinimumElements, nameof(fullDigits));
             
@@ -43,7 +43,7 @@ namespace Triplex.Validations.Algorithms.Checksum
         /// <exception cref="System.ArgumentNullException">If <paramref name="fullDigits"/> is <see langword="null"/></exception>
         /// <exception cref="System.ArgumentOutOfRangeException">If <paramref name="fullDigits"/> has less than two(2) digits.</exception>
         /// <exception cref="System.FormatException">If <paramref name="fullDigits"/> contains characters other than digits.</exception>
-        public static bool IsValid([ValidatedNotNull] in string fullDigits)
+        public static bool IsValid([ValidatedNotNull] in string? fullDigits)
         {
             string notNullDigits = ValidateDigitsAsString(fullDigits);
 
@@ -52,7 +52,7 @@ namespace Triplex.Validations.Algorithms.Checksum
             return DoDigitCheck(validatedDigits);
         }
 
-        private static string ValidateDigitsAsString(in string fullDigits)
+        private static string ValidateDigitsAsString([ValidatedNotNull] in string? fullDigits)
         {
             string notNullDigits = fullDigits.ValueOrThrowIfNullOrZeroLength(nameof(fullDigits));
 
@@ -85,7 +85,7 @@ namespace Triplex.Validations.Algorithms.Checksum
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">If <paramref name="digitsWithoutCheck"/> is <see langword="null"/></exception>
         /// <exception cref="System.ArgumentOutOfRangeException">If <paramref name="digitsWithoutCheck"/> is has less than one digits.</exception>
-        public static int GetCheckDigit([ValidatedNotNull] in int[] digitsWithoutCheck)
+        public static int GetCheckDigit([ValidatedNotNull] in int[]? digitsWithoutCheck)
         {
             const int minimumElements = 1;
 

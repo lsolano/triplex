@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Triplex.Validations.Exceptions;
+using Triplex.Validations.Utilities;
 
 namespace Triplex.Validations.ArgumentsHelpers
 {
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
     internal static class Extensions
     {
-        internal static T ValueOrThrowIfNull<T>(this T value, in string paramName)
+        internal static T ValueOrThrowIfNull<T>([ValidatedNotNull] this T? value, in string paramName)
         {
             if (value is not null)
             {
@@ -17,7 +18,7 @@ namespace Triplex.Validations.ArgumentsHelpers
             throw new ArgumentNullException(paramName);
         }
 
-        internal static T ValueOrThrowIfNull<T>(this T value, in string paramName, in string customMessage)
+        internal static T ValueOrThrowIfNull<T>([ValidatedNotNull] this T? value, in string paramName, in string customMessage)
         {
             if (value is not null)
             {
@@ -53,20 +54,20 @@ namespace Triplex.Validations.ArgumentsHelpers
             throw new ArgumentFormatException(paramName: paramName, message: customMessage);
         }
 
-        internal static string ValueOrThrowIfNullOrZeroLength(this string value, in string paramName)
+        internal static string ValueOrThrowIfNullOrZeroLength([ValidatedNotNull] this string? value, in string paramName)
             => ValueOrThrowIfNull(value, paramName)
                 .ValueOrThrowIfZeroLength(paramName);
 
-        internal static string ValueOrThrowIfNullOrZeroLength(this string value, in string paramName, in string customMessage)
+        internal static string ValueOrThrowIfNullOrZeroLength([ValidatedNotNull] this string? value, in string paramName, in string customMessage)
             => ValueOrThrowIfNull(value, paramName, customMessage)
                 .ValueOrThrowIfZeroLength(paramName, customMessage);
 
-        internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(this string value, in string paramName)
+        internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([ValidatedNotNull] this string? value, in string paramName)
             => ValueOrThrowIfNull(value, paramName)
                 .ValueOrThrowIfZeroLength(paramName)
                     .ValueOrThrowIfWhiteSpaceOnly(paramName);
 
-        internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(this string value, in string paramName, in string customMessage)
+        internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([ValidatedNotNull] this string? value, in string paramName, in string customMessage)
             => ValueOrThrowIfNull(value, paramName, customMessage)
                 .ValueOrThrowIfZeroLength(paramName, customMessage)
                     .ValueOrThrowIfWhiteSpaceOnly(paramName, customMessage);
@@ -95,10 +96,10 @@ namespace Triplex.Validations.ArgumentsHelpers
             throw new ArgumentOutOfRangeException(paramName, value, finalMessage);
         }
 
-        internal static TType[] ValueOrThrowIfNullOrWithLessThanElements<TType>(this TType[] value, in int minimumElements, in string paramName) {
+        internal static TType[] ValueOrThrowIfNullOrWithLessThanElements<TType>([ValidatedNotNull] this TType[]? value, in int minimumElements, in string paramName) {
             OutOfRangeChecks.GreaterThanOrEqualTo(ValueOrThrowIfNull(value, paramName).Length, minimumElements, paramName);
 
-            return value;
+            return value!;
         }
     }
 #pragma warning restore CA1303 // Do not pass literals as localized parameters

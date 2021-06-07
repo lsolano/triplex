@@ -8,6 +8,6 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
     {
         protected readonly bool UseCustomErrorMessage;
 
-        protected BaseFixtureForOptionalCustomMessage(bool useCustomErrorMessage) => UseCustomErrorMessage = useCustomErrorMessage;
+        protected BaseFixtureForOptionalCustomMessage(in bool useCustomErrorMessage) => UseCustomErrorMessage = useCustomErrorMessage;
     }
 }

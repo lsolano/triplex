@@ -10,7 +10,7 @@ namespace Triplex.Validations.Tests.StateFacts
         [Test]
         public void With_Null_Message_Throws_ArgumentNullException([Values] bool stateQuery) {
             const string argumentName = "message";
-            Assert.That(() => State.IsFalse(stateQuery, message: null), 
+            Assert.That(() => State.IsFalse(stateQuery, message: null!), 
                 Throws.ArgumentNullException
                       .With.Message.Contains(argumentName)
                       .And.Property(nameof(ArgumentNullException.ParamName)).EqualTo(argumentName));

@@ -26,7 +26,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         }
 
         [Test]
-        public void With_Valid_Color_Constants_Returns_Value([Values] in Color someColor)
+        public void With_Valid_Color_Constants_Returns_Value([Values] Color someColor)
         {
             Color validatedColor =
                 ValidEnumerationMember(someColor, nameof(someColor), CustomMessage, UseCustomErrorMessage);
@@ -35,7 +35,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         }
 
         [Test]
-        public void With_Valid_StringComparison_Constants_Returns_Value([Values] in StringComparison someComparison)
+        public void With_Valid_StringComparison_Constants_Returns_Value([Values] StringComparison someComparison)
         {
             StringComparison validatedComparisonStrategy =
                 ValidEnumerationMember(someComparison, nameof(someComparison), CustomMessage, UseCustomErrorMessage);

@@ -27,7 +27,7 @@ namespace Triplex.Validations
         /// <returns><paramref name="value"/></returns>
         /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
         [DebuggerStepThrough]
-        public static TParamType NotNull<TParamType>([ValidatedNotNull] in TParamType value, [ValidatedNotNull] in string paramName) where TParamType : class
+        public static TParamType NotNull<TParamType>([ValidatedNotNull] in TParamType? value, [ValidatedNotNull] in string paramName) where TParamType : class
             => NullAndEmptyChecks.NotNull(value, paramName);
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Triplex.Validations
         /// <returns><paramref name="value"/></returns>
         /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
         [DebuggerStepThrough]
-        public static TParamType NotNull<TParamType>([ValidatedNotNull] in TParamType value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage) where TParamType : class
+        public static TParamType NotNull<TParamType>([ValidatedNotNull] in TParamType? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage) where TParamType : class
             => NullAndEmptyChecks.NotNull(value, paramName, customMessage);
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">If any paramete is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
         /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
-        public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName)
+        public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
             => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName);
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
         /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
         [DebuggerStepThrough]
-        public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+        public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
             => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName, customMessage);
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
         /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
         [DebuggerStepThrough]
-        public static string NotNullOrEmpty([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName)
+        public static string NotNullOrEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
             => NullAndEmptyChecks.NotNullOrEmpty(value, paramName);
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">If any paramete is <see langword = "null" />.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
         [DebuggerStepThrough]
-        public static string NotNullOrEmpty([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+        public static string NotNullOrEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
             => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
 
         #endregion
@@ -147,7 +147,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not less than <paramref name="other"/></exception>
         [DebuggerStepThrough]
-        public static TComparable LessThan<TComparable>([ValidatedNotNull] in TComparable value, [ValidatedNotNull] in TComparable other, [ValidatedNotNull] in string paramName)
+        public static TComparable LessThan<TComparable>([ValidatedNotNull] in TComparable? value, [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName)
             where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.LessThan(value, other, paramName);
 
@@ -163,7 +163,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not less than <paramref name="other"/></exception>
         [DebuggerStepThrough]
-        public static TComparable LessThan<TComparable>([ValidatedNotNull] in TComparable value, [ValidatedNotNull] in TComparable other, [ValidatedNotNull] in string paramName,
+        public static TComparable LessThan<TComparable>([ValidatedNotNull] in TComparable? value, [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName,
             [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.LessThan(value, other, paramName, customMessage);
 
@@ -179,8 +179,8 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not less than or equal to <paramref name="other"/></exception>
         [DebuggerStepThrough]
-        public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable value,
-            [ValidatedNotNull] in TComparable other, [ValidatedNotNull] in string paramName)
+        public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable? value,
+            [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName)
             where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.LessThanOrEqualTo(value, other, paramName);
 
@@ -197,8 +197,8 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not less than or equal to <paramref name="other"/></exception>
         [DebuggerStepThrough]
-        public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable value,
-            [ValidatedNotNull] in TComparable other, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+        public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable? value,
+            [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
             where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.LessThanOrEqualTo(value, other, paramName, customMessage);
 
@@ -214,7 +214,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not greater than <paramref name="other"/></exception>
         [DebuggerStepThrough]
-        public static TComparable GreaterThan<TComparable>([ValidatedNotNull] in TComparable value, [ValidatedNotNull] in TComparable other, [ValidatedNotNull] in string paramName)
+        public static TComparable GreaterThan<TComparable>([ValidatedNotNull] in TComparable? value, [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName)
             where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.GreaterThan(value, other, paramName);
 
@@ -231,7 +231,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not greater than <paramref name="other"/></exception>
         [DebuggerStepThrough]
-        public static TComparable GreaterThan<TComparable>([ValidatedNotNull] in TComparable value, [ValidatedNotNull] in TComparable other, [ValidatedNotNull] in string paramName,
+        public static TComparable GreaterThan<TComparable>([ValidatedNotNull] in TComparable? value, [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName,
             [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.GreaterThan(value, other, paramName, customMessage);
 
@@ -247,7 +247,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not greater than or equal to <paramref name="other"/></exception>
         [DebuggerStepThrough]
-        public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable value, [ValidatedNotNull] in TComparable other, [ValidatedNotNull] in string paramName)
+        public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable? value, [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName)
             where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.GreaterThanOrEqualTo(value, other, paramName);
 
@@ -264,7 +264,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not greater than or equal to <paramref name="other"/></exception>
         [DebuggerStepThrough]
-        public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable value, [ValidatedNotNull] in TComparable other, [ValidatedNotNull] in string paramName,
+        public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable? value, [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName,
             [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.GreaterThanOrEqualTo(value, other, paramName, customMessage);
 
@@ -283,9 +283,9 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is not between [<paramref name="fromInclusive"/>, <paramref name="toInclusive"/>]</exception>
         [DebuggerStepThrough]
         public static TComparable Between<TComparable>(
-            [ValidatedNotNull] in TComparable value,
-            [ValidatedNotNull] in TComparable fromInclusive,
-            [ValidatedNotNull] in TComparable toInclusive,
+            [ValidatedNotNull] in TComparable? value,
+            [ValidatedNotNull] in TComparable? fromInclusive,
+            [ValidatedNotNull] in TComparable? toInclusive,
             [ValidatedNotNull] in string paramName,
             [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>
                 => OutOfRangeChecks.Between(value, fromInclusive, toInclusive, paramName, customMessage);
@@ -309,7 +309,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="FormatException">If <paramref name="value"/> is not valid as described by the Luhn algorithm.</exception>
         [DebuggerStepThrough]
-        public static string ValidLuhnChecksum([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+        public static string ValidLuhnChecksum([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
         {
             (string validParamName, string validCustomMessage) =
                 (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
@@ -350,7 +350,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
         [DebuggerStepThrough]
-        public static string ValidBase64([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName) {
+        public static string ValidBase64([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName) {
             string validParamName =
                 paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
 
@@ -369,7 +369,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
         [DebuggerStepThrough]
-        public static string ValidBase64([ValidatedNotNull] in string value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage) {
+        public static string ValidBase64([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage) {
             (string validParamName, string validCustomMessage) =
                 (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
                  customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(customMessage)));
@@ -448,7 +448,7 @@ namespace Triplex.Validations
         /// <param name="precondition">Boolean expression that must be <see langword="true"/> for the argument check to succeed.</param>
         /// <param name="paramName">Parameter name, from caller's context.</param>
         /// <param name="preconditionDescription">Description for the custom precondition.</param>
-        public static void CompliesWith(in bool precondition, in string paramName, in string preconditionDescription) {
+        public static void CompliesWith(in bool precondition, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string preconditionDescription) {
             (string validParamName, string validPreconditionDescription) =
                 (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
                  preconditionDescription.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(preconditionDescription)));
