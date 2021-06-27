@@ -1,37 +1,43 @@
-## Welcome to GitHub Pages
+## TLDR;
+1. We hate invalid inputs: `null`s, too short, too long, empty, ...
+2. We fail early and fast: fail means throwing an suitable Exception type for each situation.
+3. We return validated values (Arguments): value-or-throw pattern.
 
-You can use the [editor on GitHub](https://github.com/lsolano/triplex/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+### Common method arguments checks
+```cs
+public void SomeMethod(Guid id, string name, ISet<Tag> tags) {
+  //throws System.ArgumentException if constraint is violated
+  Arguments.NotEmpty(id, nameof(id));
+  
+  //throws ArgumentNullException, ArgumentOutOfRangeException, or Triplex.Validations.Exceptions.ArgumentFormatException depending on the violation
+  Arguments.NotNullEmptyOrWhiteSpaceOnly(name, nameof(name));
+  
+  //throws ArgumentNullException if tags is null, ArgumentException if at least one element is null.
+  Arguments.AllNotNull(tags, nameof(tags));
+  
+  //Here you confidently can use id, name and tags knowing that ther are valid.
+}
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### Help to construct an always valid, immutable object
+```cs
+using System
+using Triplex.Validations; //root namespace
 
-### Jekyll Themes
+namespace My.Project {
+  public sealed class SomeClass {
+  
+    //Instances of this class are either null (blame c#), or valid (your responsiblity as developer)
+    public SomeClass(Guid id, string name, ISet<Tag> tags) {
+      Id = Arguments.NotEmpty(id, nameof(id));
+      Name = Arguments.NotNullEmptyOrWhiteSpaceOnly(name, nameof(name));
+      Tags = new ReadOnlySet<Tag>( Arguments.AllNotNull(tags, nameof(tags)) );
+    }
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/lsolano/triplex/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+    public Guid Id { get; }
+    public string Name { get; }
+    public ReadOnlySet<Tag> Tags { get; }
+  }
+}
+```
