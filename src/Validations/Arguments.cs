@@ -60,6 +60,8 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">If any paramete is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
         /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
+        [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmptyOrWhiteSpaceOnly(string?, string) instead.", error: false)]
+        [DebuggerStepThrough]
         public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
             => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName);
 
@@ -73,8 +75,19 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">If any paramete is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
         /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
+        [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmptyOrWhiteSpaceOnly(string?, string, string) instead.", error: false)]
         [DebuggerStepThrough]
         public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+            => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName, customMessage);
+
+        /// <inheritdoc cref="NotNullEmptyOrWhiteSpaceOnly(in string?, in string)"/>
+        [DebuggerStepThrough]
+        public static string NotEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
+            => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName);
+
+        /// <inheritdoc cref="NotNullEmptyOrWhiteSpaceOnly(in string?, in string, in string)"/>
+        [DebuggerStepThrough]
+        public static string NotEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
             => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName, customMessage);
 
         /// <summary>
@@ -86,6 +99,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">If any paramete is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
         /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
+        [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmpty(string?, string) instead.", error: false)]
         [DebuggerStepThrough]
         public static string NotNullOrEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
             => NullAndEmptyChecks.NotNullOrEmpty(value, paramName);
@@ -99,8 +113,19 @@ namespace Triplex.Validations
         /// <returns><paramref name="value"/></returns>
         /// <exception cref="ArgumentNullException">If any paramete is <see langword = "null" />.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
+        [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmpty(string?, string, string) instead.", error: false)]
         [DebuggerStepThrough]
         public static string NotNullOrEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+            => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
+
+        /// <inheritdoc cref="NotNullOrEmpty(in string?, in string)"/>
+        [DebuggerStepThrough]
+        public static string NotEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
+            => NullAndEmptyChecks.NotNullOrEmpty(value, paramName);
+        
+        /// <inheritdoc cref="NotNullOrEmpty(in string?, in string, in string)"/>
+        [DebuggerStepThrough]
+        public static string NotEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
             => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
 
         #endregion
