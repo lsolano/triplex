@@ -34,9 +34,12 @@ Breaking Changes
     - string NotNullEmptyOrWhiteSpaceOnly(in string?, in string, in string)
     - string NotNullOrEmpty(in string?, in string)
     - string NotNullOrEmpty(in string?, in string, in string)
+    - void CompliesWith(in bool, in string, in string)
 
 Features
   - Introduce implicit null check for NotNullEmptyOrWhiteSpaceOnly (now NotEmptyOrWhiteSpaceOnly) and NotNullOrEmpty (now NotEmpty).
+  - T CompliesWith(T?, Func&lt;T, bool&gt;, string, string)
+  - T DoesNotComplyWith(T?, Func&lt;T, bool&gt;, string, string)
         </PackageReleaseNotes>
     </PropertyGroup>
 
