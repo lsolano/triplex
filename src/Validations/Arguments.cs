@@ -433,7 +433,7 @@ namespace Triplex.Validations
             }
 
             return value;
-        } //NotEmptyGuidMessage
+        }
 
         /// <summary>
         /// Checks that the provided value is not empty.
@@ -478,6 +478,7 @@ namespace Triplex.Validations
         /// <param name="precondition">Boolean expression that must be <see langword="true"/> for the argument check to succeed.</param>
         /// <param name="paramName">Parameter name, from caller's context.</param>
         /// <param name="preconditionDescription">Description for the custom precondition.</param>
+        [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use CompliesWith(T?, Func<T, bool>, string, string), or DoesNotComplyWith(T?, Func<T, bool>, string, string) instead.", error: false)]
         [DebuggerStepThrough]
         public static void CompliesWith(in bool precondition, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string preconditionDescription)
         {
@@ -506,13 +507,39 @@ namespace Triplex.Validations
             [ValidatedNotNull] string paramName,
             [ValidatedNotNull] string preconditionDescription)
                 where TNullable : class
+                => CompliesWithExpected(value, validator, paramName, preconditionDescription, true);
+
+        /// <summary>
+        /// Checks the given value for <see langword="null"/> and then if the its complies with the validator function. 
+        /// </summary>
+        /// <param name="value">To be validated.</param>
+        /// <param name="validator">Validator function, expecting to return <see langword="true"/> for the argument check to succeed.</param>
+        /// <param name="paramName">Parameter name, from caller's context.</param>
+        /// <param name="preconditionDescription">Description for the custom precondition.</param>
+        /// <typeparam name="TNullable"></typeparam>
+        [DebuggerStepThrough]
+        public static TNullable DoesNotComplyWith<TNullable>(
+            [ValidatedNotNull] TNullable? value,
+            [ValidatedNotNull] Func<TNullable, bool> validator,
+            [ValidatedNotNull] string paramName,
+            [ValidatedNotNull] string preconditionDescription)
+                where TNullable : class
+                => CompliesWithExpected(value, validator, paramName, preconditionDescription, false);
+
+        private static TNullable CompliesWithExpected<TNullable>(
+            [ValidatedNotNull] TNullable? value,
+            [ValidatedNotNull] Func<TNullable, bool> validator,
+            [ValidatedNotNull] string paramName,
+            [ValidatedNotNull] string preconditionDescription,
+            bool expected)
+                where TNullable : class
         {
             TNullable notNullValue = value.ValueOrThrowIfNull(nameof(value));
             Func<TNullable, bool> notNullValidator = validator.ValueOrThrowIfNull(nameof(validator));
             string notNullParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
-            string notNullPreconditionDescription = preconditionDescription.ValueOrThrowIfNull(nameof(preconditionDescription));
+            string notNullPreconditionDescription = preconditionDescription.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(preconditionDescription));
 
-            if (!notNullValidator(notNullValue))
+            if (notNullValidator(notNullValue) != expected)
             {
                 throw new ArgumentException(paramName: notNullParamName, message: notNullPreconditionDescription);
             }
