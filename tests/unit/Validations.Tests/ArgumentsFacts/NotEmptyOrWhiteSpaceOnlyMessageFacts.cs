@@ -1,0 +1,117 @@
+﻿using NUnit.Framework;
+using System;
+
+namespace Triplex.Validations.Tests.ArgumentsFacts
+{
+    [TestFixture]
+    internal sealed class NotEmptyOrWhiteSpaceOnlyMessageFacts
+    {
+        private const string CustomMessage = "Some error message, caller provided.";
+
+        [Test]
+        public void With_Null_CustomError_Throws_ArgumentNullException()
+        {
+            string? dummyParam = "Hello world!";
+
+            Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam), null!), 
+                Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
+        }
+
+        [Test]
+        public void With_Empty_CustomError_Throws_ArgumentOutOfRangeException()
+        {
+            string? dummyParam = "Hello world!";
+
+            Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam), string.Empty),
+                Throws.InstanceOf<ArgumentOutOfRangeException>()
+                .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
+        }
+
+        [TestCase(" ")]
+        [TestCase("\n")]
+        [TestCase("\r")]
+        [TestCase("\t")]
+        [TestCase("\n\r\t ")]
+        public void With_Common_White_Space_CustomError_Throws_ArgumentFormatException(in string? someErrorMessage)
+        {
+            string? dummyParam = "Hello world!";
+            string? someErrorMessageCopy = someErrorMessage;
+
+            Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam), someErrorMessageCopy!),
+                Throws.InstanceOf<Exceptions.ArgumentFormatException>()
+                .With.Property(nameof(ArgumentException.ParamName)).EqualTo("customMessage"));
+        }
+       
+        [Test]
+        public void With_Null_Value_Throws_ArgumentNullException()
+        {
+            string? dummyParam = null;
+
+            Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam), CustomMessage),
+                Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(nameof(dummyParam)));
+        }
+
+        [Test]
+        public void With_Empty_Value_Throws_ArgumentOutOfRangeException()
+        {
+            string? dummyParam = string.Empty;
+
+            Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam), CustomMessage),
+                Throws.InstanceOf<ArgumentOutOfRangeException>()
+                .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(nameof(dummyParam)));
+        }
+
+        [TestCase(" ")]
+        [TestCase("\n")]
+        [TestCase("\r")]
+        [TestCase("\t")]
+        [TestCase("\n\r\t ")]
+        public void With_Common_White_Space_Value_Throws_ArgumentFormatException(in string? dummyParam)
+        {
+            string? dummyParamValue = dummyParam;
+            Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParamValue, nameof(dummyParam), CustomMessage),
+                Throws.InstanceOf<Exceptions.ArgumentFormatException>()
+                .With.Property(nameof(ArgumentException.ParamName)).EqualTo(nameof(dummyParam)));
+        }
+
+        [TestCase("peter")]
+        [TestCase("parker ")]
+        [TestCase(" Peter Parker Is Spiderman ")]
+        public void With_Valid_Values_Returns_Input_Value(in string? someValue)
+        {
+            string validatedValue = Arguments.NotEmptyOrWhiteSpaceOnly(someValue, nameof(someValue), CustomMessage);
+
+            Assert.That(validatedValue, Is.SameAs(someValue));
+        }
+
+        [Test]
+        public void With_Null_ParamName_Throws_ArgumentNullException()
+        {
+            Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly("dummyValue", null!, CustomMessage),
+                Throws.ArgumentNullException
+                .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("paramName"));
+        }
+
+        [Test]
+        public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException()
+        {
+            Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly("dummyValue", string.Empty, CustomMessage),
+                Throws.InstanceOf<ArgumentOutOfRangeException>()
+                .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("paramName")
+                .And.Property(nameof(ArgumentOutOfRangeException.ActualValue)).EqualTo(0));
+        }
+
+        [TestCase(" ")]
+        [TestCase("\n")]
+        [TestCase("\r")]
+        [TestCase("\t")]
+        [TestCase("\n\r\t ")]
+        public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException(in string? paramName)
+        {
+            string? paramNameValue = paramName;
+            Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly("dummyValue", paramNameValue!, CustomMessage),
+                Throws.InstanceOf<Exceptions.ArgumentFormatException>()
+                .With.Property(nameof(Exceptions.ArgumentFormatException.ParamName)).EqualTo("paramName"));
+        }
+    }
+}

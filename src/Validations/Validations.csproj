@@ -22,17 +22,24 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
         <PackageIcon>icon.png</PackageIcon>
-        <Version>2.0.0</Version>
+        <Version>3.0.0-alpha</Version>
         <Nullable>enable</Nullable>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
         <AnalysisMode>AllEnabledByDefault</AnalysisMode>
         <PackageReleaseNotes>
 Breaking Changes
-  - Add declare all public parameters doing null-checks as TType? instead of TType to improve developers experience when working with Nullable Context (nullable reference types).
+  - Obsolete members from Triplex.Validations.Arguments:
+    - string NotNullEmptyOrWhiteSpaceOnly(in string?, in string)
+    - string NotNullEmptyOrWhiteSpaceOnly(in string?, in string, in string)
+    - string NotNullOrEmpty(in string?, in string)
+    - string NotNullOrEmpty(in string?, in string, in string)
+    - void CompliesWith(in bool, in string, in string)
 
-Notes:
-  - This version does not introduces compiler errors for 1.x usages but it could introduce (or remove) compiler warnings and that can be considered a breaking change for some teams. Tha's why we changed from 1.x to 2.x, but most users won't experience breaking changes in their builds. 
+Features
+  - Introduce implicit null check for NotNullEmptyOrWhiteSpaceOnly (now NotEmptyOrWhiteSpaceOnly) and NotNullOrEmpty (now NotEmpty).
+  - T CompliesWith(T?, Func&lt;T, bool&gt;, string, string)
+  - T DoesNotComplyWith(T?, Func&lt;T, bool&gt;, string, string)
         </PackageReleaseNotes>
     </PropertyGroup>
 

@@ -60,6 +60,8 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">If any paramete is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
         /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
+        [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmptyOrWhiteSpaceOnly(string?, string) instead.", error: false)]
+        [DebuggerStepThrough]
         public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
             => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName);
 
@@ -73,8 +75,19 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">If any paramete is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
         /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
+        [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmptyOrWhiteSpaceOnly(string?, string, string) instead.", error: false)]
         [DebuggerStepThrough]
         public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+            => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName, customMessage);
+
+        /// <inheritdoc cref="NotNullEmptyOrWhiteSpaceOnly(in string?, in string)"/>
+        [DebuggerStepThrough]
+        public static string NotEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
+            => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName);
+
+        /// <inheritdoc cref="NotNullEmptyOrWhiteSpaceOnly(in string?, in string, in string)"/>
+        [DebuggerStepThrough]
+        public static string NotEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
             => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName, customMessage);
 
         /// <summary>
@@ -86,6 +99,7 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">If any paramete is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
         /// <exception cref="ArgumentFormatException">If <paramref name="value"/> contains only white-space characters</exception>
+        [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmpty(string?, string) instead.", error: false)]
         [DebuggerStepThrough]
         public static string NotNullOrEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
             => NullAndEmptyChecks.NotNullOrEmpty(value, paramName);
@@ -99,8 +113,19 @@ namespace Triplex.Validations
         /// <returns><paramref name="value"/></returns>
         /// <exception cref="ArgumentNullException">If any paramete is <see langword = "null" />.</exception>
         /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
+        [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmpty(string?, string, string) instead.", error: false)]
         [DebuggerStepThrough]
         public static string NotNullOrEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+            => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
+
+        /// <inheritdoc cref="NotNullOrEmpty(in string?, in string)"/>
+        [DebuggerStepThrough]
+        public static string NotEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
+            => NullAndEmptyChecks.NotNullOrEmpty(value, paramName);
+
+        /// <inheritdoc cref="NotNullOrEmpty(in string?, in string, in string)"/>
+        [DebuggerStepThrough]
+        public static string NotEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
             => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
 
         #endregion
@@ -330,7 +355,7 @@ namespace Triplex.Validations
                 throw new FormatException(validCustomMessage);
             }
         }
-        
+
         private static int[] ToDigitsArray(string notNullValue)
         {
             const int zeroAsciiCode = '0';
@@ -350,12 +375,13 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
         [DebuggerStepThrough]
-        public static string ValidBase64([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName) {
+        public static string ValidBase64([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
+        {
             string validParamName =
                 paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
 
             string notNullValue = value.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(validParamName);
-            
+
             return IsBase64String(notNullValue) ? notNullValue : throw new FormatException($"{validParamName} is not a valid Base64 String.");
         }
 
@@ -369,11 +395,12 @@ namespace Triplex.Validations
         /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
         /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
         [DebuggerStepThrough]
-        public static string ValidBase64([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage) {
+        public static string ValidBase64([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+        {
             (string validParamName, string validCustomMessage) =
                 (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
                  customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(customMessage)));
-            
+
             string notNullValue = value.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(validParamName, validCustomMessage);
 
             return IsBase64String(notNullValue) ? notNullValue : throw new FormatException(validCustomMessage);
@@ -382,7 +409,7 @@ namespace Triplex.Validations
         private static bool IsBase64String(in string base64)
         {
             Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
-            return Convert.TryFromBase64String(base64, buffer , out int bytesParsed);
+            return Convert.TryFromBase64String(base64, buffer, out int bytesParsed);
         }
 
         #endregion // Known Encodings
@@ -396,15 +423,17 @@ namespace Triplex.Validations
         /// <returns><paramref name="value"/></returns>
         /// <exception cref="ArgumentException">If <paramref name="value"/> is an empty <see cref="Guid"/>.</exception>
         [DebuggerStepThrough]
-        public static Guid NotEmpty(in Guid value, [ValidatedNotNull] in string paramName) {
+        public static Guid NotEmpty(in Guid value, [ValidatedNotNull] in string paramName)
+        {
             string validParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
 
-            if (IsEmpty(value)) {
+            if (IsEmpty(value))
+            {
                 throw new ArgumentException(paramName);
             }
 
             return value;
-        } //NotEmptyGuidMessage
+        }
 
         /// <summary>
         /// Checks that the provided value is not empty.
@@ -423,13 +452,14 @@ namespace Triplex.Validations
         /// <returns><paramref name="value"/></returns>
         /// <exception cref="ArgumentException">If <paramref name="value"/> is an empty <see cref="Guid"/>.</exception>
         [DebuggerStepThrough]
-        public static Guid NotEmpty(in Guid value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage) 
-        { 
+        public static Guid NotEmpty(in Guid value, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+        {
             (string validParamName, string validCustomMessage) =
                 (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
                  customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(customMessage)));
 
-            if (IsEmpty(value)) {
+            if (IsEmpty(value))
+            {
                 throw new ArgumentException(paramName: paramName, message: validCustomMessage);
             }
 
@@ -448,16 +478,75 @@ namespace Triplex.Validations
         /// <param name="precondition">Boolean expression that must be <see langword="true"/> for the argument check to succeed.</param>
         /// <param name="paramName">Parameter name, from caller's context.</param>
         /// <param name="preconditionDescription">Description for the custom precondition.</param>
-        public static void CompliesWith(in bool precondition, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string preconditionDescription) {
+        [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use CompliesWith(T?, Func<T, bool>, string, string), or DoesNotComplyWith(T?, Func<T, bool>, string, string) instead.", error: false)]
+        [DebuggerStepThrough]
+        public static void CompliesWith(in bool precondition, [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string preconditionDescription)
+        {
             (string validParamName, string validPreconditionDescription) =
                 (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
                  preconditionDescription.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(preconditionDescription)));
 
-            if (!precondition) {
+            if (!precondition)
+            {
                 throw new ArgumentException(paramName: validParamName, message: validPreconditionDescription);
             }
         }
-        
+
+        /// <summary>
+        /// Checks the given value for <see langword="null"/> and then if the its complies with the validator function. 
+        /// </summary>
+        /// <param name="value">To be validated.</param>
+        /// <param name="validator">Validator function, expecting to return <see langword="true"/> for the argument check to succeed.</param>
+        /// <param name="paramName">Parameter name, from caller's context.</param>
+        /// <param name="preconditionDescription">Description for the custom precondition.</param>
+        /// <typeparam name="TNullable"></typeparam>
+        [DebuggerStepThrough]
+        public static TNullable CompliesWith<TNullable>(
+            [ValidatedNotNull] TNullable? value,
+            [ValidatedNotNull] Func<TNullable, bool> validator,
+            [ValidatedNotNull] string paramName,
+            [ValidatedNotNull] string preconditionDescription)
+                where TNullable : class
+                => CompliesWithExpected(value, validator, paramName, preconditionDescription, true);
+
+        /// <summary>
+        /// Checks the given value for <see langword="null"/> and then if the its complies with the validator function. 
+        /// </summary>
+        /// <param name="value">To be validated.</param>
+        /// <param name="validator">Validator function, expecting to return <see langword="true"/> for the argument check to succeed.</param>
+        /// <param name="paramName">Parameter name, from caller's context.</param>
+        /// <param name="preconditionDescription">Description for the custom precondition.</param>
+        /// <typeparam name="TNullable"></typeparam>
+        [DebuggerStepThrough]
+        public static TNullable DoesNotComplyWith<TNullable>(
+            [ValidatedNotNull] TNullable? value,
+            [ValidatedNotNull] Func<TNullable, bool> validator,
+            [ValidatedNotNull] string paramName,
+            [ValidatedNotNull] string preconditionDescription)
+                where TNullable : class
+                => CompliesWithExpected(value, validator, paramName, preconditionDescription, false);
+
+        private static TNullable CompliesWithExpected<TNullable>(
+            [ValidatedNotNull] TNullable? value,
+            [ValidatedNotNull] Func<TNullable, bool> validator,
+            [ValidatedNotNull] string paramName,
+            [ValidatedNotNull] string preconditionDescription,
+            bool expected)
+                where TNullable : class
+        {
+            TNullable notNullValue = value.ValueOrThrowIfNull(nameof(value));
+            Func<TNullable, bool> notNullValidator = validator.ValueOrThrowIfNull(nameof(validator));
+            string notNullParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
+            string notNullPreconditionDescription = preconditionDescription.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(preconditionDescription));
+
+            if (notNullValidator(notNullValue) != expected)
+            {
+                throw new ArgumentException(paramName: notNullParamName, message: notNullPreconditionDescription);
+            }
+
+            return notNullValue;
+        }
+
         #endregion //General Purpose Checks
     }
 }
