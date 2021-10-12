@@ -6,16 +6,16 @@ namespace Triplex.Validations.Utilities
     internal static class ComparableRangeFactory
     {
         internal static ComparableRange<T> WithMinInclusiveOnly<T>(in SimpleOption<T> min) where T : IComparable<T>
-            => new ComparableRange<T>(min, true, SimpleOption.None<T>(), false);
+            => new(min, true, SimpleOption.None<T>(), false);
 
         internal static ComparableRange<T> WithMinExclusiveOnly<T>(in SimpleOption<T> min) where T : IComparable<T>
-            => new ComparableRange<T>(min, false, SimpleOption.None<T>(), false);
+            => new(min, false, SimpleOption.None<T>(), false);
 
         internal static ComparableRange<T> WithMaxInclusiveOnly<T>(in SimpleOption<T> max) where T : IComparable<T>
-            => new ComparableRange<T>(SimpleOption.None<T>(), false, max, true);
+            => new(SimpleOption.None<T>(), false, max, true);
 
         internal static ComparableRange<T> WithMaxExclusiveOnly<T>(in SimpleOption<T> max) where T : IComparable<T>
-            => new ComparableRange<T>(SimpleOption.None<T>(), false, max, false);
+            => new(SimpleOption.None<T>(), false, max, false);
     }
 
     internal sealed class ComparableRange<TComparable> where TComparable : IComparable<TComparable>

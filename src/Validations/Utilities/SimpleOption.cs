@@ -5,10 +5,10 @@ namespace Triplex.Validations.Utilities
     internal static class SimpleOption
     {
         internal static SimpleOption<T> SomeNotNull<T>(in T value)
-            => new SimpleOption<T>(value, value is not null);
+            => new(value, value is not null);
 
         internal static SimpleOption<T> None<T>()
-            => new SimpleOption<T>(default!, false);
+            => new(default!, false);
     }
 
     internal struct SimpleOption<T>

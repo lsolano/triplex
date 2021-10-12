@@ -7,7 +7,7 @@ namespace Triplex.Validations
 {
     /// <summary>
     /// Object internal state checks. Use it to check Preconditions and Invariants. 
-    /// Always throw <see cref="System.InvalidOperationException"/> or some derivative.
+    /// Always throw <see cref="InvalidOperationException"/> or some derivative.
     /// </summary>
     public static class State
     {

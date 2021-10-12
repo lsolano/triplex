@@ -319,7 +319,7 @@ namespace Triplex.Validations
 
         #region Checksum algorithms
 
-        private static Regex LuhnDigitsRegex = new Regex("[0-9]{2}", RegexOptions.Compiled);
+        private static readonly Regex LuhnDigitsRegex = new("[0-9]{2}", RegexOptions.Compiled);
 
         /// <summary>
         /// Validates that the given argument (<paramref name="value" />) has a valid checksum digit as described by the Luhn algorithm or Luhn formula.
@@ -408,8 +408,8 @@ namespace Triplex.Validations
 
         private static bool IsBase64String(in string base64)
         {
-            Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
-            return Convert.TryFromBase64String(base64, buffer, out int bytesParsed);
+            Span<byte> buffer = new(new byte[base64.Length]);
+            return Convert.TryFromBase64String(base64, buffer, out _);
         }
 
         #endregion // Known Encodings
@@ -429,7 +429,7 @@ namespace Triplex.Validations
 
             if (IsEmpty(value))
             {
-                throw new ArgumentException(paramName);
+                throw new ArgumentException(validParamName);
             }
 
             return value;
@@ -460,7 +460,7 @@ namespace Triplex.Validations
 
             if (IsEmpty(value))
             {
-                throw new ArgumentException(paramName: paramName, message: validCustomMessage);
+                throw new ArgumentException(paramName: validParamName, message: validCustomMessage);
             }
 
             return value;

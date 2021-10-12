@@ -7,7 +7,6 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
     internal sealed class BetweenMessageFacts
     {
         private const string CustomMessage = "Look caller: the number is not in range.";
-        private const string DefaultParameterName = "length";
 
         [TestCase(-1, -1, 1)]
         [TestCase(-1, 0, 1)]
