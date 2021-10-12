@@ -1,4 +1,6 @@
-[assembly:System.CLSCompliant(true)]
+[assembly: System.CLSCompliant(true)]
+[assembly: System.Resources.NeutralResourcesLanguage("en")]
+[assembly: System.Runtime.InteropServices.ComVisible(false)]
 
 namespace Triplex.Validations.Properties
 {
