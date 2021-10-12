@@ -43,9 +43,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          dotnet clean --configuration Release
-          dotnet restore
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"lsolano_triplex" /o:"lsolano" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build --configuration Release
-          dotnet test --no-build --verbosity normal --configuration Release
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"lsolano_triplex" /o:"lsolano" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.coverage.exclusions=""
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then configuration="Release"; else configuration="Debug"; fi
+          dotnet clean
+          dotnet build -c "$configuration"
+          dotnet test -c "$configuration" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
