@@ -1,6 +1,4 @@
-.github/workflows/build.yml
-
-name: Build
+name: Analyse Code Quality
 on:
   push:
     branches:
