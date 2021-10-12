@@ -1,6 +1,13 @@
 # Triplex #
 Validation library inspired by the concepts of ***Secure by Design***, by Dan Bergh Johnsson, Daniel Deogun, and Daniel Sawano (MEAP 2019 Manning Publications). (Preconditions, Postconditions, Invariants & Proto-Primitives at [https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/code-contracts](https://docs.microsoft.com/en-us/dotnet/framework/debug-trace-profile/code-contracts "C# Code Contracts"))
 
+## Project's Code Health ##
+### Overall ###
+[![Quality Gate](https://sonarcloud.io/api/project_badges/quality_gate?project=lsolano_triplex&branch=master)](https://sonarcloud.io/dashboard?id=lsolano_triplex) [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=lsolano_triplex&metric=alert_status&branch=master)](https://sonarcloud.io/dashboard?id=lsolano_triplex)
+
+### Ratings ###
+[![SQALE Rating](https://sonarcloud.io/api/project_badges/measure?project=lsolano_triplex&metric=sqale_rating&branch=master)](https://sonarcloud.io/dashboard?id=lsolano_triplex) [![SQALE Index](https://sonarcloud.io/api/project_badges/measure?project=lsolano_triplex&metric=sqale_index&branch=master)](https://sonarcloud.io/dashboard?id=lsolano_triplex) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=lsolano_triplex&metric=reliability_rating&branch=master)](https://sonarcloud.io/dashboard?id=lsolano_triplex) 
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=lsolano_triplex&metric=security_rating&branch=master)](https://sonarcloud.io/dashboard?id=lsolano_triplex)
 
 ## Types of validations ##
 ### Arguments ###
