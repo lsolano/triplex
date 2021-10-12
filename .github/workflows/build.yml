@@ -43,9 +43,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"lsolano_triplex" /o:"lsolano" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+          $workingDir=pwd
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"lsolano_triplex" /o:"lsolano" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.dotnet.excludeTestProjects=true /d:sonar.exclusions=tests/** /d:sonar.cs.opencover.reportsPaths="$workingDir/test-results/coverage.opencover.xml"
           if ("$GITHUB_REF" -ceq "refs/heads/master") {$configuration="Release"} else {$configuration="Debug"}
           dotnet clean
           dotnet build -c "$configuration"
-          dotnet test -c "$configuration" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test --no-restore -c "$configuration" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutputFormat=json%2copencover /p:MergeWith="$workingDir/test-results/coverage.json" /p:CoverletOutput="$workingDir/test-results/"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
