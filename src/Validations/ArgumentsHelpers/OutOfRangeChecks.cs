@@ -75,7 +75,7 @@ namespace Triplex.Validations.ArgumentsHelpers
             [ValidatedNotNull] in TComparable? toInclusive,
             [ValidatedNotNull] in string paramName,
             [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>{
-                ComparableRange<TComparable> range = new ComparableRange<TComparable>(
+                ComparableRange<TComparable> range = new(
                     SimpleOption.SomeNotNull(fromInclusive.ValueOrThrowIfNull(nameof(fromInclusive))),
                     SimpleOption.SomeNotNull(toInclusive.ValueOrThrowIfNull(nameof(toInclusive))));
 

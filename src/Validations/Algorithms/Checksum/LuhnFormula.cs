@@ -13,7 +13,7 @@ namespace Triplex.Validations.Algorithms.Checksum
     public static class LuhnFormula
     {
         private const int MinimumElements = 2;
-        private static readonly Regex DigitsRegex = new Regex("^[0-9]+$", RegexOptions.Compiled);
+        private static readonly Regex DigitsRegex = new("^[0-9]+$", RegexOptions.Compiled);
 
         /// <summary>
         /// Indicates is a sequence of numbers is valid using the Luhn formula.
@@ -73,7 +73,7 @@ namespace Triplex.Validations.Algorithms.Checksum
         {
             int check = CalculateCheck(sanitizedDigits, isFullSequence: true);
 
-            int lastDigit = sanitizedDigits[sanitizedDigits.Length - 1];
+            int lastDigit = sanitizedDigits[^1];
 
             return check == lastDigit;
         }

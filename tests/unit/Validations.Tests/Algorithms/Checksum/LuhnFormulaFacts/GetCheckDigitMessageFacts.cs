@@ -17,7 +17,7 @@ namespace Triplex.Validations.Tests.Algorithms.Checksum.LuhnFormulaFacts
         [Test]
         public void Rejects_Less_Than_One_Elements()
         {
-            int[] digits = new int[0];
+            int[] digits = Array.Empty<int>();
 
             Assert.That(() => LuhnFormula.GetCheckDigit(digits), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
