@@ -20,13 +20,23 @@ namespace Triplex.Validations.Utilities
 
     internal sealed class ComparableRange<TComparable> where TComparable : IComparable<TComparable>
     {
-        internal ComparableRange(in SimpleOption<TComparable> min, in SimpleOption<TComparable> max) : this(min, true, max,
-            true)
+        internal ComparableRange(in SimpleOption<TComparable> min, in SimpleOption<TComparable> max)
+            : this(min, true, max, true)
         {
         }
 
-        internal ComparableRange(in SimpleOption<TComparable> min, in bool minInclusive, in SimpleOption<TComparable> max,
-            in bool maxInclusive)
+        internal ComparableRange(in SimpleOption<TComparable> min, in bool minInclusive,
+            in SimpleOption<TComparable> max, in bool maxInclusive)
+        {
+            ValidateRangeArguments(min, max);
+
+            Min = min;
+            Max = max;
+            MinInclusive = minInclusive;
+            MaxInclusive = maxInclusive;
+        }
+
+        private static void ValidateRangeArguments(SimpleOption<TComparable> min, SimpleOption<TComparable> max)
         {
             if (!min.HasValue && !max.HasValue)
             {
@@ -41,11 +51,6 @@ namespace Triplex.Validations.Utilities
                     throw new ArgumentOutOfRangeException(nameof(min), min, $"Must be less than {max.Value}.");
                 }
             }
-
-            Min = min;
-            Max = max;
-            MinInclusive = minInclusive;
-            MaxInclusive = maxInclusive;
         }
 
         private SimpleOption<TComparable> Min { get; }
