@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - master
-      - feature/13_codeQualityChecks
+      - feature/13_testCoverageReport
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
