@@ -38,9 +38,13 @@ bld/
 # Visual Studio 2017 auto generated files
 Generated\ Files/
 
-# MSTest test Results
+# Test Results
+# MSTest test results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
+
+# Coverlet test results
+test-results/*
 
 # NUnit
 *.VisualState.xml
