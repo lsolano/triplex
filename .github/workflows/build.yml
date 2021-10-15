@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - feature/13_testCoverageReport
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
