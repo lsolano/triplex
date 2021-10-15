@@ -3,7 +3,7 @@
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
 namespace Triplex.Validations.Utilities
 {
-    internal static class ComparableRangeFactory
+    public static class ComparableRangeFactory
     {
         internal static ComparableRange<T> WithMinInclusiveOnly<T>(in SimpleOption<T> min) where T : IComparable<T>
             => new(min, true, SimpleOption.None<T>(), false);
@@ -16,9 +16,23 @@ namespace Triplex.Validations.Utilities
 
         internal static ComparableRange<T> WithMaxExclusiveOnly<T>(in SimpleOption<T> max) where T : IComparable<T>
             => new(SimpleOption.None<T>(), false, max, false);
+
+        /// <summary>
+        /// Builds a range including both ends. 
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static ComparableRange<T> WithBothInclusive<T>(T min, T max) where T : IComparable<T>
+            => new(SimpleOption.SomeNotNull(min), true, SimpleOption.SomeNotNull(max), true);
     }
 
-    internal sealed class ComparableRange<TComparable> where TComparable : IComparable<TComparable>
+    /// <summary>
+    /// Helper class for abstract ranges.
+    /// </summary>
+    /// <typeparam name="TComparable"></typeparam>
+    public sealed class ComparableRange<TComparable> where TComparable : IComparable<TComparable>
     {
         internal ComparableRange(in SimpleOption<TComparable> min, in SimpleOption<TComparable> max)
             : this(min, true, max, true)
@@ -28,7 +42,7 @@ namespace Triplex.Validations.Utilities
         internal ComparableRange(in SimpleOption<TComparable> min, in bool minInclusive,
             in SimpleOption<TComparable> max, in bool maxInclusive)
         {
-            ValidateRangeArguments(min, max);
+            ValidateRangeArguments(min, minInclusive, max, maxInclusive);
 
             Min = min;
             Max = max;
@@ -36,7 +50,8 @@ namespace Triplex.Validations.Utilities
             MaxInclusive = maxInclusive;
         }
 
-        private static void ValidateRangeArguments(SimpleOption<TComparable> min, SimpleOption<TComparable> max)
+        private static void ValidateRangeArguments(SimpleOption<TComparable> min, bool minInclusive,
+            SimpleOption<TComparable> max, bool maxInclusive)
         {
             if (!min.HasValue && !max.HasValue)
             {
@@ -50,6 +65,16 @@ namespace Triplex.Validations.Utilities
                 {
                     throw new ArgumentOutOfRangeException(nameof(min), min, $"Must be less than {max.Value}.");
                 }
+            }
+
+            if (!min.HasValue && minInclusive)
+            {
+                throw new ArgumentException(paramName: nameof(min), message: "Must have value.");
+            }
+
+            if (!max.HasValue && maxInclusive)
+            {
+                throw new ArgumentException(paramName: nameof(max), message: "Must have value.");
             }
         }
 
