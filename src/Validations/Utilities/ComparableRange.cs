@@ -3,6 +3,9 @@
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
 namespace Triplex.Validations.Utilities
 {
+    /// <summary>
+    /// Comparable ranges factory. 
+    /// </summary>
     public static class ComparableRangeFactory
     {
         internal static ComparableRange<T> WithMinInclusiveOnly<T>(in SimpleOption<T> min) where T : IComparable<T>
@@ -53,11 +56,21 @@ namespace Triplex.Validations.Utilities
         private static void ValidateRangeArguments(SimpleOption<TComparable> min, bool minInclusive,
             SimpleOption<TComparable> max, bool maxInclusive)
         {
+            ThrowIfBothEmpty(min, max);
+            ThrowIfInvertedOrClosed(min, max);
+            ThrowIfRequiredEndIsMissing(min, minInclusive, max, maxInclusive);
+        }
+
+        private static void ThrowIfBothEmpty(SimpleOption<TComparable> min, SimpleOption<TComparable> max)
+        {
             if (!min.HasValue && !max.HasValue)
             {
                 throw new ArgumentException("Useless range detected, no min or max boundaries.");
             }
+        }
 
+        private static void ThrowIfInvertedOrClosed(SimpleOption<TComparable> min, SimpleOption<TComparable> max)
+        {
             if (min.HasValue && max.HasValue)
             {
                 bool minIsEqualsToOrGreaterThanMax = min.Value.CompareTo(max.Value) >= 0;
@@ -66,15 +79,18 @@ namespace Triplex.Validations.Utilities
                     throw new ArgumentOutOfRangeException(nameof(min), min, $"Must be less than {max.Value}.");
                 }
             }
+        }
 
+        private static void ThrowIfRequiredEndIsMissing(SimpleOption<TComparable> min, bool minInclusive, SimpleOption<TComparable> max, bool maxInclusive)
+        {
             if (!min.HasValue && minInclusive)
             {
-                throw new ArgumentException(paramName: nameof(min), message: "Must have value.");
+                throw new ArgumentException(message: "Must have value.", paramName: nameof(min));
             }
 
             if (!max.HasValue && maxInclusive)
             {
-                throw new ArgumentException(paramName: nameof(max), message: "Must have value.");
+                throw new ArgumentException(message: "Must have value.", paramName: nameof(max));
             }
         }
 
