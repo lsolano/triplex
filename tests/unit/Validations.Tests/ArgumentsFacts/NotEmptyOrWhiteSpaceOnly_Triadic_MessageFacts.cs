@@ -4,7 +4,7 @@ using System;
 namespace Triplex.Validations.Tests.ArgumentsFacts
 {
     [TestFixture]
-    internal sealed class NotEmptyOrWhiteSpaceOnlyMessageFacts
+    internal sealed class NotEmptyOrWhiteSpaceOnly_Triadic_MessageFacts
     {
         private const string CustomMessage = "Some error message, caller provided.";
 
