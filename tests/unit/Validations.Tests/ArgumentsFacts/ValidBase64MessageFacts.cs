@@ -22,9 +22,12 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
                             .And.Property(nameof(ArgumentNullException.ParamName)).EqualTo(DefaultParameterName));
         }
 
-        [Test]
-        public void With_Peter_Throws_Nothing()
-            => Assert.That(() => ValidBase64("cGV0ZXI=", DefaultParameterName, CustomMessage, UseCustomErrorMessage), Throws.Nothing);
+        [TestCase("c3BpZGVyIG1hbgá=")]
+        [TestCase("cGV0ZXí")]
+        [TestCase("c3BpZGVyIG1hbg=")]
+        public void With_Invalid_Value_Throws_FormatException(string? iAmInvalid)
+            => Assert.That(() => ValidBase64(iAmInvalid!, nameof(iAmInvalid), CustomMessage, UseCustomErrorMessage),
+                Throws.InstanceOf<FormatException>());
 
         [TestCase("cGV0ZXI=")]
         [TestCase("c3BpZGVyIG1hbg==")]

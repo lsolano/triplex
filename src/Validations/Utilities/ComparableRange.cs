@@ -81,7 +81,8 @@ namespace Triplex.Validations.Utilities
             }
         }
 
-        private static void ThrowIfRequiredEndIsMissing(SimpleOption<TComparable> min, bool minInclusive, SimpleOption<TComparable> max, bool maxInclusive)
+        private static void ThrowIfRequiredEndIsMissing(SimpleOption<TComparable> min, bool minInclusive,
+            SimpleOption<TComparable> max, bool maxInclusive)
         {
             if (!min.HasValue && minInclusive)
             {
