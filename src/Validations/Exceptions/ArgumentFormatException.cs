@@ -23,7 +23,6 @@ namespace Triplex.Validations.Exceptions
         /// Initializes a new instance of the <see cref="ArgumentFormatException"/> class.
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the current exception.</param>
-        [CLSCompliant(false)]
         public ArgumentFormatException(string paramName) : base(paramName: paramName, message: DefaultMessage)
         {
         }
