@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
+using Triplex.Validations.Exceptions;
 
 namespace Triplex.Validations.Tests.ArgumentsFacts
 {
@@ -34,7 +35,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         {
             string? copy = dummyParam;
             Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly(copy, nameof(dummyParam)),
-                Throws.InstanceOf<Exceptions.ArgumentFormatException>()
+                Throws.InstanceOf<ArgumentFormatException>()
                 .With.Property(nameof(ArgumentException.ParamName)).EqualTo(nameof(dummyParam)));
         }
 
@@ -74,8 +75,8 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         {
             string? paramNameValue = paramName;
             Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly("dummyValue", paramNameValue!),
-                Throws.InstanceOf<Exceptions.ArgumentFormatException>()
-                .With.Property(nameof(Exceptions.ArgumentFormatException.ParamName)).EqualTo("paramName"));
+                Throws.InstanceOf<ArgumentFormatException>()
+                .With.Property(nameof(ArgumentFormatException.ParamName)).EqualTo("paramName"));
         }
     }
 }
