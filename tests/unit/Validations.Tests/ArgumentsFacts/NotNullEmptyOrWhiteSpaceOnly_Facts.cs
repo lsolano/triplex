@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
+using Triplex.Validations.Exceptions;
 
 namespace Triplex.Validations.Tests.ArgumentsFacts
 {
@@ -39,7 +40,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
             string? someErrorMessageCopy = someErrorMessage;
 
             Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam), someErrorMessageCopy!),
-                Throws.InstanceOf<Exceptions.ArgumentFormatException>()
+                Throws.InstanceOf<ArgumentFormatException>()
                 .With.Property(nameof(ArgumentException.ParamName)).EqualTo("customMessage"));
         }
        
@@ -71,7 +72,7 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         {
             string? dummyParamValue = dummyParam;
             Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly(dummyParamValue, nameof(dummyParam), CustomMessage),
-                Throws.InstanceOf<Exceptions.ArgumentFormatException>()
+                Throws.InstanceOf<ArgumentFormatException>()
                 .With.Property(nameof(ArgumentException.ParamName)).EqualTo(nameof(dummyParam)));
         }
 
@@ -111,8 +112,8 @@ namespace Triplex.Validations.Tests.ArgumentsFacts
         {
             string? paramNameValue = paramName;
             Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly("dummyValue", paramNameValue!, CustomMessage),
-                Throws.InstanceOf<Exceptions.ArgumentFormatException>()
-                .With.Property(nameof(Exceptions.ArgumentFormatException.ParamName)).EqualTo("paramName"));
+                Throws.InstanceOf<ArgumentFormatException>()
+                .With.Property(nameof(ArgumentFormatException.ParamName)).EqualTo("paramName"));
         }
     }
 }
