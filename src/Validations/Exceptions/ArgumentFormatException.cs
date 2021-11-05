@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Triplex.Validations.Exceptions
 {
@@ -7,7 +6,6 @@ namespace Triplex.Validations.Exceptions
     /// The exception that is thrown when one of the arguments provided to a method is not valid due to a format
     /// problem, usually refering to a <see cref="String"/> or similar.
     /// </summary>
-    [Serializable]
     public sealed class ArgumentFormatException : ArgumentException
     {
         private const string DefaultMessage = "Argument has an invalid format.";
@@ -57,10 +55,6 @@ namespace Triplex.Validations.Exceptions
             : base(paramName: paramName, message: message, innerException: innerException)
         {
         }
-
-        private ArgumentFormatException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
-        {
-        }
     }
 }
+
