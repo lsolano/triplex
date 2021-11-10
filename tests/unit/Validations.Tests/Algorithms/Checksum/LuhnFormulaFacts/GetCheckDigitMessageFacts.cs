@@ -1,6 +1,3 @@
-using NUnit.Framework;
-using System;
-using System.Linq;
 using Triplex.Validations.Algorithms.Checksum;
 
 namespace Triplex.Validations.Tests.Algorithms.Checksum.LuhnFormulaFacts

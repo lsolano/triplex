@@ -1,6 +1,3 @@
-using System;
-using NUnit.Framework;
-
 namespace Triplex.Validations.Tests.StateFacts
 {
     [TestFixture]

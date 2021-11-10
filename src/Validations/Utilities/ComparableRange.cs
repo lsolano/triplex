@@ -1,6 +1,4 @@
-﻿using System;
-
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
+﻿#pragma warning disable CA1303 // Do not pass literals as localized parameters
 namespace Triplex.Validations.Utilities
 {
     /// <summary>

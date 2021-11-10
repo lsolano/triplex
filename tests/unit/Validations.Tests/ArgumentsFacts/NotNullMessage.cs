@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using NUnit.Framework;
-
-namespace Triplex.Validations.Tests.ArgumentsFacts
+﻿namespace Triplex.Validations.Tests.ArgumentsFacts
 {
     internal sealed class NotNullMessage : BaseFixtureForOptionalCustomMessage
     {

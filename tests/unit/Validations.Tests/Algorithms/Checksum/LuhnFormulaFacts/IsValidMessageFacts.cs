@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-
-using NUnit.Framework;
-
-using Triplex.Validations.Algorithms.Checksum;
+﻿using Triplex.Validations.Algorithms.Checksum;
 
 namespace Triplex.Validations.Tests.Algorithms.Checksum.LuhnFormulaFacts
 {

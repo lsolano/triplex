@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-using System;
-using Triplex.Validations.Exceptions;
+﻿using Triplex.Validations.Exceptions;
 
 namespace Triplex.Validations.Tests.ArgumentsFacts
 {
