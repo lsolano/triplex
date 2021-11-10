@@ -19,10 +19,8 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-#pragma warning disable csharpsquid:S4018
-        public static SimpleOption<T> None<T>()
+        public static SimpleOption<T> None<T>() //NOSONAR
             => new(default!, false);
-#pragma warning restore csharpsquid:S4018
     }
 
     /// <summary>
