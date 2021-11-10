@@ -2,13 +2,9 @@
 {
     /// <summary>
     /// The exception that is thrown when one of the arguments provided to a method is not valid due to a format
-    /// problem, usually refering to a <see cref="String"/> or similar.
+    /// problem, usually refering to a <see cref="string"/> or similar.
     /// </summary>
-#pragma warning disable CA2229 //Implement serialization constructors
-#pragma warning disable CA2237 //Mark ISerializable types with SerializableAttribute
-    public sealed class ArgumentFormatException : ArgumentException
-#pragma warning restore CA2229 //Implement serialization constructors
-#pragma warning restore CA2237 //Mark ISerializable types with SerializableAttribute
+    public sealed class ArgumentFormatException : ArgumentException //NOSONAR
     {
         private const string DefaultMessage = "Argument has an invalid format.";
 
