@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Triplex.Validations.ArgumentsHelpers
+﻿namespace Triplex.Validations.ArgumentsHelpers
 {
     internal static class EnumerationChecks
     {

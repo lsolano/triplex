@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-
-namespace Triplex.Validations.Tests.ArgumentsFacts
+﻿namespace Triplex.Validations.Tests.ArgumentsFacts
 {
     [TestFixture(false)]
     [TestFixture(true)]

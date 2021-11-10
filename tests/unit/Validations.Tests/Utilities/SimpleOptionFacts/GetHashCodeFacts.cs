@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using NUnit.Framework;
 using Triplex.Validations.Utilities;
 
 namespace Triplex.Validations.Tests.Utilities.SimpleOptionFacts

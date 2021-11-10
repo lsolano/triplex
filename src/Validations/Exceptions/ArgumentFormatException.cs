@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Triplex.Validations.Exceptions
+﻿namespace Triplex.Validations.Exceptions
 {
     /// <summary>
     /// The exception that is thrown when one of the arguments provided to a method is not valid due to a format

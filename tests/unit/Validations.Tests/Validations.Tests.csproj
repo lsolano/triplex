@@ -2,6 +2,7 @@
     <PropertyGroup>
         <TargetFrameworks>net6.0</TargetFrameworks>
         <LangVersion>10.0</LangVersion>
+        <ImplicitUsings>disable</ImplicitUsings>
         <IsTestProject>true</IsTestProject>
         <RootNamespace>Triplex.Validations.Tests</RootNamespace>
         <AssemblyName>Triplex.Validations.Tests</AssemblyName>

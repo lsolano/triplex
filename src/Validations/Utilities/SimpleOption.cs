@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Triplex.Validations.Utilities
+﻿namespace Triplex.Validations.Utilities
 {
     /// <summary>
     /// Options builder class.

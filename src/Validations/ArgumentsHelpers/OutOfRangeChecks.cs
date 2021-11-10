@@ -1,5 +1,4 @@
-﻿using System;
-using Triplex.Validations.Utilities;
+﻿using Triplex.Validations.Utilities;
 
 namespace Triplex.Validations.ArgumentsHelpers
 {

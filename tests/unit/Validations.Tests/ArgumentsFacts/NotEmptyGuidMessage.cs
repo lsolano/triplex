@@ -1,7 +1,3 @@
-using System;
-
-using NUnit.Framework;
-
 namespace Triplex.Validations.Tests.ArgumentsFacts
 {
     internal sealed class NotEmptyGuidMessage : BaseFixtureForOptionalCustomMessage

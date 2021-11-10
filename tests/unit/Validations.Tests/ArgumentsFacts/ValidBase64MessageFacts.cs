@@ -1,7 +1,4 @@
-﻿using NUnit.Framework;
-using System;
-
-namespace Triplex.Validations.Tests.ArgumentsFacts
+﻿namespace Triplex.Validations.Tests.ArgumentsFacts
 {
     internal sealed class ValidBase64MessageFacts : BaseFixtureForOptionalCustomMessage
     {
