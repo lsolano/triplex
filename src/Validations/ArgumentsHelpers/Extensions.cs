@@ -16,7 +16,8 @@ internal static class Extensions
         throw new ArgumentNullException(paramName);
     }
 
-    internal static T ValueOrThrowIfNull<T>([ValidatedNotNull] this T? value, in string paramName, in string customMessage)
+    internal static T ValueOrThrowIfNull<T>([ValidatedNotNull] this T? value, in string paramName,
+        in string customMessage)
     {
         if (value is not null)
         {
@@ -56,26 +57,31 @@ internal static class Extensions
         => ValueOrThrowIfNull(value, paramName)
             .ValueOrThrowIfZeroLength(paramName);
 
-    internal static string ValueOrThrowIfNullOrZeroLength([ValidatedNotNull] this string? value, in string paramName, in string customMessage)
+    internal static string ValueOrThrowIfNullOrZeroLength([ValidatedNotNull] this string? value, in string paramName,
+        in string customMessage)
         => ValueOrThrowIfNull(value, paramName, customMessage)
             .ValueOrThrowIfZeroLength(paramName, customMessage);
 
-    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([ValidatedNotNull] this string? value, in string paramName)
+    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([ValidatedNotNull] this string? value,
+        in string paramName)
         => ValueOrThrowIfNull(value, paramName)
             .ValueOrThrowIfZeroLength(paramName)
                 .ValueOrThrowIfWhiteSpaceOnly(paramName);
 
-    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([ValidatedNotNull] this string? value, in string paramName, in string customMessage)
+    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([ValidatedNotNull] this string? value,
+        in string paramName, in string customMessage)
         => ValueOrThrowIfNull(value, paramName, customMessage)
             .ValueOrThrowIfZeroLength(paramName, customMessage)
                 .ValueOrThrowIfWhiteSpaceOnly(paramName, customMessage);
 
     internal static bool IsNotWhiteSpace(this char ch) => !char.IsWhiteSpace(ch);
 
-    internal static TEnumType ValueOrThrowIfNotDefined<TEnumType>(this TEnumType value, in string paramName) where TEnumType : Enum
+    internal static TEnumType ValueOrThrowIfNotDefined<TEnumType>(this TEnumType value, in string paramName)
+        where TEnumType : Enum
         => ValueOrThrowIfNotDefined(value, paramName, null);
 
-    internal static TEnumType ValueOrThrowIfNotDefined<TEnumType>(this TEnumType value, in string paramName, in string? customMessage) where TEnumType : Enum
+    internal static TEnumType ValueOrThrowIfNotDefined<TEnumType>(this TEnumType value, in string paramName,
+        in string? customMessage) where TEnumType : Enum
     {
         if (Enum.IsDefined(typeof(TEnumType), value))
         {
@@ -94,7 +100,8 @@ internal static class Extensions
         throw new ArgumentOutOfRangeException(paramName, value, finalMessage);
     }
 
-    internal static TType[] ValueOrThrowIfNullOrWithLessThanElements<TType>([ValidatedNotNull] this TType[]? value, in int minimumElements, in string paramName)
+    internal static TType[] ValueOrThrowIfNullOrWithLessThanElements<TType>([ValidatedNotNull] this TType[]? value,
+        in int minimumElements, in string paramName)
     {
         OutOfRangeChecks.GreaterThanOrEqualTo(ValueOrThrowIfNull(value, paramName).Length, minimumElements, paramName);
 
