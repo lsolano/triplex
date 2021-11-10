@@ -73,10 +73,10 @@ namespace Triplex.Validations.Utilities
         {
             if (min.HasValue && max.HasValue)
             {
-                bool minIsEqualsToOrGreaterThanMax = min.Value.CompareTo(max.Value) >= 0;
+                bool minIsEqualsToOrGreaterThanMax = min.ValueOrFailure.CompareTo(max.ValueOrFailure) >= 0;
                 if (minIsEqualsToOrGreaterThanMax)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(min), min, $"Must be less than {max.Value}.");
+                    throw new ArgumentOutOfRangeException(nameof(min), min, $"Must be less than {max.ValueOrFailure}.");
                 }
             }
         }
@@ -116,7 +116,7 @@ namespace Triplex.Validations.Utilities
                 return;
             }
 
-            int valueVersusMinimum = value.CompareTo(Min.Value);
+            int valueVersusMinimum = value.CompareTo(Min.ValueOrFailure);
             bool valueBelowMinimum = MinInclusive ? valueVersusMinimum < 0 : valueVersusMinimum <= 0;
 
             if (!valueBelowMinimum)
@@ -126,7 +126,7 @@ namespace Triplex.Validations.Utilities
 
             string orEqualToOption = MinInclusive ? "or equal to " : string.Empty;
             throw new ArgumentOutOfRangeException(paramName, value,
-                customMessage ?? $"Must be greater than {orEqualToOption}{Min.Value}.");
+                customMessage ?? $"Must be greater than {orEqualToOption}{Min.ValueOrFailure}.");
         }
 
         private void CheckUpperBoundary(in TComparable value, in string paramName, in string? customMessage)
@@ -136,7 +136,7 @@ namespace Triplex.Validations.Utilities
                 return;
             }
 
-            int valueVersusMaximum = value.CompareTo(Max.Value);
+            int valueVersusMaximum = value.CompareTo(Max.ValueOrFailure);
             bool valueIsAboveMaximum = MaxInclusive ? valueVersusMaximum > 0 : valueVersusMaximum >= 0;
 
             if (!valueIsAboveMaximum)
@@ -146,7 +146,7 @@ namespace Triplex.Validations.Utilities
 
             string orEqualToOption = MaxInclusive ? "or equal to " : string.Empty;
             throw new ArgumentOutOfRangeException(paramName, value,
-                customMessage ?? $"Must be less than {orEqualToOption}{Max.Value}.");
+                customMessage ?? $"Must be less than {orEqualToOption}{Max.ValueOrFailure}.");
         }
     }
 }
