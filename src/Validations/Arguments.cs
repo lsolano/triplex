@@ -142,6 +142,64 @@ public static class Arguments
 
     #endregion
 
+    #region Emptyness
+    /// <summary>
+    /// Checks that the provided value is not empty.
+    /// </summary>
+    /// <param name="value">Value to check</param>
+    /// <param name="paramName">Parameter name, from caller's context.</param>
+    /// <returns><paramref name="value"/></returns>
+    /// <exception cref="ArgumentException">If <paramref name="value"/> is an empty <see cref="Guid"/>.</exception>
+    [DebuggerStepThrough]
+    public static Guid NotEmpty(Guid value, [ValidatedNotNull] string paramName)
+    {
+        string validParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
+
+        if (IsEmpty(value))
+        {
+            throw new ArgumentException(validParamName);
+        }
+
+        return value;
+    }
+
+    /// <summary>
+    /// Checks that the provided value is not empty.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// * Certain derivatives from <see cref="ArgumentException" /> such as <see cref="ArgumentNullException" /> 
+    /// does not allow direct message setting.
+    /// </para>
+    /// <para>
+    /// This one will use the provided message and used to build a final one.
+    /// </para>
+    /// </remarks>
+    /// <param name="value">Value to check</param>
+    /// <param name="paramName">Parameter name, from caller's context.</param>
+    /// <param name="customMessage">Custom exception error message</param>
+    /// <returns><paramref name="value"/></returns>
+    /// <exception cref="ArgumentException">If <paramref name="value"/> is an empty <see cref="Guid"/>.</exception>
+    [DebuggerStepThrough]
+    public static Guid NotEmpty(Guid value, [ValidatedNotNull] string paramName,
+        [ValidatedNotNull] string customMessage)
+    {
+        (string validParamName, string validCustomMessage) =
+            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
+             customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(customMessage)));
+
+        if (IsEmpty(value))
+        {
+            throw new ArgumentException(paramName: validParamName, message: validCustomMessage);
+        }
+
+        return value;
+    }
+
+    private static bool IsEmpty(Guid value) => value == default;
+
+    #endregion //Emptyness
+
     #region Enumerations Checks
 
     /// <summary>
@@ -472,63 +530,7 @@ public static class Arguments
 
     #endregion // Known Encodings
 
-    #region Emptyness
-    /// <summary>
-    /// Checks that the provided value is not empty.
-    /// </summary>
-    /// <param name="value">Value to check</param>
-    /// <param name="paramName">Parameter name, from caller's context.</param>
-    /// <returns><paramref name="value"/></returns>
-    /// <exception cref="ArgumentException">If <paramref name="value"/> is an empty <see cref="Guid"/>.</exception>
-    [DebuggerStepThrough]
-    public static Guid NotEmpty(Guid value, [ValidatedNotNull] string paramName)
-    {
-        string validParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
 
-        if (IsEmpty(value))
-        {
-            throw new ArgumentException(validParamName);
-        }
-
-        return value;
-    }
-
-    /// <summary>
-    /// Checks that the provided value is not empty.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// * Certain derivatives from <see cref="ArgumentException" /> such as <see cref="ArgumentNullException" /> 
-    /// does not allow direct message setting.
-    /// </para>
-    /// <para>
-    /// This one will use the provided message and used to build a final one.
-    /// </para>
-    /// </remarks>
-    /// <param name="value">Value to check</param>
-    /// <param name="paramName">Parameter name, from caller's context.</param>
-    /// <param name="customMessage">Custom exception error message</param>
-    /// <returns><paramref name="value"/></returns>
-    /// <exception cref="ArgumentException">If <paramref name="value"/> is an empty <see cref="Guid"/>.</exception>
-    [DebuggerStepThrough]
-    public static Guid NotEmpty(Guid value, [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string customMessage)
-    {
-        (string validParamName, string validCustomMessage) =
-            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
-             customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(customMessage)));
-
-        if (IsEmpty(value))
-        {
-            throw new ArgumentException(paramName: validParamName, message: validCustomMessage);
-        }
-
-        return value;
-    }
-
-    private static bool IsEmpty(Guid value) => value == default;
-
-    #endregion //Emptyness
 
     #region General Purpose Checks
 
