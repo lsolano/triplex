@@ -43,4 +43,4 @@ jobs:
       run: cd src/Validations/bin/Release
       
     - name: Deploy To Nuget.org
-      run: dotnet nuget push *.nupkg -k ${{secrets.NUGET_DEPLOYMENT_KEY}} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push "*.nupkg" -k ${{secrets.NUGET_DEPLOYMENT_KEY}} -s https://api.nuget.org/v3/index.json
