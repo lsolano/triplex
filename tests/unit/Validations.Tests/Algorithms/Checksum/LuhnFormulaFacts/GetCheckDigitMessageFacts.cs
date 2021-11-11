@@ -20,7 +20,7 @@ internal sealed class GetCheckDigitMessageFacts
     }
 
     [Test]
-    public void Accepts_One_Or_More_Elements([Values(1, 2, 3, 5, 8, 13)] in int length)
+    public void Accepts_One_Or_More_Elements([Values(1, 2, 3, 5, 8, 13)] int length)
     {
         int[] digits = new int[length];
 
@@ -54,7 +54,7 @@ internal sealed class GetCheckDigitMessageFacts
     [TestCase("1000000008", 2)]
     [TestCase("1000000009", 0)]
     [TestCase("1000000010", 8)]
-    public void Returns_True_For_Valid_Sequences(in string rawDigits, in int expectedCheckDigit)
+    public void Returns_True_For_Valid_Sequences(string rawDigits, int expectedCheckDigit)
     {
         int[] digits = rawDigits.Select(ch => int.Parse(ch.ToString())).ToArray();
 

@@ -11,7 +11,8 @@ internal sealed class NotEmptyGuidMessage : BaseFixtureForOptionalCustomMessage
 
     [Test]
     public void With_New_Guid_Throws_Nothing()
-        => Assert.That(() => NotEmpty(Guid.NewGuid(), DefaultParameterName, CustomMessage, UseCustomErrorMessage), Throws.Nothing);
+        => Assert.That(() => NotEmpty(Guid.NewGuid(), DefaultParameterName, CustomMessage, UseCustomErrorMessage), 
+            Throws.Nothing);
 
     [Test]
     public void Returns_Value_When_No_Exception()
@@ -43,7 +44,7 @@ internal sealed class NotEmptyGuidMessage : BaseFixtureForOptionalCustomMessage
             .And.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
     }
 
-    private static Guid NotEmpty(in Guid value, in string? paramName, in string? customMessage, bool useCustomMessage)
+    private static Guid NotEmpty(Guid value, string? paramName, string? customMessage, bool useCustomMessage)
         => useCustomMessage ?
             Arguments.NotEmpty(value, paramName!, customMessage!)
             : Arguments.NotEmpty(value, paramName!);

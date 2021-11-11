@@ -62,10 +62,12 @@ internal static class NotEmptyMessageFacts
             string? dummyParam = null;
 
             Constraint exceptionConstraint = AddMessageConstraint(
-                Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(nameof(dummyParam)),
+                Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName))
+                                                 .EqualTo(nameof(dummyParam)),
                 UseCustomErrorMessage);
 
-            Assert.That(() => NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage), exceptionConstraint);
+            Assert.That(() => NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage),
+                exceptionConstraint);
         }
 
         [Test]
@@ -78,10 +80,11 @@ internal static class NotEmptyMessageFacts
                 .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(nameof(dummyParam)),
                 UseCustomErrorMessage);
 
-            Assert.That(() => NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage), exceptionConstraint);
+            Assert.That(() => NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage),
+                exceptionConstraint);
         }
 
-        private static Constraint AddMessageConstraint(in Constraint messageConstraint, in bool useCustomErrorMessage)
+        private static Constraint AddMessageConstraint(Constraint messageConstraint, bool useCustomErrorMessage)
             => useCustomErrorMessage ? messageConstraint.With.Message.StartsWith(CustomMessage) : messageConstraint;
     }
 
@@ -96,7 +99,7 @@ internal static class NotEmptyMessageFacts
         [TestCase("\r")]
         [TestCase("\t")]
         [TestCase("\n\r\t ")]
-        public void With_Common_White_Space_Sequences_Value_Throws_Nothing(in string? dummyParam)
+        public void With_Common_White_Space_Sequences_Value_Throws_Nothing(string? dummyParam)
         {
             string myDummyValue = NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage);
 
@@ -106,7 +109,7 @@ internal static class NotEmptyMessageFacts
         [TestCase("peter")]
         [TestCase("parker ")]
         [TestCase(" Peter Parker Is Spiderman ")]
-        public void With_Non_Empty_Values_Throws_Nothing(in string? someParam)
+        public void With_Non_Empty_Values_Throws_Nothing(string? someParam)
         {
             string myDummyValue = NotNullOrEmpty(someParam, nameof(someParam), CustomMessage, UseCustomErrorMessage);
 
@@ -115,10 +118,10 @@ internal static class NotEmptyMessageFacts
     }
 
     private static string NotNullOrEmpty(
-        in string? value,
-        in string? paramName,
-        in string? customMessage,
-        in bool useCustomErrorMessage)
+        string? value,
+        string? paramName,
+        string? customMessage,
+        bool useCustomErrorMessage)
         => useCustomErrorMessage ? Arguments.NotEmpty(value, paramName!, customMessage!)
                                  : Arguments.NotEmpty(value, paramName!);
 }

@@ -15,7 +15,7 @@ internal sealed class IsValidMessageFacts
     [TestCase("1-01")]
     [TestCase("1+01")]
     [TestCase("ab")]
-    public void With_Non_Digit_Characters_Throws_FormatException(in string rawDigits)
+    public void With_Non_Digit_Characters_Throws_FormatException(string rawDigits)
     {
         const int zeroAsciiCode = '0';
         int[] digits = rawDigits.Select(ch => ch - zeroAsciiCode).ToArray();
@@ -24,7 +24,7 @@ internal sealed class IsValidMessageFacts
     }
 
     [Test]
-    public void Rejects_Less_Than_Two_Elements([Values(0, 1)] in int length)
+    public void Rejects_Less_Than_Two_Elements([Values(0, 1)] int length)
     {
         int[] digits = new int[length];
 
@@ -32,7 +32,7 @@ internal sealed class IsValidMessageFacts
     }
 
     [Test]
-    public void Accepts_Two_Or_More_Elements([Values(2, 3, 5, 8, 13)] in int length)
+    public void Accepts_Two_Or_More_Elements([Values(2, 3, 5, 8, 13)] int length)
     {
         int[] digits = new int[length];
 
@@ -68,7 +68,7 @@ internal sealed class IsValidMessageFacts
     [TestCase("10000000082")]
     [TestCase("10000000090")]
     [TestCase("10000000108")]
-    public void Returns_True_For_Valid_Sequences(in string rawDigits)
+    public void Returns_True_For_Valid_Sequences(string rawDigits)
     {
         const int zeroAsciiCode = '0';
         int[] digits = rawDigits.Select(ch => ch - zeroAsciiCode).ToArray();
@@ -78,7 +78,7 @@ internal sealed class IsValidMessageFacts
 
     [TestCase("10000000091")]
     [TestCase("10000000109")]
-    public void Returns_False_For_Invalid_Sequences(in string rawDigits)
+    public void Returns_False_For_Invalid_Sequences(string rawDigits)
     {
         const int zeroAsciiCode = '0';
         int[] digits = rawDigits.Select(ch => ch - zeroAsciiCode).ToArray();

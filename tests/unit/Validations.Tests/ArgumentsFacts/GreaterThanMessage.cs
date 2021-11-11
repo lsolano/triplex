@@ -13,7 +13,7 @@ internal sealed class GreaterThanMessage : BaseFixtureForOptionalCustomMessage
     [TestCase(1, 0)]
     [TestCase(2, 1)]
     [TestCase(2, -1)]
-    public void With_Valid_Integers_Throws_Nothing(in int theValue, in int other)
+    public void With_Valid_Integers_Throws_Nothing(int theValue, int other)
     {
         int validatedValue = Arguments.GreaterThan(theValue, other, nameof(theValue), CustomError);
 
@@ -25,7 +25,7 @@ internal sealed class GreaterThanMessage : BaseFixtureForOptionalCustomMessage
     [TestCase(1L, 0L)]
     [TestCase(2L, 1L)]
     [TestCase(2L, -1L)]
-    public void With_Valid_Longs_Throws_Nothing(in long theValue, in long other)
+    public void With_Valid_Longs_Throws_Nothing(long theValue, long other)
     {
         long validatedValue = GreaterThan(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage);
 
@@ -34,7 +34,7 @@ internal sealed class GreaterThanMessage : BaseFixtureForOptionalCustomMessage
 
     [TestCase("b", "a")]
     [TestCase("c", "b")]
-    public void With_Valid_Strings_Throws_Nothing(in string theValue, in string other)
+    public void With_Valid_Strings_Throws_Nothing(string theValue, string other)
     {
         string validatedValue = GreaterThan(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage);
 
@@ -46,7 +46,7 @@ internal sealed class GreaterThanMessage : BaseFixtureForOptionalCustomMessage
     [TestCase(-2, 2)]
     [TestCase(-2, -2)]
     [TestCase(2, 2)]
-    public void With_Less_Or_Equal_Integers_Throws_ArgumentOutOfRangeException(in int theValue, in int other)
+    public void With_Less_Or_Equal_Integers_Throws_ArgumentOutOfRangeException(int theValue, int other)
     {
         Constraint throwsOutOfRange = BuildConstraint(theValue, other, nameof(theValue), CustomError);
         (int theValueCopy, int otherCopy) = (theValue, other);
@@ -60,7 +60,7 @@ internal sealed class GreaterThanMessage : BaseFixtureForOptionalCustomMessage
     [TestCase("a", "c")]
     [TestCase("a", "a")]
     [TestCase("c", "c")]
-    public void With_Less_Or_Equal_Strings_Throws_ArgumentOutOfRangeException(in string theValue, in string other)
+    public void With_Less_Or_Equal_Strings_Throws_ArgumentOutOfRangeException(string theValue, string other)
     {
         Constraint throwsOutOfRange = BuildConstraint(theValue, other, nameof(theValue), CustomError);
         (string theValueCopy, string otherCopy) = (theValue, other);
@@ -69,7 +69,7 @@ internal sealed class GreaterThanMessage : BaseFixtureForOptionalCustomMessage
             throwsOutOfRange);
     }
 
-    private Constraint BuildConstraint(in object theValue, in object other, in string paramName, in string customError)
+    private Constraint BuildConstraint(object theValue, object other, string paramName, string customError)
     {
         Constraint throwsOutOfRange = Throws.InstanceOf<ArgumentOutOfRangeException>()
             .With.Property(nameof(ArgumentOutOfRangeException.ActualValue)).EqualTo(theValue)
@@ -113,11 +113,11 @@ internal sealed class GreaterThanMessage : BaseFixtureForOptionalCustomMessage
     }
 
     private static TComparable GreaterThan<TComparable>(
-        in TComparable? value,
-        in TComparable? other,
-        in string? paramName,
-        in string? customError,
-        in bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
+        TComparable? value,
+        TComparable? other,
+        string? paramName,
+        string? customError,
+        bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
     {
         return useCustomErrorMessage
             ? Arguments.GreaterThan(value, other, paramName!, customError!)

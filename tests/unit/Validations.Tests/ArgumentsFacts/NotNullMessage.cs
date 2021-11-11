@@ -21,12 +21,13 @@ internal sealed class NotNullMessage : BaseFixtureForOptionalCustomMessage
 
     [Test]
     public void With_Peter_Throws_Nothing()
-        => Assert.That(() => NotNull("Peter", DefaultParameterName, CustomMessage, UseCustomErrorMessage), Throws.Nothing);
+        => Assert.That(() => NotNull("Peter", DefaultParameterName, CustomMessage, UseCustomErrorMessage),
+            Throws.Nothing);
 
     [TestCase("")]
     [TestCase("peter")]
     [TestCase("spider-man")]
-    public void Returns_Value_When_No_Exception_For_Strings(in string value)
+    public void Returns_Value_When_No_Exception_For_Strings(string value)
     {
         string name = NotNull(value, nameof(value), CustomMessage, UseCustomErrorMessage);
 
@@ -43,19 +44,21 @@ internal sealed class NotNullMessage : BaseFixtureForOptionalCustomMessage
     }
 
 #if NETFRAMEWORK
-            private static readonly string DefaultErrorTemplate = $"Value cannot be null.{System.Environment.NewLine}Parameter name: {{paramName}}";
-            private static string BuildFinalMessage(in string customMessagePrefix, in string paramName, in bool useCustomErrorMessage)
-                => useCustomErrorMessage ? $"{customMessagePrefix}{System.Environment.NewLine}Parameter name: {paramName}"
+    private const string DefaultErrorTemplate =
+        $"Value cannot be null.{NewLine}Parameter name: {{paramName}}";
+    private static string BuildFinalMessage(string customMessagePrefix, string paramName, bool useCustomErrorMessage)
+        => useCustomErrorMessage ? $"{customMessagePrefix}{NewLine}Parameter name: {paramName}"
                     : DefaultErrorTemplate.Replace("{paramName}", paramName);
 #endif
 #if NETCOREAPP
     private const string DefaultErrorTemplate = "Value cannot be null. (Parameter '{paramName}')";
-    private static string BuildFinalMessage(in string customMessagePrefix, in string paramName, in bool useCustomErrorMessage)
+    private static string BuildFinalMessage(string customMessagePrefix, string paramName, bool useCustomErrorMessage)
         => useCustomErrorMessage ? $"{customMessagePrefix} (Parameter '{paramName}')"
             : DefaultErrorTemplate.Replace("{paramName}", paramName);
 #endif
 
-    private static TValue NotNull<TValue>(in TValue? value, in string? paramName, in string? customMessage, bool useCustomMessage)
+    private static TValue NotNull<TValue>(TValue? value, string? paramName, string? customMessage,
+        bool useCustomMessage)
         where TValue : class => useCustomMessage
         ? Arguments.NotNull(value, paramName!, customMessage!)
         : Arguments.NotNull(value, paramName!);

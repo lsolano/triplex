@@ -17,7 +17,7 @@ public static class State
     /// <param name="message">Can not be <see langword="null"/></param>
     /// <returns></returns>
     [DebuggerStepThrough]
-    public static void IsTrue(in bool stateQuery, [ValidatedNotNull] in string message)
+    public static void IsTrue(bool stateQuery, [ValidatedNotNull] string message)
     {
         Arguments.NotNull(message, nameof(message));
 
@@ -34,7 +34,7 @@ public static class State
     /// <param name="message">Can not be <see langword="null"/></param>
     /// <returns></returns>
     [DebuggerStepThrough]
-    public static void IsFalse(in bool stateQuery, [ValidatedNotNull] in string message)
+    public static void IsFalse(bool stateQuery, [ValidatedNotNull] string message)
     {
         Arguments.NotNull(message, nameof(message));
 
@@ -55,7 +55,7 @@ public static class State
     /// <param name="invariant">Expected to be <code>true</code></param>
     /// <param name="message">Can not be <see langword="null"/></param>
     [DebuggerStepThrough]
-    public static void StillHolds(in bool invariant, [ValidatedNotNull] in string message)
+    public static void StillHolds(bool invariant, [ValidatedNotNull] string message)
     {
         Arguments.NotNull(message, nameof(message));
 
@@ -71,7 +71,7 @@ public static class State
     /// <param name="invariant">Expected to be <code>false</code></param>
     /// <param name="message">Can not be <see langword="null"/></param>
     [DebuggerStepThrough]
-    public static void StillNotHolds(in bool invariant, [ValidatedNotNull] in string message)
+    public static void StillNotHolds(bool invariant, [ValidatedNotNull] string message)
     {
         Arguments.NotNull(message, nameof(message));
 

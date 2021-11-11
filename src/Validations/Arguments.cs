@@ -22,8 +22,8 @@ public static class Arguments
     /// <returns><paramref name="value"/></returns>
     /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
     [DebuggerStepThrough]
-    public static TParamType NotNull<TParamType>([ValidatedNotNull] in TParamType? value,
-        [ValidatedNotNull] in string paramName) where TParamType : class
+    public static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType? value,
+        [ValidatedNotNull] string paramName) where TParamType : class
         => NullAndEmptyChecks.NotNull(value, paramName);
 
     /// <summary>
@@ -45,8 +45,8 @@ public static class Arguments
     /// <returns><paramref name="value"/></returns>
     /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
     [DebuggerStepThrough]
-    public static TParamType NotNull<TParamType>([ValidatedNotNull] in TParamType? value,
-        [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage) where TParamType : class
+    public static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType? value,
+        [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage) where TParamType : class
         => NullAndEmptyChecks.NotNull(value, paramName, customMessage);
 
     /// <summary>
@@ -63,8 +63,8 @@ public static class Arguments
     /// </exception>
     [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmptyOrWhiteSpaceOnly(string?, string) instead.", error: false)]
     [DebuggerStepThrough]
-    public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value,
-        [ValidatedNotNull] in string paramName)
+    public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] string? value,
+        [ValidatedNotNull] string paramName)
         => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName);
 
     /// <summary>
@@ -82,20 +82,20 @@ public static class Arguments
     /// </exception>
     [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmptyOrWhiteSpaceOnly(string?, string, string) instead.", error: false)]
     [DebuggerStepThrough]
-    public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value,
-        [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+    public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] string? value,
+        [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage)
         => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName, customMessage);
 
-    /// <inheritdoc cref="NotNullEmptyOrWhiteSpaceOnly(in string?, in string)"/>
+    /// <inheritdoc cref="NotNullEmptyOrWhiteSpaceOnly(string?, string)"/>
     [DebuggerStepThrough]
-    public static string NotEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value,
-        [ValidatedNotNull] in string paramName)
+    public static string NotEmptyOrWhiteSpaceOnly([ValidatedNotNull] string? value,
+        [ValidatedNotNull] string paramName)
         => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName);
 
-    /// <inheritdoc cref="NotNullEmptyOrWhiteSpaceOnly(in string?, in string, in string)"/>
+    /// <inheritdoc cref="NotNullEmptyOrWhiteSpaceOnly(string?, string, string)"/>
     [DebuggerStepThrough]
-    public static string NotEmptyOrWhiteSpaceOnly([ValidatedNotNull] in string? value,
-        [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+    public static string NotEmptyOrWhiteSpaceOnly([ValidatedNotNull] string? value,
+        [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage)
         => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName, customMessage);
 
     /// <summary>
@@ -111,7 +111,7 @@ public static class Arguments
     /// </exception>
     [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmpty(string?, string) instead.", error: false)]
     [DebuggerStepThrough]
-    public static string NotNullOrEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
+    public static string NotNullOrEmpty([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName)
         => NullAndEmptyChecks.NotNullOrEmpty(value, paramName);
 
     /// <summary>
@@ -125,19 +125,19 @@ public static class Arguments
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
     [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmpty(string?, string, string) instead.", error: false)]
     [DebuggerStepThrough]
-    public static string NotNullOrEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName,
-        [ValidatedNotNull] in string customMessage)
+    public static string NotNullOrEmpty([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName,
+        [ValidatedNotNull] string customMessage)
         => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
 
-    /// <inheritdoc cref="NotNullOrEmpty(in string?, in string)"/>
+    /// <inheritdoc cref="NotNullOrEmpty(string?, string)"/>
     [DebuggerStepThrough]
-    public static string NotEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
+    public static string NotEmpty([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName)
         => NullAndEmptyChecks.NotNullOrEmpty(value, paramName);
 
-    /// <inheritdoc cref="NotNullOrEmpty(in string?, in string, in string)"/>
+    /// <inheritdoc cref="NotNullOrEmpty(string?, string, string)"/>
     [DebuggerStepThrough]
-    public static string NotEmpty([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName,
-        [ValidatedNotNull] in string customMessage)
+    public static string NotEmpty([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName,
+        [ValidatedNotNull] string customMessage)
         => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
 
     #endregion
@@ -155,7 +155,7 @@ public static class Arguments
     /// When <paramref name="value"/> is not within <typeparamref name="TEnumType"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TEnumType ValidEnumerationMember<TEnumType>(in TEnumType value, in string paramName)
+    public static TEnumType ValidEnumerationMember<TEnumType>(TEnumType value, string paramName)
         where TEnumType : Enum
         => EnumerationChecks.ValidEnumerationMember(value, paramName);
 
@@ -171,8 +171,8 @@ public static class Arguments
     /// When <paramref name="value"/> is not within <typeparamref name="TEnumType"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TEnumType ValidEnumerationMember<TEnumType>(in TEnumType value, in string paramName,
-        in string customMessage) where TEnumType : Enum
+    public static TEnumType ValidEnumerationMember<TEnumType>(TEnumType value, string paramName,
+        string customMessage) where TEnumType : Enum
         => EnumerationChecks.ValidEnumerationMember(value, paramName, customMessage);
 
     #endregion
@@ -193,8 +193,8 @@ public static class Arguments
     /// If <paramref name="value"/> is not less than <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable LessThan<TComparable>([ValidatedNotNull] in TComparable? value,
-        [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName)
+    public static TComparable LessThan<TComparable>([ValidatedNotNull] TComparable? value,
+        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName)
         where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThan(value, other, paramName);
 
@@ -213,9 +213,9 @@ public static class Arguments
     /// If <paramref name="value"/> is not less than <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable LessThan<TComparable>([ValidatedNotNull] in TComparable? value,
-        [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName,
-        [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>
+    public static TComparable LessThan<TComparable>([ValidatedNotNull] TComparable? value,
+        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName,
+        [ValidatedNotNull] string customMessage) where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThan(value, other, paramName, customMessage);
 
     /// <summary>
@@ -233,8 +233,8 @@ public static class Arguments
     /// If <paramref name="value"/> is not less than or equal to <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable? value,
-        [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName)
+    public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable? value,
+        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName)
         where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThanOrEqualTo(value, other, paramName);
 
@@ -253,9 +253,9 @@ public static class Arguments
     /// If <paramref name="value"/> is not less than or equal to <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable? value,
-        [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName,
-            [ValidatedNotNull] in string customMessage)
+    public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable? value,
+        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName,
+            [ValidatedNotNull] string customMessage)
         where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThanOrEqualTo(value, other, paramName, customMessage);
 
@@ -273,8 +273,8 @@ public static class Arguments
     /// If <paramref name="value"/> is not greater than <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable GreaterThan<TComparable>([ValidatedNotNull] in TComparable? value,
-        [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName)
+    public static TComparable GreaterThan<TComparable>([ValidatedNotNull] TComparable? value,
+        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName)
         where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThan(value, other, paramName);
 
@@ -293,9 +293,9 @@ public static class Arguments
     /// If <paramref name="value"/> is not greater than <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable GreaterThan<TComparable>([ValidatedNotNull] in TComparable? value,
-        [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName,
-        [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>
+    public static TComparable GreaterThan<TComparable>([ValidatedNotNull] TComparable? value,
+        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName,
+        [ValidatedNotNull] string customMessage) where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThan(value, other, paramName, customMessage);
 
     /// <summary>
@@ -313,8 +313,8 @@ public static class Arguments
     /// If <paramref name="value"/> is not greater than or equal to <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable? value,
-        [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName)
+    public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable? value,
+        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName)
         where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThanOrEqualTo(value, other, paramName);
 
@@ -334,9 +334,9 @@ public static class Arguments
     /// If <paramref name="value"/> is not greater than or equal to <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] in TComparable? value,
-        [ValidatedNotNull] in TComparable? other, [ValidatedNotNull] in string paramName,
-        [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>
+    public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable? value,
+        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName,
+        [ValidatedNotNull] string customMessage) where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThanOrEqualTo(value, other, paramName, customMessage);
 
     /// <summary>
@@ -358,11 +358,11 @@ public static class Arguments
     /// </exception>
     [DebuggerStepThrough]
     public static TComparable Between<TComparable>(
-        [ValidatedNotNull] in TComparable? value,
-        [ValidatedNotNull] in TComparable? fromInclusive,
-        [ValidatedNotNull] in TComparable? toInclusive,
-        [ValidatedNotNull] in string paramName,
-        [ValidatedNotNull] in string customMessage) where TComparable : IComparable<TComparable>
+        [ValidatedNotNull] TComparable? value,
+        [ValidatedNotNull] TComparable? fromInclusive,
+        [ValidatedNotNull] TComparable? toInclusive,
+        [ValidatedNotNull] string paramName,
+        [ValidatedNotNull] string customMessage) where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.Between(value, fromInclusive, toInclusive, paramName, customMessage);
 
     #endregion
@@ -372,7 +372,8 @@ public static class Arguments
     private static readonly Regex LuhnDigitsRegex = new("[0-9]{2}", RegexOptions.Compiled);
 
     /// <summary>
-    /// Validates that the given argument (<paramref name="value" />) has a valid checksum digit as described by the Luhn algorithm or Luhn formula.
+    /// Validates that the given argument (<paramref name="value" />) has a valid checksum digit as described by the 
+    /// Luhn algorithm or Luhn formula.
     /// </summary>
     /// <remarks>
     /// See https://en.wikipedia.org/wiki/Luhn_algorithm and https://www.investopedia.com/terms/l/luhn-algorithm.asp
@@ -386,8 +387,8 @@ public static class Arguments
     /// If <paramref name="value"/> is not valid as described by the Luhn algorithm.
     /// </exception>
     [DebuggerStepThrough]
-    public static string ValidLuhnChecksum([ValidatedNotNull] in string? value,
-        [ValidatedNotNull] in string paramName, [ValidatedNotNull] in string customMessage)
+    public static string ValidLuhnChecksum([ValidatedNotNull] string? value,
+        [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage)
     {
         (string validParamName, string validCustomMessage) =
             (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
@@ -401,7 +402,7 @@ public static class Arguments
             : throw new FormatException(validCustomMessage);
     }
 
-    private static void ValidateLuhnSequenceFormat(in string notNullValue, in string validCustomMessage)
+    private static void ValidateLuhnSequenceFormat(string notNullValue, string validCustomMessage)
     {
         bool hasInvalidFormat = !LuhnDigitsRegex.IsMatch(notNullValue);
         if (hasInvalidFormat)
@@ -429,7 +430,7 @@ public static class Arguments
     /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
     /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
     [DebuggerStepThrough]
-    public static string ValidBase64([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName)
+    public static string ValidBase64([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName)
     {
         string validParamName =
             paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
@@ -450,8 +451,8 @@ public static class Arguments
     /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
     /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
     [DebuggerStepThrough]
-    public static string ValidBase64([ValidatedNotNull] in string? value, [ValidatedNotNull] in string paramName,
-        [ValidatedNotNull] in string customMessage)
+    public static string ValidBase64([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName,
+        [ValidatedNotNull] string customMessage)
     {
         (string validParamName, string validCustomMessage) =
             (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
@@ -463,7 +464,7 @@ public static class Arguments
         return IsBase64String(notNullValue) ? notNullValue : throw new FormatException(validCustomMessage);
     }
 
-    private static bool IsBase64String(in string base64)
+    private static bool IsBase64String(string base64)
     {
         Span<byte> buffer = new(new byte[base64.Length]);
         return Convert.TryFromBase64String(base64, buffer, out _);
@@ -480,7 +481,7 @@ public static class Arguments
     /// <returns><paramref name="value"/></returns>
     /// <exception cref="ArgumentException">If <paramref name="value"/> is an empty <see cref="Guid"/>.</exception>
     [DebuggerStepThrough]
-    public static Guid NotEmpty(in Guid value, [ValidatedNotNull] in string paramName)
+    public static Guid NotEmpty(Guid value, [ValidatedNotNull] string paramName)
     {
         string validParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
 
@@ -510,8 +511,8 @@ public static class Arguments
     /// <returns><paramref name="value"/></returns>
     /// <exception cref="ArgumentException">If <paramref name="value"/> is an empty <see cref="Guid"/>.</exception>
     [DebuggerStepThrough]
-    public static Guid NotEmpty(in Guid value, [ValidatedNotNull] in string paramName,
-        [ValidatedNotNull] in string customMessage)
+    public static Guid NotEmpty(Guid value, [ValidatedNotNull] string paramName,
+        [ValidatedNotNull] string customMessage)
     {
         (string validParamName, string validCustomMessage) =
             (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
@@ -525,7 +526,7 @@ public static class Arguments
         return value;
     }
 
-    private static bool IsEmpty(in Guid value) => value == default;
+    private static bool IsEmpty(Guid value) => value == default;
 
     #endregion //Emptyness
 
@@ -540,8 +541,8 @@ public static class Arguments
     /// <param name="preconditionDescription">Description for the custom precondition.</param>
     [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use CompliesWith(T?, Func<T, bool>, string, string), or DoesNotComplyWith(T?, Func<T, bool>, string, string) instead.", error: false)]
     [DebuggerStepThrough]
-    public static void CompliesWith(in bool precondition, [ValidatedNotNull] in string paramName,
-        [ValidatedNotNull] in string preconditionDescription)
+    public static void CompliesWith(bool precondition, [ValidatedNotNull] string paramName,
+        [ValidatedNotNull] string preconditionDescription)
     {
         (string validParamName, string validPreconditionDescription) =
             (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),

@@ -4,3 +4,5 @@ global using System.Linq;
 global using NUnit.Framework;
 
 global using NUnit.Framework.Constraints;
+
+global using static System.Environment;

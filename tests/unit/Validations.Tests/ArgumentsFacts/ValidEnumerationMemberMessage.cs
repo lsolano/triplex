@@ -40,14 +40,19 @@ internal sealed class ValidEnumerationMemberMessage : BaseFixtureForOptionalCust
     }
 
 #if NETFRAMEWORK
-            private static readonly string DefaultErrorTemplate = $"Value is not a member of enum {{typeName}}.{System.Environment.NewLine}Parameter name: {{paramName}}{System.Environment.NewLine}Actual value was {{actualValue}}.";
-            private static readonly string CustomErrorTemplate = $"{{prefix}}{System.Environment.NewLine}Parameter name: {{paramName}}{System.Environment.NewLine}Actual value was {{actualValue}}.";
+    private const string DefaultErrorTemplate = 
+        $"Value is not a member of enum {{typeName}}.{NewLine}Parameter name: {{paramName}}{NewLine}Actual value was {{actualValue}}.";
+    private const string CustomErrorTemplate = 
+        $"{{prefix}}{NewLine}Parameter name: {{paramName}}{NewLine}Actual value was {{actualValue}}.";
 #endif
 #if NETCOREAPP
-    private static readonly string DefaultErrorTemplate = $"Value is not a member of enum {{typeName}}. (Parameter '{{paramName}}'){Environment.NewLine}Actual value was {{actualValue}}.";
-    private static readonly string CustomErrorTemplate = $"{{prefix}} (Parameter '{{paramName}}'){Environment.NewLine}Actual value was {{actualValue}}.";
+    private static readonly string DefaultErrorTemplate = 
+        $"Value is not a member of enum {{typeName}}. (Parameter '{{paramName}}'){NewLine}Actual value was {{actualValue}}.";
+    private static readonly string CustomErrorTemplate = 
+        $"{{prefix}} (Parameter '{{paramName}}'){NewLine}Actual value was {{actualValue}}.";
 #endif
-    private static string BuildExpectedMessageForValidEnumerationMember(in object value, in string typeName, in string paramName, in string customErrorMessage, in bool useCustomErrorMessage)
+    private static string BuildExpectedMessageForValidEnumerationMember(object value, string typeName, string paramName, 
+    string customErrorMessage, bool useCustomErrorMessage)
     {
         string baseMessage = useCustomErrorMessage
             ? CustomErrorTemplate.Replace("{prefix}", customErrorMessage)
@@ -57,9 +62,11 @@ internal sealed class ValidEnumerationMemberMessage : BaseFixtureForOptionalCust
                           .Replace("{actualValue}", value.ToString());
     }
 
-    private static TValue ValidEnumerationMember<TValue>(in TValue value, in string paramName, in string customMessage,
-        in bool useCustomMessage) where TValue : Enum
+    private static TValue ValidEnumerationMember<TValue>(TValue value, string paramName, string customMessage,
+        bool useCustomMessage) where TValue : Enum
     {
-        return useCustomMessage ? Arguments.ValidEnumerationMember(value, paramName, customMessage) : Arguments.ValidEnumerationMember(value, paramName);
+        return useCustomMessage ?
+            Arguments.ValidEnumerationMember(value, paramName, customMessage) 
+          : Arguments.ValidEnumerationMember(value, paramName);
     }
 }
