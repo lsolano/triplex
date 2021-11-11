@@ -39,8 +39,7 @@ jobs:
     - name: Package
       run: dotnet pack --configuration Release
 
-    - name: Move To Release Dir
-      run: cd src/Validations/bin/Release
-      
     - name: Deploy To Nuget.org
-      run: dotnet nuget push "*.nupkg" -k ${{secrets.NUGET_DEPLOYMENT_KEY}} -s https://api.nuget.org/v3/index.json
+      run:run: |
+          cd src/Validations/bin/Release
+          dotnet nuget push "**/*.nupkg" -k ${{secrets.NUGET_DEPLOYMENT_KEY}} -s https://api.nuget.org/v3/index.json
