@@ -2,9 +2,9 @@ name: Publish in Nuget.org V3 Package Registry
 
 on:  
   push:
-    #tags:
-    #  - '1.*'
-    tags-ignore:
+    tags:
+      - '1.*'
+      - '2.*'
       - '3.*'
 
 jobs:
