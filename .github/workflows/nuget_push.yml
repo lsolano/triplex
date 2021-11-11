@@ -25,7 +25,7 @@ jobs:
       run: dotnet clean --framework net6.0 --configuration Release
 
     - name: Clean old Packages
-      run: rm src/Validations/bin/Release/Triplex.Validations*.nupkg
+      run: rm --force src/Validations/bin/Release/Triplex.Validations*.nupkg
 
     - name: Restore dependencies
       run: dotnet restore
