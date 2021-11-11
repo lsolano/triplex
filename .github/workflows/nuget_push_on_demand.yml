@@ -1,4 +1,4 @@
-name: Publish in Nuget.org V3 Package Registry
+name: Nuget Publish On-Demand
 
 on:  
   workflow_dispatch
