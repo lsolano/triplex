@@ -6,16 +6,16 @@ namespace Triplex.Validations.Utilities;
 /// </summary>
 public static class ComparableRangeFactory
 {
-    internal static ComparableRange<T> WithMinInclusiveOnly<T>(in SimpleOption<T> min) where T : IComparable<T>
+    internal static ComparableRange<T> WithMinInclusiveOnly<T>(SimpleOption<T> min) where T : IComparable<T>
         => new(min, true, SimpleOption.None<T>(), false);
 
-    internal static ComparableRange<T> WithMinExclusiveOnly<T>(in SimpleOption<T> min) where T : IComparable<T>
+    internal static ComparableRange<T> WithMinExclusiveOnly<T>(SimpleOption<T> min) where T : IComparable<T>
         => new(min, false, SimpleOption.None<T>(), false);
 
-    internal static ComparableRange<T> WithMaxInclusiveOnly<T>(in SimpleOption<T> max) where T : IComparable<T>
+    internal static ComparableRange<T> WithMaxInclusiveOnly<T>(SimpleOption<T> max) where T : IComparable<T>
         => new(SimpleOption.None<T>(), false, max, true);
 
-    internal static ComparableRange<T> WithMaxExclusiveOnly<T>(in SimpleOption<T> max) where T : IComparable<T>
+    internal static ComparableRange<T> WithMaxExclusiveOnly<T>(SimpleOption<T> max) where T : IComparable<T>
         => new(SimpleOption.None<T>(), false, max, false);
 
     /// <summary>
@@ -35,13 +35,13 @@ public static class ComparableRangeFactory
 /// <typeparam name="TComparable"></typeparam>
 public sealed class ComparableRange<TComparable> where TComparable : IComparable<TComparable>
 {
-    internal ComparableRange(in SimpleOption<TComparable> min, in SimpleOption<TComparable> max)
+    internal ComparableRange(SimpleOption<TComparable> min, SimpleOption<TComparable> max)
         : this(min, true, max, true)
     {
     }
 
-    internal ComparableRange(in SimpleOption<TComparable> min, in bool minInclusive,
-        in SimpleOption<TComparable> max, in bool maxInclusive)
+    internal ComparableRange(SimpleOption<TComparable> min, bool minInclusive,
+        SimpleOption<TComparable> max, bool maxInclusive)
     {
         ValidateRangeArguments(min, minInclusive, max, maxInclusive);
 
@@ -98,7 +98,7 @@ public sealed class ComparableRange<TComparable> where TComparable : IComparable
     private bool MinInclusive { get; }
     private bool MaxInclusive { get; }
 
-    internal TComparable IsWithin(in TComparable value, in string paramName, in string? customMessage)
+    internal TComparable IsWithin(TComparable value, string paramName, string? customMessage)
     {
         CheckLowerBoundary(value, paramName, customMessage);
 
@@ -107,7 +107,7 @@ public sealed class ComparableRange<TComparable> where TComparable : IComparable
         return value;
     }
 
-    private void CheckLowerBoundary(in TComparable value, in string paramName, in string? customMessage)
+    private void CheckLowerBoundary(TComparable value, string paramName, string? customMessage)
     {
         if (!Min.HasValue)
         {
@@ -127,7 +127,7 @@ public sealed class ComparableRange<TComparable> where TComparable : IComparable
             customMessage ?? $"Must be greater than {orEqualToOption}{Min.ValueOrFailure}.");
     }
 
-    private void CheckUpperBoundary(in TComparable value, in string paramName, in string? customMessage)
+    private void CheckUpperBoundary(TComparable value, string paramName, string? customMessage)
     {
         if (!Max.HasValue)
         {

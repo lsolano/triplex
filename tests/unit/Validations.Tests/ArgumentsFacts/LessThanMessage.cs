@@ -12,7 +12,7 @@ internal sealed class LessThanMessage : BaseFixtureForOptionalCustomMessage
     [TestCase(-1, 0)]
     [TestCase(0, 1)]
     [TestCase(-2, 1)]
-    public void With_Valid_Integers_Throws_Nothing(in int theValue, in int other)
+    public void With_Valid_Integers_Throws_Nothing(int theValue, int other)
     {
         int validatedValue = Arguments.LessThan(theValue, other, nameof(theValue), CustomError);
 
@@ -23,7 +23,7 @@ internal sealed class LessThanMessage : BaseFixtureForOptionalCustomMessage
     [TestCase(-1L, 0L)]
     [TestCase(0L, 1L)]
     [TestCase(-2L, 1L)]
-    public void With_Valid_Longs_Throws_Nothing(in long theValue, in long other)
+    public void With_Valid_Longs_Throws_Nothing(long theValue, long other)
     {
         long validatedValue = LessThan(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage);
 
@@ -33,7 +33,7 @@ internal sealed class LessThanMessage : BaseFixtureForOptionalCustomMessage
     [TestCase("a", "b")]
     [TestCase("b", "c")]
     [TestCase("a", "c")]
-    public void With_Valid_Strings_Throws_Nothing(in string theValue, in string other)
+    public void With_Valid_Strings_Throws_Nothing(string theValue, string other)
     {
         string validatedValue = LessThan(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage);
 
@@ -46,7 +46,7 @@ internal sealed class LessThanMessage : BaseFixtureForOptionalCustomMessage
     [TestCase(1, 0)]
     [TestCase(2, 2)]
     [TestCase(3, 2)]
-    public void With_Equal_Or_Greater_Integers_Throws_ArgumentOutOfRangeException(in int theValue, in int other)
+    public void With_Equal_Or_Greater_Integers_Throws_ArgumentOutOfRangeException(int theValue, int other)
     {
         Constraint throwsOutOfRange = BuildConstraint(theValue, other, nameof(theValue), CustomError);
         (int theValueCopy, int otherCopy) = (theValue, other);
@@ -61,7 +61,7 @@ internal sealed class LessThanMessage : BaseFixtureForOptionalCustomMessage
     [TestCase("c", "b")]
     [TestCase("c", "c")]
     [TestCase("d", "c")]
-    public void With_Equal_Or_Greater_Strings_Throws_ArgumentOutOfRangeException(in string theValue, in string other)
+    public void With_Equal_Or_Greater_Strings_Throws_ArgumentOutOfRangeException(string theValue, string other)
     {
         Constraint throwsOutOfRange = BuildConstraint(theValue, other, nameof(theValue), CustomError);
         (string theValueCopy, string otherCopy) = (theValue, other);
@@ -70,7 +70,7 @@ internal sealed class LessThanMessage : BaseFixtureForOptionalCustomMessage
             throwsOutOfRange);
     }
 
-    private Constraint BuildConstraint(in object theValue, in object other, in string paramName, in string customError)
+    private Constraint BuildConstraint(object theValue, object other, string paramName, string customError)
     {
         Constraint throwsOutOfRange = Throws.InstanceOf<ArgumentOutOfRangeException>()
             .With.Property(nameof(ArgumentOutOfRangeException.ActualValue)).EqualTo(theValue)
@@ -114,11 +114,11 @@ internal sealed class LessThanMessage : BaseFixtureForOptionalCustomMessage
     }
 
     private static TComparable LessThan<TComparable>(
-        in TComparable? value,
-        in TComparable? other,
-        in string? paramName,
-        in string? customError,
-        in bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
+        TComparable? value,
+        TComparable? other,
+        string? paramName,
+        string? customError,
+        bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
     {
         return useCustomErrorMessage
             ? Arguments.LessThan(value, other!, paramName!, customError!)

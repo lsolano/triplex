@@ -31,7 +31,7 @@ internal sealed class NotEmptyOrWhiteSpaceOnly_Diadic_MessageFacts
     [TestCase("\r")]
     [TestCase("\t")]
     [TestCase("\n\r\t ")]
-    public void With_Common_White_Space_Value_Throws_ArgumentFormatException(in string? dummyParam)
+    public void With_Common_White_Space_Value_Throws_ArgumentFormatException(string? dummyParam)
     {
         string? dummyParamValue = dummyParam;
         Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParamValue, nameof(dummyParam)),
@@ -42,7 +42,7 @@ internal sealed class NotEmptyOrWhiteSpaceOnly_Diadic_MessageFacts
     [TestCase("peter")]
     [TestCase("parker ")]
     [TestCase(" Peter Parker Is Spiderman ")]
-    public void With_Valid_Values_Returns_Input_Value(in string? someValue)
+    public void With_Valid_Values_Returns_Input_Value(string? someValue)
     {
         string validatedValue = Arguments.NotEmptyOrWhiteSpaceOnly(someValue, nameof(someValue));
 
@@ -71,7 +71,7 @@ internal sealed class NotEmptyOrWhiteSpaceOnly_Diadic_MessageFacts
     [TestCase("\r")]
     [TestCase("\t")]
     [TestCase("\n\r\t ")]
-    public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException(in string? paramName)
+    public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException(string? paramName)
     {
         string? paramNameValue = paramName;
         Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly("dummyValue", paramNameValue!),

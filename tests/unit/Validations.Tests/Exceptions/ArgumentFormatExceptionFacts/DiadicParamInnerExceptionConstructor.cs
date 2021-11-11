@@ -1,4 +1,5 @@
 using Triplex.Validations.Exceptions;
+using DataSourceType = Triplex.Validations.Tests.Exceptions.ArgumentFormatExceptionFacts.TriadicConstructorFacts;
 
 namespace Triplex.Validations.Tests.Exceptions.ArgumentFormatExceptionFacts;
 
@@ -7,7 +8,7 @@ internal sealed class DiadicParamInnerExceptionConstructor
 {
     [Test]
     public void Throws_Nothing(
-        [ValueSource(typeof(TriadicConstructorFacts), nameof(TriadicConstructorFacts.ValidParameterNames))] string? paramName,
-        [ValueSource(typeof(TriadicConstructorFacts), nameof(TriadicConstructorFacts.ValidInnerExceptions))] Exception? innerException)
+        [ValueSource(typeof(DataSourceType), nameof(DataSourceType.ValidParameterNames))] string? paramName,
+        [ValueSource(typeof(DataSourceType), nameof(DataSourceType.ValidInnerExceptions))] Exception? innerException)
         => Assert.That(() => new ArgumentFormatException(paramName!, innerException!), Throws.Nothing);
 }

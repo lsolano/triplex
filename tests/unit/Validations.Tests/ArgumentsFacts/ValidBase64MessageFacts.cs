@@ -28,7 +28,7 @@ internal sealed class ValidBase64MessageFacts : BaseFixtureForOptionalCustomMess
 
     [TestCase("cGV0ZXI=")]
     [TestCase("c3BpZGVyIG1hbg==")]
-    public void Returns_Value_When_No_Exception(in string? value)
+    public void Returns_Value_When_No_Exception(string? value)
     {
         string validatedValue = ValidBase64(value, nameof(value), CustomMessage, UseCustomErrorMessage);
 
@@ -36,19 +36,21 @@ internal sealed class ValidBase64MessageFacts : BaseFixtureForOptionalCustomMess
     }
 
 #if NETFRAMEWORK
-            private static readonly string DefaultErrorTemplate = $"Value cannot be null.{System.Environment.NewLine}Parameter name: {{paramName}}";
-            private static string BuildFinalMessage(in string customMessagePrefix, in string paramName, in bool useCustomErrorMessage)
-                => useCustomErrorMessage ? $"{customMessagePrefix}{System.Environment.NewLine}Parameter name: {paramName}"
+    private const string DefaultErrorTemplate = 
+        $"Value cannot be null.{NewLine}Parameter name: {{paramName}}";
+    private static string BuildFinalMessage(string customMessagePrefix, string paramName, bool useCustomErrorMessage)
+                => useCustomErrorMessage ? 
+                    $"{customMessagePrefix}{NewLine}Parameter name: {paramName}"
                     : DefaultErrorTemplate.Replace("{paramName}", paramName);
 #endif
 #if NETCOREAPP
     private const string DefaultErrorTemplate = "Value cannot be null. (Parameter '{paramName}')";
-    private static string BuildFinalMessage(in string customMessagePrefix, in string paramName, in bool useCustomErrorMessage)
+    private static string BuildFinalMessage(string customMessagePrefix, string paramName, bool useCustomErrorMessage)
         => useCustomErrorMessage ? $"{customMessagePrefix} (Parameter '{paramName}')"
             : DefaultErrorTemplate.Replace("{paramName}", paramName);
 #endif
 
-    private static string ValidBase64(in string? value, in string? paramName, in string? customMessage,
+    private static string ValidBase64(string? value, string? paramName, string? customMessage,
         bool useCustomMessage)
         => useCustomMessage
             ? Arguments.ValidBase64(value, paramName!, customMessage!)

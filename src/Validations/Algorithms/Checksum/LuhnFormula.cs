@@ -2,6 +2,7 @@
 using Triplex.Validations.Utilities;
 
 namespace Triplex.Validations.Algorithms.Checksum;
+
 /// <summary>
 /// Implementation of the Luhn algorithm in its two variants: as validation and as checksum generator.
 /// </summary>
@@ -24,7 +25,7 @@ public static class LuhnFormula
     /// <exception cref="FormatException">
     /// If <paramref name="fullDigits"/> contains elements not within range [0-9].
     /// </exception>
-    public static bool IsValid([ValidatedNotNull] in int[]? fullDigits)
+    public static bool IsValid([ValidatedNotNull] int[]? fullDigits)
     {
         int[] validatedDigits = fullDigits.ValueOrThrowIfNullOrWithLessThanElements(MinimumElements,
             nameof(fullDigits));
@@ -53,7 +54,7 @@ public static class LuhnFormula
     /// <exception cref="FormatException">
     /// If <paramref name="fullDigits"/> contains characters other than digits.
     /// </exception>
-    public static bool IsValid([ValidatedNotNull] in string? fullDigits)
+    public static bool IsValid([ValidatedNotNull] string? fullDigits)
     {
         string notNullDigits = ValidateDigitsAsString(fullDigits);
 
@@ -62,7 +63,7 @@ public static class LuhnFormula
         return DoDigitCheck(validatedDigits);
     }
 
-    private static string ValidateDigitsAsString([ValidatedNotNull] in string? fullDigits)
+    private static string ValidateDigitsAsString([ValidatedNotNull] string? fullDigits)
     {
         string notNullDigits = fullDigits.ValueOrThrowIfNullOrZeroLength(nameof(fullDigits));
 
@@ -80,7 +81,7 @@ public static class LuhnFormula
         return notNullDigits;
     }
 
-    private static bool DoDigitCheck(in int[] sanitizedDigits)
+    private static bool DoDigitCheck(int[] sanitizedDigits)
     {
         int check = CalculateCheck(sanitizedDigits, isFullSequence: true);
 
@@ -100,7 +101,7 @@ public static class LuhnFormula
     /// <exception cref="ArgumentOutOfRangeException">
     /// If <paramref name="digitsWithoutCheck"/> is has less than one digits.
     /// </exception>
-    public static int GetCheckDigit([ValidatedNotNull] in int[]? digitsWithoutCheck)
+    public static int GetCheckDigit([ValidatedNotNull] int[]? digitsWithoutCheck)
     {
         const int minimumElements = 1;
 
@@ -110,7 +111,7 @@ public static class LuhnFormula
         return CalculateCheck(validatedDigits, isFullSequence: false);
     }
 
-    private static int CalculateCheck(in int[] digits, in bool isFullSequence)
+    private static int CalculateCheck(int[] digits, bool isFullSequence)
     {
         int offset = isFullSequence ? 2 : 1;
 

@@ -15,7 +15,7 @@ internal sealed class LessThanOrEqualToMessage : BaseFixtureForOptionalCustomMes
     [TestCase(0, 1)]
     [TestCase(1, 1)]
     [TestCase(-2, 1)]
-    public void With_Valid_Integers_Throws_Nothing(in int theValue, in int other)
+    public void With_Valid_Integers_Throws_Nothing(int theValue, int other)
     {
         int validatedValue = Arguments.LessThanOrEqualTo(theValue, other, nameof(theValue), CustomError);
 
@@ -29,7 +29,7 @@ internal sealed class LessThanOrEqualToMessage : BaseFixtureForOptionalCustomMes
     [TestCase(0L, 1L)]
     [TestCase(1L, 1L)]
     [TestCase(-2L, 1L)]
-    public void With_Valid_Longs_Throws_Nothing(in long theValue, in long other)
+    public void With_Valid_Longs_Throws_Nothing(long theValue, long other)
     {
         long validatedValue = LessThanOrEqualTo(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage);
 
@@ -41,9 +41,10 @@ internal sealed class LessThanOrEqualToMessage : BaseFixtureForOptionalCustomMes
     [TestCase("b", "c")]
     [TestCase("c", "c")]
     [TestCase("a", "c")]
-    public void With_Valid_Strings_Throws_Nothing(in string theValue, in string other)
+    public void With_Valid_Strings_Throws_Nothing(string theValue, string other)
     {
-        string validatedValue = LessThanOrEqualTo(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage);
+        string validatedValue = LessThanOrEqualTo(theValue, other, nameof(theValue), CustomError,
+            UseCustomErrorMessage);
 
         Assert.That(validatedValue, Is.EqualTo(theValue));
     }
@@ -51,28 +52,30 @@ internal sealed class LessThanOrEqualToMessage : BaseFixtureForOptionalCustomMes
     [TestCase(-1, -2)]
     [TestCase(1, 0)]
     [TestCase(3, 2)]
-    public void With_Greater_Integers_Throws_ArgumentOutOfRangeException(in int theValue, in int other)
+    public void With_Greater_Integers_Throws_ArgumentOutOfRangeException(int theValue, int other)
     {
         Constraint throwsOutOfRange = BuildConstraint(theValue, other, nameof(theValue), CustomError);
         (int theValueCopy, int otherCopy) = (theValue, other);
 
-        Assert.That(() => LessThanOrEqualTo(theValueCopy, otherCopy, nameof(theValue), CustomError, UseCustomErrorMessage),
+        Assert.That(() => LessThanOrEqualTo(theValueCopy, otherCopy, nameof(theValue), CustomError,
+            UseCustomErrorMessage),
             throwsOutOfRange);
     }
 
     [TestCase("b", "a")]
     [TestCase("c", "b")]
     [TestCase("d", "c")]
-    public void With_Greater_Strings_Throws_ArgumentOutOfRangeException(in string theValue, in string other)
+    public void With_Greater_Strings_Throws_ArgumentOutOfRangeException(string theValue, string other)
     {
         Constraint throwsOutOfRange = BuildConstraint(theValue, other, nameof(theValue), CustomError);
         (string theValueCopy, string otherCopy) = (theValue, other);
 
-        Assert.That(() => LessThanOrEqualTo(theValueCopy, otherCopy, nameof(theValue), CustomError, UseCustomErrorMessage),
+        Assert.That(() => LessThanOrEqualTo(theValueCopy, otherCopy, nameof(theValue), CustomError,
+            UseCustomErrorMessage),
             throwsOutOfRange);
     }
 
-    private Constraint BuildConstraint(in object theValue, in object other, in string paramName, in string customError)
+    private Constraint BuildConstraint(object theValue, object other, string paramName, string customError)
     {
         Constraint throwsOutOfRange = Throws.InstanceOf<ArgumentOutOfRangeException>()
             .With.Property(nameof(ArgumentOutOfRangeException.ActualValue)).EqualTo(theValue)
@@ -116,11 +119,11 @@ internal sealed class LessThanOrEqualToMessage : BaseFixtureForOptionalCustomMes
     }
 
     private static TComparable LessThanOrEqualTo<TComparable>(
-        in TComparable? value,
-        in TComparable? other,
-        in string? paramName,
-        in string? customError,
-        in bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
+        TComparable? value,
+        TComparable? other,
+        string? paramName,
+        string? customError,
+        bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
     {
         return useCustomErrorMessage
             ? Arguments.LessThanOrEqualTo(value, other, paramName!, customError!)

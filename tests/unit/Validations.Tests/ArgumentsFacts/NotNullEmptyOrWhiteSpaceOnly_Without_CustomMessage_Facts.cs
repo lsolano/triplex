@@ -11,7 +11,8 @@ internal sealed class NotNullEmptyOrWhiteSpaceOnly_Without_CustomMessage_Facts
         string? dummyParam = null;
 
         Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly(dummyParam!, nameof(dummyParam)),
-            Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(nameof(dummyParam)));
+            Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName))
+                .EqualTo(nameof(dummyParam)));
     }
 
     [Test]
@@ -29,7 +30,7 @@ internal sealed class NotNullEmptyOrWhiteSpaceOnly_Without_CustomMessage_Facts
     [TestCase("\r")]
     [TestCase("\t")]
     [TestCase("\n\r\t ")]
-    public void With_Common_White_Space_Value_Throws_ArgumentFormatException(in string? dummyParam)
+    public void With_Common_White_Space_Value_Throws_ArgumentFormatException(string? dummyParam)
     {
         string? copy = dummyParam;
         Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly(copy, nameof(dummyParam)),
@@ -40,7 +41,7 @@ internal sealed class NotNullEmptyOrWhiteSpaceOnly_Without_CustomMessage_Facts
     [TestCase("peter")]
     [TestCase("parker ")]
     [TestCase(" Peter Parker Is Spiderman ")]
-    public void With_Valid_Values_Returns_Input_Value(in string? someValue)
+    public void With_Valid_Values_Returns_Input_Value(string? someValue)
     {
         string validatedValue = Arguments.NotNullEmptyOrWhiteSpaceOnly(someValue, nameof(someValue));
 
@@ -69,7 +70,7 @@ internal sealed class NotNullEmptyOrWhiteSpaceOnly_Without_CustomMessage_Facts
     [TestCase("\r")]
     [TestCase("\t")]
     [TestCase("\n\r\t ")]
-    public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException(in string? paramName)
+    public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException(string? paramName)
     {
         string? paramNameValue = paramName;
         Assert.That(() => Arguments.NotNullEmptyOrWhiteSpaceOnly("dummyValue", paramNameValue!),

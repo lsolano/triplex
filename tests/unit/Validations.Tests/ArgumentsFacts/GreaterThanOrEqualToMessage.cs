@@ -15,7 +15,7 @@ internal sealed class GreaterThanOrEqualToMessage : BaseFixtureForOptionalCustom
     [TestCase(2, 1)]
     [TestCase(2, 2)]
     [TestCase(2, -2)]
-    public void With_Valid_Integers_Throws_Nothing(in int theValue, in int other)
+    public void With_Valid_Integers_Throws_Nothing(int theValue, int other)
     {
         int validatedValue = Arguments.GreaterThanOrEqualTo(theValue, other, nameof(theValue), CustomError);
 
@@ -29,9 +29,10 @@ internal sealed class GreaterThanOrEqualToMessage : BaseFixtureForOptionalCustom
     [TestCase(2L, 1L)]
     [TestCase(2L, 2L)]
     [TestCase(2L, -2L)]
-    public void With_Valid_Longs_Throws_Nothing(in long theValue, in long other)
+    public void With_Valid_Longs_Throws_Nothing(long theValue, long other)
     {
-        long validatedValue = GreaterThanOrEqualTo(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage);
+        long validatedValue = GreaterThanOrEqualTo(theValue, other, nameof(theValue), CustomError,
+            UseCustomErrorMessage);
 
         Assert.That(validatedValue, Is.EqualTo(theValue));
     }
@@ -40,9 +41,10 @@ internal sealed class GreaterThanOrEqualToMessage : BaseFixtureForOptionalCustom
     [TestCase("c", "b")]
     [TestCase("a", "a")]
     [TestCase("c", "c")]
-    public void With_Valid_Strings_Throws_Nothing(in string theValue, in string other)
+    public void With_Valid_Strings_Throws_Nothing(string theValue, string other)
     {
-        string validatedValue = GreaterThanOrEqualTo(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage);
+        string validatedValue = GreaterThanOrEqualTo(theValue, other, nameof(theValue), CustomError,
+            UseCustomErrorMessage);
 
         Assert.That(validatedValue, Is.EqualTo(theValue));
     }
@@ -54,23 +56,25 @@ internal sealed class GreaterThanOrEqualToMessage : BaseFixtureForOptionalCustom
         Constraint throwsOutOfRange = BuildConstraint(theValue, other, nameof(theValue), CustomError);
         (int theValueCopy, int otherCopy) = (theValue, other);
 
-        Assert.That(() => GreaterThanOrEqualTo(theValueCopy, otherCopy, nameof(theValue), CustomError, UseCustomErrorMessage),
+        Assert.That(() => GreaterThanOrEqualTo(theValueCopy, otherCopy, nameof(theValue), CustomError,
+            UseCustomErrorMessage),
             throwsOutOfRange);
     }
 
     [TestCase("a", "b")]
     [TestCase("b", "c")]
     [TestCase("a", "c")]
-    public void With_Less_Strings_Throws_ArgumentOutOfRangeException(in string theValue, in string other)
+    public void With_Less_Strings_Throws_ArgumentOutOfRangeException(string theValue, string other)
     {
         Constraint throwsOutOfRange = BuildConstraint(theValue, other, nameof(theValue), CustomError);
         (string theValueCopy, string otherCopy) = (theValue, other);
 
-        Assert.That(() => GreaterThanOrEqualTo(theValueCopy, otherCopy, nameof(theValue), CustomError, UseCustomErrorMessage),
+        Assert.That(() => GreaterThanOrEqualTo(theValueCopy, otherCopy, nameof(theValue), CustomError,
+            UseCustomErrorMessage),
             throwsOutOfRange);
     }
 
-    private Constraint BuildConstraint(in object theValue, in object other, in string paramName, in string customError)
+    private Constraint BuildConstraint(object theValue, object other, string paramName, string customError)
     {
         Constraint throwsOutOfRange = Throws.InstanceOf<ArgumentOutOfRangeException>()
             .With.Property(nameof(ArgumentOutOfRangeException.ActualValue)).EqualTo(theValue)
@@ -78,7 +82,7 @@ internal sealed class GreaterThanOrEqualToMessage : BaseFixtureForOptionalCustom
 
         return UseCustomErrorMessage
             ? throwsOutOfRange.With.Message.StartWith(customError)
-            : (Constraint)throwsOutOfRange.With.Message.Contains(other.ToString());
+            : throwsOutOfRange.With.Message.Contains(other.ToString());
     }
 
     [Test]
@@ -86,7 +90,8 @@ internal sealed class GreaterThanOrEqualToMessage : BaseFixtureForOptionalCustom
     {
         const string? someString = null;
 
-        Assert.That(() => GreaterThanOrEqualTo(someString, "abc", nameof(someString), CustomError, UseCustomErrorMessage),
+        Assert.That(() => GreaterThanOrEqualTo(someString, "abc", nameof(someString), CustomError,
+            UseCustomErrorMessage),
             Throws.ArgumentNullException
                 .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("value"));
     }
@@ -96,7 +101,8 @@ internal sealed class GreaterThanOrEqualToMessage : BaseFixtureForOptionalCustom
     {
         const string? someString = "abc";
 
-        Assert.That(() => GreaterThanOrEqualTo(someString, null, nameof(someString), CustomError, UseCustomErrorMessage),
+        Assert.That(() => GreaterThanOrEqualTo(someString, null, nameof(someString), CustomError,
+            UseCustomErrorMessage),
             Throws.ArgumentNullException
                 .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("other"));
     }
@@ -114,11 +120,11 @@ internal sealed class GreaterThanOrEqualToMessage : BaseFixtureForOptionalCustom
     }
 
     private static TComparable GreaterThanOrEqualTo<TComparable>(
-        in TComparable? value,
-        in TComparable? other,
-        in string paramName,
-        in string customError,
-        in bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
+        TComparable? value,
+        TComparable? other,
+        string paramName,
+        string customError,
+        bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
     {
         return useCustomErrorMessage
             ? Arguments.GreaterThanOrEqualTo(value, other, paramName, customError)
