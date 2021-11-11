@@ -23,7 +23,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
         <PackageIcon>icon.png</PackageIcon>
-        <Version>3.0.0-alpha</Version>
+        <Version>3.0.1-alpha</Version>
         <Nullable>enable</Nullable>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
