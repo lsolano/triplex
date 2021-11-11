@@ -109,42 +109,53 @@ public sealed class ComparableRange<TComparable> where TComparable : IComparable
 
     private void CheckLowerBoundary(TComparable value, string paramName, string? customMessage)
     {
-        if (!Min.HasValue)
+        if (!Min.HasValue || ValueIsNotBelowMinimum(value))
         {
             return;
         }
 
+        ThrowBoundaryViolatedException(value, paramName, customMessage, BoundaryViolations.Lower);
+    }
+
+    private bool ValueIsNotBelowMinimum(TComparable value)
+    {
         int valueVersusMinimum = value.CompareTo(Min.ValueOrFailure);
-        bool valueBelowMinimum = MinInclusive ? valueVersusMinimum < 0 : valueVersusMinimum <= 0;
 
-        if (!valueBelowMinimum)
-        {
-            return;
-        }
-
-        string orEqualToOption = MinInclusive ? "or equal to " : string.Empty;
-        throw new ArgumentOutOfRangeException(paramName, value,
-            customMessage ?? $"Must be greater than {orEqualToOption}{Min.ValueOrFailure}.");
+        return !(MinInclusive ? valueVersusMinimum < 0 : valueVersusMinimum <= 0);
     }
 
     private void CheckUpperBoundary(TComparable value, string paramName, string? customMessage)
     {
-        if (!Max.HasValue)
+        if (!Max.HasValue || ValueIsNotAboveMaximum(value))
         {
             return;
         }
 
-        int valueVersusMaximum = value.CompareTo(Max.ValueOrFailure);
-        bool valueIsAboveMaximum = MaxInclusive ? valueVersusMaximum > 0 : valueVersusMaximum >= 0;
-
-        if (!valueIsAboveMaximum)
-        {
-            return;
-        }
-
-        string orEqualToOption = MaxInclusive ? "or equal to " : string.Empty;
-        throw new ArgumentOutOfRangeException(paramName, value,
-            customMessage ?? $"Must be less than {orEqualToOption}{Max.ValueOrFailure}.");
+        ThrowBoundaryViolatedException(value, paramName, customMessage, BoundaryViolations.Upper);
     }
+
+    private bool ValueIsNotAboveMaximum(TComparable value)
+    {
+        int valueVersusMaximum = value.CompareTo(Max.ValueOrFailure);
+
+        return !(MaxInclusive ? valueVersusMaximum > 0 : valueVersusMaximum >= 0);
+    }
+
+    private void ThrowBoundaryViolatedException(TComparable value, string paramName, string? customMessage,
+        BoundaryViolations violation)
+    {
+        static string OrEqualToOptionMessage(bool inclusive) => inclusive ? "or equal to " : string.Empty;
+
+        if (violation == BoundaryViolations.Lower)
+        {
+            throw new ArgumentOutOfRangeException(paramName, value,
+                customMessage ?? $"Must be greater than {OrEqualToOptionMessage(MinInclusive)}{Min.ValueOrFailure}.");
+        }
+
+        throw new ArgumentOutOfRangeException(paramName, value,
+            customMessage ?? $"Must be less than {OrEqualToOptionMessage(MaxInclusive)}{Max.ValueOrFailure}.");
+    }
+
+    private enum BoundaryViolations { Lower = 0, Upper = 1 }
 }
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
