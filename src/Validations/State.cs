@@ -1,5 +1,3 @@
-using Triplex.Validations.Utilities;
-
 namespace Triplex.Validations;
 
 /// <summary>
@@ -17,7 +15,7 @@ public static class State
     /// <param name="message">Can not be <see langword="null"/></param>
     /// <returns></returns>
     [DebuggerStepThrough]
-    public static void IsTrue(bool stateQuery, [ValidatedNotNull] string message)
+    public static void IsTrue(bool stateQuery, [NotNull, ValidatedNotNull] string message)
     {
         Arguments.NotNull(message, nameof(message));
 
@@ -34,7 +32,7 @@ public static class State
     /// <param name="message">Can not be <see langword="null"/></param>
     /// <returns></returns>
     [DebuggerStepThrough]
-    public static void IsFalse(bool stateQuery, [ValidatedNotNull] string message)
+    public static void IsFalse(bool stateQuery, [NotNull, ValidatedNotNull] string message)
     {
         Arguments.NotNull(message, nameof(message));
 
@@ -55,7 +53,7 @@ public static class State
     /// <param name="invariant">Expected to be <code>true</code></param>
     /// <param name="message">Can not be <see langword="null"/></param>
     [DebuggerStepThrough]
-    public static void StillHolds(bool invariant, [ValidatedNotNull] string message)
+    public static void StillHolds(bool invariant, [NotNull, ValidatedNotNull] string message)
     {
         Arguments.NotNull(message, nameof(message));
 
@@ -71,7 +69,7 @@ public static class State
     /// <param name="invariant">Expected to be <code>false</code></param>
     /// <param name="message">Can not be <see langword="null"/></param>
     [DebuggerStepThrough]
-    public static void StillNotHolds(bool invariant, [ValidatedNotNull] string message)
+    public static void StillNotHolds(bool invariant, [NotNull, ValidatedNotNull] string message)
     {
         Arguments.NotNull(message, nameof(message));
 

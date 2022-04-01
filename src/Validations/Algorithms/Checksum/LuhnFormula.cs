@@ -1,7 +1,4 @@
-﻿using Triplex.Validations.ArgumentsHelpers;
-using Triplex.Validations.Utilities;
-
-namespace Triplex.Validations.Algorithms.Checksum;
+﻿namespace Triplex.Validations.Algorithms.Checksum;
 
 /// <summary>
 /// Implementation of the Luhn algorithm in its two variants: as validation and as checksum generator.
@@ -25,7 +22,7 @@ public static class LuhnFormula
     /// <exception cref="FormatException">
     /// If <paramref name="fullDigits"/> contains elements not within range [0-9].
     /// </exception>
-    public static bool IsValid([ValidatedNotNull] int[]? fullDigits)
+    public static bool IsValid([NotNull, ValidatedNotNull] int[]? fullDigits)
     {
         int[] validatedDigits = fullDigits.ValueOrThrowIfNullOrWithLessThanElements(MinimumElements,
             nameof(fullDigits));
@@ -54,7 +51,7 @@ public static class LuhnFormula
     /// <exception cref="FormatException">
     /// If <paramref name="fullDigits"/> contains characters other than digits.
     /// </exception>
-    public static bool IsValid([ValidatedNotNull] string? fullDigits)
+    public static bool IsValid([NotNull, ValidatedNotNull] string? fullDigits)
     {
         string notNullDigits = ValidateDigitsAsString(fullDigits);
 
@@ -63,7 +60,8 @@ public static class LuhnFormula
         return DoDigitCheck(validatedDigits);
     }
 
-    private static string ValidateDigitsAsString([ValidatedNotNull] string? fullDigits)
+    [return: NotNull]
+    private static string ValidateDigitsAsString([NotNull, ValidatedNotNull] string? fullDigits)
     {
         string notNullDigits = fullDigits.ValueOrThrowIfNullOrZeroLength(nameof(fullDigits));
 
@@ -101,7 +99,7 @@ public static class LuhnFormula
     /// <exception cref="ArgumentOutOfRangeException">
     /// If <paramref name="digitsWithoutCheck"/> is has less than one digits.
     /// </exception>
-    public static int GetCheckDigit([ValidatedNotNull] int[]? digitsWithoutCheck)
+    public static int GetCheckDigit([NotNull, ValidatedNotNull] int[]? digitsWithoutCheck)
     {
         const int minimumElements = 1;
 
