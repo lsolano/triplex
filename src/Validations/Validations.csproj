@@ -1,34 +1,45 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Version>3.1.0</Version>
+    
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
 
-    <PropertyGroup>
-        <TargetFrameworks>net6.0</TargetFrameworks>
-        <LangVersion>latest</LangVersion>
-        <ImplicitUsings>disable</ImplicitUsings>
-        <IsTestProject>false</IsTestProject>
-        <RootNamespace>Triplex.Validations</RootNamespace>
-        <AssemblyName>$(RootNamespace)</AssemblyName>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-        <Authors>Lorenzo Solano Martinez</Authors>
-        <Description>Validation library inspired by the concepts of Secure by Design, by Dan Bergh Johnsson, Daniel Deogun, and Daniel Sawano (MEAP 2019 Manning Publications).</Description>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <Year>$([System.DateTime]::Now.Year.ToString("####"))</Year>
-        <CopyrightStartYear>2019</CopyrightStartYear>
-        <CopyrightEndYear Condition="$(Year) != '$(CopyrightStartYear)'">-$(Year)</CopyrightEndYear>
-        <Copyright>(C) Lorenzo Solano Martinez (https://lorenzosolano.com/) $(CopyrightStartYear)$(CopyrightEndYear). All Rights Reserved.</Copyright>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/lsolano/triplex</RepositoryUrl>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
-        <PackageIcon>icon.png</PackageIcon>
-        <Version>3.1.0</Version>
-        <Nullable>enable</Nullable>
-        <EnableNETAnalyzers>true</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-        <PackageReleaseNotes>
+    <RootNamespace>Triplex.Validations</RootNamespace>
+    <AssemblyName>$(RootNamespace)</AssemblyName>
+    <IsPackable>true</IsPackable>
+    <IsTestProject>false</IsTestProject>
+    <PackageId>$(RootNamespace)</PackageId>
+
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+
+    <Nullable>enable</Nullable>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+
+    <Authors>Lorenzo Solano Martinez</Authors>
+    <Description>Validation library inspired by the concepts of Secure by Design, by Dan Bergh Johnsson, Daniel Deogun, and Daniel Sawano (MEAP 2019 Manning Publications).</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Year>$([System.DateTime]::Now.Year.ToString("####"))</Year>
+    <CopyrightStartYear>2019</CopyrightStartYear>
+    <CopyrightEndYear Condition="$(Year) != '$(CopyrightStartYear)'">-$(Year)</CopyrightEndYear>
+    <Copyright>(C) Lorenzo Solano Martinez (https://lorenzosolano.com/) $(CopyrightStartYear)$(CopyrightEndYear). All Rights Reserved.</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/lsolano/triplex</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    
+    <PackageReleaseNotes>
 Breaking Changes
   - Obsolete members from Triplex.Validations.Arguments:
     - string NotNullEmptyOrWhiteSpaceOnly(in string?, in string)
@@ -48,15 +59,19 @@ Improvements
   - Migrate to .NET 6
   - Increase test coverage to 100 percent
   - Analyse project using sonarcloud.io (see https://sonarcloud.io/project/overview?id=lsolano_triplex)
-        </PackageReleaseNotes>
-    </PropertyGroup>
+    </PackageReleaseNotes>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <None Include="..\..\LICENSE">
-        <Pack>True</Pack>
-        <PackagePath></PackagePath>
-      </None>
-      <None Include="..\..\icon.png" Pack="true" PackagePath="/" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\icon.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
 
 </Project>

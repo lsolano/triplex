@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net6.0</TargetFrameworks>
-        <LangVersion>10.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <ImplicitUsings>disable</ImplicitUsings>
         <IsTestProject>true</IsTestProject>
+        <IsPackable>false</IsPackable>
         <RootNamespace>Triplex.Validations.Tests</RootNamespace>
         <AssemblyName>Triplex.Validations.Tests</AssemblyName>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
