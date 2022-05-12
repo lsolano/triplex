@@ -67,26 +67,26 @@ using Triplex.Validations;
 
 public sealed class Email
 {
-	private readonly string _value;
+  private readonly string _value;
 
-	public Email(string value)
-	{
-		//a) Simple form (param name for ArgumentException is automatically taken from 1st parameter)
-		Arguments.OrException(value);
-		
-		//b) With custom message (param name for ArgumentException is automatically taken from 1st parameter)
-		Arguments.OrExceptionWithMessage(value, "Invalid email");
-		
-		// Use value ensuring that it is not null now
-		_value = value.ToLowerInvariant();
+  public Email(string value)
+  {
+    //a) Simple form (param name for ArgumentException is automatically taken from 1st parameter)
+    Arguments.OrException(value);
+    
+    //b) With custom message (param name for ArgumentException is automatically taken from 1st parameter)
+    Arguments.OrExceptionWithMessage(value, "Invalid email");
+    
+    // Use value ensuring that it is not null now
+    _value = value.ToLowerInvariant();
 
-		// or use returned value from argument check 
-		_value = Arguments.OrException(value); //return same input (literally same reference) 
-	}
+    // or use returned value from argument check 
+    _value = Arguments.OrException(value); //return same input (literally same reference) 
+  }
 
-	// Collapse Check-Then-Assign pattern using returned value from checks.
-	public Email(string username, string domain)
-		=> _value = $"{Arguments.OrException(username)}@{Arguments.OrException(domain)}";	
+  // Collapse Check-Then-Assign pattern using returned value from checks.
+  public Email(string username, string domain)
+    => _value = $"{Arguments.OrException(username)}@{Arguments.OrException(domain)}";	
 }
 ```
 
@@ -110,21 +110,21 @@ using Triplex.Validations;
 
 public sealed class MyList<T>
 {
-	public T Remove(int index) {
-		//0. Pre-condition
-		State.IsTrue(_size > 0, "Unable to remove elements when empty.");
+  public T Remove(int index) {
+    //0. Pre-condition
+    State.IsTrue(_size > 0, "Unable to remove elements when empty.");
 
-		//1. Contract
-		Arguments.Between(index, 0, _size - 1, "Index out of bounds.");
+    //1. Contract
+    Arguments.Between(index, 0, _size - 1, "Index out of bounds.");
 
-		//2. Do your stuff
-		T removed = DoRemoveElementAt(index);
-		
-		//3. After removing size must be zero or greater
-		State.StillHolds(_size >= 0, "Internal error, size must not be negative.");
+    //2. Do your stuff
+    T removed = DoRemoveElementAt(index);
+    
+    //3. After removing size must be zero or greater
+    State.StillHolds(_size >= 0, "Internal error, size must not be negative.");
 
-		return removed;
-	}
+    return removed;
+  }
 }
 ```
 State checks semantics:
