@@ -15,7 +15,7 @@ internal sealed class BetweenMessageFacts
     [TestCase(1, 3, 3)]
     public void With_Valid_Integers_Throws_Nothing(int from, int value, int to)
     {
-        int validatedValue = Arguments.Between(value, from, to, nameof(value), CustomMessage);
+        int validatedValue = Arguments.BetweenOrExceptionWithMessage(value, from, to, nameof(value), CustomMessage);
 
         Assert.That(validatedValue, Is.EqualTo(value));
     }
@@ -28,7 +28,7 @@ internal sealed class BetweenMessageFacts
     {
         (int fromCopy, int valueCopy, int toCopy) = (from, value, to);
 
-        Assert.That(() => Arguments.Between(valueCopy, fromCopy, toCopy, nameof(value), CustomMessage),
+        Assert.That(() => Arguments.BetweenOrExceptionWithMessage(valueCopy, fromCopy, toCopy, nameof(value), CustomMessage),
             Throws.InstanceOf<ArgumentOutOfRangeException>()
                 .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("min"));
     }
@@ -45,7 +45,7 @@ internal sealed class BetweenMessageFacts
     {
         (int fromCopy, int valueCopy, int toCopy) = (from, value, to);
 
-        Assert.That(() => Arguments.Between(valueCopy, fromCopy, toCopy, nameof(value), CustomMessage),
+        Assert.That(() => Arguments.BetweenOrExceptionWithMessage(valueCopy, fromCopy, toCopy, CustomMessage, nameof(value)),
             Throws.InstanceOf<ArgumentOutOfRangeException>()
                 .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo(nameof(value))
                 .And.Message.StartsWith(CustomMessage));

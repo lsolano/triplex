@@ -1,21 +1,23 @@
-﻿namespace Triplex.Validations.ArgumentsHelpers;
+﻿using System.Runtime.CompilerServices;
+
+namespace Triplex.Validations.ArgumentsHelpers;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
 internal static class Extensions
 {
     [return: NotNull]
-    internal static T ValueOrThrowIfNull<T>([NotNull, ValidatedNotNull] this T? value, string paramName)
-    {
-        if (value is not null)
-        {
-            return value;
-        }
-
-        throw new ArgumentNullException(paramName);
-    }
+    internal static T ValueOrThrowIfNull<T>([NotNull] this T? value, 
+        [CallerArgumentExpression("value")] string paramName = "")
+        => value ?? throw new ArgumentNullException(paramName);
 
     [return: NotNull]
-    internal static T ValueOrThrowIfNull<T>([NotNull, ValidatedNotNull] this T? value, string paramName,
+    internal static T ValueOrThrowInvalidOperationIfNull<T>([NotNull] this T? stateElement,
+        string elementName)
+            => stateElement
+                ?? throw new InvalidOperationException($"Operation not allowed when {elementName} is null.");
+
+    [return: NotNull]
+    internal static T ValueOrThrowIfNull<T>([NotNull] this T? value, string paramName,
         string customMessage)
     {
         if (value is not null)
@@ -38,7 +40,7 @@ internal static class Extensions
             return value;
         }
 
-        throw new ArgumentOutOfRangeException(paramName, value.Length, customMessage);
+        throw new ArgumentFormatException(paramName: paramName, message: customMessage);
     }
 
     [return: NotNull]
@@ -57,26 +59,27 @@ internal static class Extensions
     }
 
     [return: NotNull]
-    internal static string ValueOrThrowIfNullOrZeroLength([NotNull, ValidatedNotNull] this string? value, 
+    internal static string ValueOrThrowIfNullOrZeroLength([NotNull] this string? value,
         string paramName)
         => ValueOrThrowIfNull(value, paramName)
             .ValueOrThrowIfZeroLength(paramName);
 
     [return: NotNull]
-    internal static string ValueOrThrowIfNullOrZeroLength([NotNull, ValidatedNotNull] this string? value, 
+    internal static string ValueOrThrowIfNullOrZeroLength([NotNull] this string? value,
         string paramName, string customMessage)
         => ValueOrThrowIfNull(value, paramName, customMessage)
             .ValueOrThrowIfZeroLength(paramName, customMessage);
 
     [return: NotNull]
-    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([NotNull, ValidatedNotNull] this string? value,
-        string paramName)
+    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(
+        [NotNull] this string? value,
+        [CallerArgumentExpression("value")] string paramName = "")
         => ValueOrThrowIfNull(value, paramName)
             .ValueOrThrowIfZeroLength(paramName)
                 .ValueOrThrowIfWhiteSpaceOnly(paramName);
 
     [return: NotNull]
-    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([NotNull, ValidatedNotNull] this string? value,
+    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([NotNull] this string? value,
         string paramName, string customMessage)
         => ValueOrThrowIfNull(value, paramName, customMessage)
             .ValueOrThrowIfZeroLength(paramName, customMessage)
@@ -110,7 +113,7 @@ internal static class Extensions
 
     [return: NotNull]
     internal static TType[] ValueOrThrowIfNullOrWithLessThanElements<TType>(
-        [NotNull, ValidatedNotNull] this TType[]? value, int minimumElements, string paramName)
+        [NotNull] this TType[]? value, int minimumElements, string paramName)
     {
         OutOfRangeChecks.GreaterThanOrEqualTo(ValueOrThrowIfNull(value, paramName).Length, minimumElements, paramName);
 

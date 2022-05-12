@@ -46,6 +46,6 @@ internal sealed class NotEmptyGuidMessage : BaseFixtureForOptionalCustomMessage
 
     private static Guid NotEmpty(Guid value, string? paramName, string? customMessage, bool useCustomMessage)
         => useCustomMessage ?
-            Arguments.NotEmpty(value, paramName!, customMessage!)
-            : Arguments.NotEmpty(value, paramName!);
+            Arguments.NotEmptyOrExceptionWithMessage(value, customMessage!, paramName!)
+            : Arguments.NotEmptyOrException(value, paramName!);
 }

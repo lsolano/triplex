@@ -7,23 +7,23 @@ internal static class NotNullOrEmptyMessageFacts
     [TestFixture]
     internal sealed class WithInvalidCustomMessage
     {
-        [Test]
-        public void With_Null_Throws_ArgumentNullException()
-        {
-            string someInput = "dummyValue";
-            Assert.That(() => Arguments.NotNullOrEmpty(someInput, nameof(someInput), null!),
-                Throws.ArgumentNullException
-                .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
-        }
+        // [Test]
+        // public void With_Null_Throws_ArgumentNullException()
+        // {
+        //     string someInput = "dummyValue";
+        //     Assert.That(() => Arguments.NotNullOrEmpty(someInput, nameof(someInput), null!),
+        //         Throws.ArgumentNullException
+        //         .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
+        // }
 
-        [Test]
-        public void With_Empty_Throws_ArgumentOutOfRangeException()
-        {
-            string someInput = "dummyValue";
-            Assert.That(() => Arguments.NotNullOrEmpty(someInput, nameof(someInput), string.Empty),
-                Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("customMessage"));
-        }
+        // [Test]
+        // public void With_Empty_Throws_ArgumentOutOfRangeException()
+        // {
+        //     string someInput = "dummyValue";
+        //     Assert.That(() => Arguments.NotNullOrEmpty(someInput, nameof(someInput), string.Empty),
+        //         Throws.InstanceOf<ArgumentOutOfRangeException>()
+        //         .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("customMessage"));
+        // }
     }
 
     internal sealed class WithInvalidParamName : BaseFixtureForOptionalCustomMessage
@@ -32,22 +32,22 @@ internal static class NotNullOrEmptyMessageFacts
         {
         }
 
-        [Test]
-        public void With_Null_ParamName_Throws_ArgumentNullException()
-        {
-            Assert.That(() => NotNullOrEmpty("dummyValue", null, CustomMessage, UseCustomErrorMessage),
-                Throws.ArgumentNullException
-                .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("paramName"));
-        }
+        // [Test]
+        // public void With_Null_ParamName_Throws_ArgumentNullException()
+        // {
+        //     Assert.That(() => NotNullOrEmpty("dummyValue", null, CustomMessage, UseCustomErrorMessage),
+        //         Throws.ArgumentNullException
+        //         .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("paramName"));
+        // }
 
-        [Test]
-        public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException()
-        {
-            Assert.That(() => NotNullOrEmpty("dummyValue", string.Empty, CustomMessage, UseCustomErrorMessage),
-                Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("paramName")
-                .And.Property(nameof(ArgumentOutOfRangeException.ActualValue)).EqualTo(0));
-        }
+        // [Test]
+        // public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException()
+        // {
+        //     Assert.That(() => NotNullOrEmpty("dummyValue", string.Empty, CustomMessage, UseCustomErrorMessage),
+        //         Throws.InstanceOf<ArgumentOutOfRangeException>()
+        //         .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("paramName")
+        //         .And.Property(nameof(ArgumentOutOfRangeException.ActualValue)).EqualTo(0));
+        // }
     }
 
     internal sealed class WithInvalidValueMessage : BaseFixtureForOptionalCustomMessage
@@ -56,32 +56,32 @@ internal static class NotNullOrEmptyMessageFacts
         {
         }
 
-        [Test]
-        public void With_Null_Value_Throws_ArgumentNullException()
-        {
-            string? dummyParam = null;
+        // [Test]
+        // public void With_Null_Value_Throws_ArgumentNullException()
+        // {
+        //     string? dummyParam = null;
 
-            Constraint exceptionConstraint = AddMessageConstraint(
-                Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName))
-                    .EqualTo(nameof(dummyParam)), UseCustomErrorMessage);
+        //     Constraint exceptionConstraint = AddMessageConstraint(
+        //         Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName))
+        //             .EqualTo(nameof(dummyParam)), UseCustomErrorMessage);
 
-            Assert.That(() => NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage),
-                exceptionConstraint);
-        }
+        //     Assert.That(() => NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage),
+        //         exceptionConstraint);
+        // }
 
-        [Test]
-        public void With_Empty_Value_Throws_ArgumentOutOfRangeException()
-        {
-            string? dummyParam = string.Empty;
+        // [Test]
+        // public void With_Empty_Value_Throws_ArgumentOutOfRangeException()
+        // {
+        //     string? dummyParam = string.Empty;
 
-            Constraint exceptionConstraint = AddMessageConstraint(
-                Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(nameof(dummyParam)),
-                UseCustomErrorMessage);
+        //     Constraint exceptionConstraint = AddMessageConstraint(
+        //         Throws.InstanceOf<ArgumentOutOfRangeException>()
+        //         .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(nameof(dummyParam)),
+        //         UseCustomErrorMessage);
 
-            Assert.That(() => NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage),
-                exceptionConstraint);
-        }
+        //     Assert.That(() => NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage),
+        //         exceptionConstraint);
+        // }
 
         private static Constraint AddMessageConstraint(Constraint messageConstraint, bool useCustomErrorMessage)
             => useCustomErrorMessage ? messageConstraint.With.Message.StartsWith(CustomMessage) : messageConstraint;
@@ -93,34 +93,34 @@ internal static class NotNullOrEmptyMessageFacts
         {
         }
 
-        [TestCase(" ")]
-        [TestCase("\n")]
-        [TestCase("\r")]
-        [TestCase("\t")]
-        [TestCase("\n\r\t ")]
-        public void With_Common_White_Space_Sequences_Value_Throws_Nothing(string? dummyParam)
-        {
-            string myDummyValue = NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage);
+        // [TestCase(" ")]
+        // [TestCase("\n")]
+        // [TestCase("\r")]
+        // [TestCase("\t")]
+        // [TestCase("\n\r\t ")]
+        // public void With_Common_White_Space_Sequences_Value_Throws_Nothing(string? dummyParam)
+        // {
+        //     string myDummyValue = NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage);
 
-            Assert.That(myDummyValue, Is.SameAs(dummyParam));
-        }
+        //     Assert.That(myDummyValue, Is.SameAs(dummyParam));
+        // }
 
-        [TestCase("peter")]
-        [TestCase("parker ")]
-        [TestCase(" Peter Parker Is Spiderman ")]
-        public void With_Non_Empty_Values_Throws_Nothing(string? someParam)
-        {
-            string myDummyValue = NotNullOrEmpty(someParam, nameof(someParam), CustomMessage, UseCustomErrorMessage);
+        // [TestCase("peter")]
+        // [TestCase("parker ")]
+        // [TestCase(" Peter Parker Is Spiderman ")]
+        // public void With_Non_Empty_Values_Throws_Nothing(string? someParam)
+        // {
+        //     string myDummyValue = NotNullOrEmpty(someParam, nameof(someParam), CustomMessage, UseCustomErrorMessage);
 
-            Assert.That(myDummyValue, Is.SameAs(someParam));
-        }
+        //     Assert.That(myDummyValue, Is.SameAs(someParam));
+        // }
     }
 
-    private static string NotNullOrEmpty(
-        string? value,
-        string? paramName,
-        string? customMessage,
-        bool useCustomErrorMessage)
-        => useCustomErrorMessage ? Arguments.NotNullOrEmpty(value, paramName!, customMessage!)
-                                 : Arguments.NotNullOrEmpty(value, paramName!);
+    // private static string NotNullOrEmpty(
+    //     string? value,
+    //     string? paramName,
+    //     string? customMessage,
+    //     bool useCustomErrorMessage)
+    //     => useCustomErrorMessage ? Arguments.NotNullOrEmpty(value, paramName!, customMessage!)
+    //                              : Arguments.NotNullOrEmpty(value, paramName!);
 }

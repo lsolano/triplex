@@ -17,7 +17,7 @@ internal sealed class LessThanOrEqualToMessage : BaseFixtureForOptionalCustomMes
     [TestCase(-2, 1)]
     public void With_Valid_Integers_Throws_Nothing(int theValue, int other)
     {
-        int validatedValue = Arguments.LessThanOrEqualTo(theValue, other, nameof(theValue), CustomError);
+        int validatedValue = Arguments.LessThanOrEqualToOrExceptionWithMessage(theValue, other, nameof(theValue), CustomError);
 
         Assert.That(validatedValue, Is.EqualTo(theValue));
     }
@@ -126,7 +126,7 @@ internal sealed class LessThanOrEqualToMessage : BaseFixtureForOptionalCustomMes
         bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
     {
         return useCustomErrorMessage
-            ? Arguments.LessThanOrEqualTo(value, other, paramName!, customError!)
-            : Arguments.LessThanOrEqualTo(value, other, paramName!);
+            ? Arguments.LessThanOrEqualToOrExceptionWithMessage(value, other, customError!, paramName!)
+            : Arguments.LessThanOrEqualToOrException(value, other, paramName!);
     }
 }

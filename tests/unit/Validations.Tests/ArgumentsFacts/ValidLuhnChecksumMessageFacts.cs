@@ -35,7 +35,7 @@ internal sealed class ValidLuhnChecksumMessageFacts
     public void With_Invalid_Value_Throws_FormatException(string? value)
     {
         string? copy = value;
-        Assert.That(() => Arguments.ValidLuhnChecksum(copy, nameof(value), CustomMessage),
+        Assert.That(() => Arguments.ValidLuhnChecksum(copy, CustomMessage, nameof(value)),
             Throws.InstanceOf<FormatException>()
                 .With.Message.EqualTo(CustomMessage));
     }

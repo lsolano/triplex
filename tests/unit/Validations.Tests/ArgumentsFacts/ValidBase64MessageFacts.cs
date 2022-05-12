@@ -53,6 +53,6 @@ internal sealed class ValidBase64MessageFacts : BaseFixtureForOptionalCustomMess
     private static string ValidBase64(string? value, string? paramName, string? customMessage,
         bool useCustomMessage)
         => useCustomMessage
-            ? Arguments.ValidBase64(value, paramName!, customMessage!)
+            ? Arguments.ValidBase64(value, customMessage!, paramName!)
             : Arguments.ValidBase64(value, paramName!);
 }
