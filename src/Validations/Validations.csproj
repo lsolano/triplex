@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>3.1.0</Version>
+    <VersionPrefix>4.0.0</VersionPrefix>
+    <VersionSuffix>alpha</VersionSuffix>
     
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
 
     <RootNamespace>Triplex.Validations</RootNamespace>
@@ -25,15 +26,17 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
 
-    <Authors>Lorenzo Solano Martinez</Authors>
-    <Description>Validation library inspired by the concepts of Secure by Design, by Dan Bergh Johnsson, Daniel Deogun, and Daniel Sawano (MEAP 2019 Manning Publications).</Description>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/lsolano/triplex</RepositoryUrl>
+    
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Year>$([System.DateTime]::Now.Year.ToString("####"))</Year>
     <CopyrightStartYear>2019</CopyrightStartYear>
     <CopyrightEndYear Condition="$(Year) != '$(CopyrightStartYear)'">-$(Year)</CopyrightEndYear>
     <Copyright>(C) Lorenzo Solano Martinez (https://lorenzosolano.com/) $(CopyrightStartYear)$(CopyrightEndYear). All Rights Reserved.</Copyright>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/lsolano/triplex</RepositoryUrl>
+    <Authors>Lorenzo Solano Martinez</Authors>
+    <Description>Validation library inspired by the concepts of Secure by Design, by Dan Bergh Johnsson, Daniel Deogun, and Daniel Sawano (MEAP 2019 Manning Publications).</Description>
+    
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
