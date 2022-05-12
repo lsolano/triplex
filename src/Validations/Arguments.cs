@@ -1,14 +1,13 @@
-﻿using Triplex.Validations.Algorithms.Checksum;
-using Triplex.Validations.ArgumentsHelpers;
-using Triplex.Validations.Exceptions;
-using Triplex.Validations.Utilities;
+﻿using System.Runtime.CompilerServices;
+using Triplex.Validations.Algorithms.Checksum;
 
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
 namespace Triplex.Validations;
 
 /// <summary>
 /// Utility class used to validate arguments. Useful to check constructor and public methods arguments.
 /// If checks are violated an instance of <see cref="ArgumentException" /> is thrown.
+/// All checks imply an initial Not-Null check for all values checked, 
+/// so <code>Arguments.OrException(someParam);</code> means "Give 'someParam' value or and exception if it is null."
 /// </summary>
 public static class Arguments
 {
@@ -22,8 +21,10 @@ public static class Arguments
     /// <returns><paramref name="value"/></returns>
     /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
     [DebuggerStepThrough]
-    public static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType? value,
-        [ValidatedNotNull] string paramName) where TParamType : class
+    [return: NotNull]
+    public static TParamType OrException<TParamType>(
+        [NotNull] TParamType? value,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "") where TParamType : class
         => NullAndEmptyChecks.NotNull(value, paramName);
 
     /// <summary>
@@ -45,8 +46,12 @@ public static class Arguments
     /// <returns><paramref name="value"/></returns>
     /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null" />.</exception>
     [DebuggerStepThrough]
-    public static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType? value,
-        [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage) where TParamType : class
+    [return: NotNull]
+    public static TParamType OrExceptionWithMessage<TParamType>(
+        [NotNull] TParamType? value,
+        [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
+            where TParamType : class
         => NullAndEmptyChecks.NotNull(value, paramName, customMessage);
 
     /// <summary>
@@ -61,10 +66,11 @@ public static class Arguments
     /// <exception cref="ArgumentFormatException">
     /// If <paramref name="value"/> contains only white-space characters
     /// </exception>
-    [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmptyOrWhiteSpaceOnly(string?, string) instead.", error: false)]
     [DebuggerStepThrough]
-    public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] string? value,
-        [ValidatedNotNull] string paramName)
+    [return: NotNull]
+    public static string NotEmptyNorWhiteSpaceOnlyOrException(
+        [NotNull] string? value,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
         => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName);
 
     /// <summary>
@@ -80,22 +86,13 @@ public static class Arguments
     /// <exception cref="ArgumentFormatException">
     /// If <paramref name="value"/> contains only white-space characters
     /// </exception>
-    [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmptyOrWhiteSpaceOnly(string?, string, string) instead.", error: false)]
     [DebuggerStepThrough]
-    public static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] string? value,
-        [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage)
-        => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName, customMessage);
-
-    /// <inheritdoc cref="NotNullEmptyOrWhiteSpaceOnly(string?, string)"/>
-    [DebuggerStepThrough]
-    public static string NotEmptyOrWhiteSpaceOnly([ValidatedNotNull] string? value,
-        [ValidatedNotNull] string paramName)
-        => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName);
-
-    /// <inheritdoc cref="NotNullEmptyOrWhiteSpaceOnly(string?, string, string)"/>
-    [DebuggerStepThrough]
-    public static string NotEmptyOrWhiteSpaceOnly([ValidatedNotNull] string? value,
-        [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage)
+    [return: NotNull]
+    //TODO: Refactor tests for NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage
+    public static string NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage(
+        [NotNull] string? value,
+        [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
         => NullAndEmptyChecks.NotNullEmptyOrWhiteSpaceOnly(value, paramName, customMessage);
 
     /// <summary>
@@ -109,9 +106,12 @@ public static class Arguments
     /// <exception cref="ArgumentFormatException">
     /// If <paramref name="value"/> contains only white-space characters
     /// </exception>
-    [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmpty(string?, string) instead.", error: false)]
     [DebuggerStepThrough]
-    public static string NotNullOrEmpty([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName)
+    [return: NotNull]
+    //TODO: Refactor tests for NotEmptyOrException
+    public static string NotEmptyOrException(
+        [NotNull] string? value,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
         => NullAndEmptyChecks.NotNullOrEmpty(value, paramName);
 
     /// <summary>
@@ -123,21 +123,13 @@ public static class Arguments
     /// <returns><paramref name="value"/></returns>
     /// <exception cref="ArgumentNullException">If any paramete is <see langword = "null" />.</exception>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
-    [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use NotEmpty(string?, string, string) instead.", error: false)]
     [DebuggerStepThrough]
-    public static string NotNullOrEmpty([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string customMessage)
-        => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
-
-    /// <inheritdoc cref="NotNullOrEmpty(string?, string)"/>
-    [DebuggerStepThrough]
-    public static string NotEmpty([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName)
-        => NullAndEmptyChecks.NotNullOrEmpty(value, paramName);
-
-    /// <inheritdoc cref="NotNullOrEmpty(string?, string, string)"/>
-    [DebuggerStepThrough]
-    public static string NotEmpty([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string customMessage)
+    [return: NotNull]
+    //TODO: Refactor tests for NotEmptyOrExceptionWithMessage
+    public static string NotEmptyOrExceptionWithMessage(
+        [NotNull] string? value,
+        [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
         => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
 
     #endregion
@@ -151,16 +143,13 @@ public static class Arguments
     /// <returns><paramref name="value"/></returns>
     /// <exception cref="ArgumentException">If <paramref name="value"/> is an empty <see cref="Guid"/>.</exception>
     [DebuggerStepThrough]
-    public static Guid NotEmpty(Guid value, [ValidatedNotNull] string paramName)
+    //TODO: Refactor tests for NotEmptyOrException
+    public static Guid NotEmptyOrException(Guid value,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
     {
-        string validParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
+        string validParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly();
 
-        if (IsEmpty(value))
-        {
-            throw new ArgumentException(validParamName);
-        }
-
-        return value;
+        return IsEmpty(value) ? throw new ArgumentException(validParamName) : value;
     }
 
     /// <summary>
@@ -181,19 +170,18 @@ public static class Arguments
     /// <returns><paramref name="value"/></returns>
     /// <exception cref="ArgumentException">If <paramref name="value"/> is an empty <see cref="Guid"/>.</exception>
     [DebuggerStepThrough]
-    public static Guid NotEmpty(Guid value, [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string customMessage)
+    //TODO: Refactor tests for NotEmptyOrExceptionWithMessage
+    public static Guid NotEmptyOrExceptionWithMessage(Guid value,
+        [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
     {
         (string validParamName, string validCustomMessage) =
-            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
-             customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(customMessage)));
+            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(),
+             customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly());
 
-        if (IsEmpty(value))
-        {
-            throw new ArgumentException(paramName: validParamName, message: validCustomMessage);
-        }
-
-        return value;
+        return IsEmpty(value) ?
+            throw new ArgumentException(paramName: validParamName, message: validCustomMessage)
+            : value;
     }
 
     private static bool IsEmpty(Guid value) => value == default;
@@ -213,7 +201,10 @@ public static class Arguments
     /// When <paramref name="value"/> is not within <typeparamref name="TEnumType"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TEnumType ValidEnumerationMember<TEnumType>(TEnumType value, string paramName)
+    [return: NotNull]
+    //TODO: Refactor tests for MemberOfOrException
+    public static TEnumType MemberOfOrException<TEnumType>(TEnumType value,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
         where TEnumType : Enum
         => EnumerationChecks.ValidEnumerationMember(value, paramName);
 
@@ -229,8 +220,11 @@ public static class Arguments
     /// When <paramref name="value"/> is not within <typeparamref name="TEnumType"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TEnumType ValidEnumerationMember<TEnumType>(TEnumType value, string paramName,
-        string customMessage) where TEnumType : Enum
+    [return: NotNull]
+    //TODO: Refactor tests for MemberOfOrExceptionWithMessage
+    public static TEnumType MemberOfOrExceptionWithMessage<TEnumType>(TEnumType value,
+        string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "") where TEnumType : Enum
         => EnumerationChecks.ValidEnumerationMember(value, paramName, customMessage);
 
     #endregion
@@ -251,9 +245,12 @@ public static class Arguments
     /// If <paramref name="value"/> is not less than <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable LessThan<TComparable>([ValidatedNotNull] TComparable? value,
-        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName)
-        where TComparable : IComparable<TComparable>
+    [return: NotNull]
+    //TODO: Refactor tests for LessThanOrException
+    public static TComparable LessThanOrException<TComparable>(
+        [NotNull] TComparable? value,
+        [NotNull] TComparable? other,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThan(value, other, paramName);
 
     /// <summary>
@@ -271,9 +268,13 @@ public static class Arguments
     /// If <paramref name="value"/> is not less than <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable LessThan<TComparable>([ValidatedNotNull] TComparable? value,
-        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string customMessage) where TComparable : IComparable<TComparable>
+    [return: NotNull]
+    //TODO: Refactor tests for LessThanOrExceptionWithMessage
+    public static TComparable LessThanOrExceptionWithMessage<TComparable>(
+        [NotNull] TComparable? value,
+        [NotNull] TComparable? other,
+        [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThan(value, other, paramName, customMessage);
 
     /// <summary>
@@ -291,9 +292,12 @@ public static class Arguments
     /// If <paramref name="value"/> is not less than or equal to <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable? value,
-        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName)
-        where TComparable : IComparable<TComparable>
+    [return: NotNull]
+    //TODO: Refactor tests for LessThanOrEqualToOrException
+    public static TComparable LessThanOrEqualToOrException<TComparable>(
+        [NotNull] TComparable? value,
+        [NotNull] TComparable? other,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThanOrEqualTo(value, other, paramName);
 
     /// <summary>
@@ -311,10 +315,13 @@ public static class Arguments
     /// If <paramref name="value"/> is not less than or equal to <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable LessThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable? value,
-        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName,
-            [ValidatedNotNull] string customMessage)
-        where TComparable : IComparable<TComparable>
+    [return: NotNull]
+    //TODO: Refactor tests for LessThanOrEqualToOrExceptionWithMessage
+    public static TComparable LessThanOrEqualToOrExceptionWithMessage<TComparable>(
+        [NotNull] TComparable? value,
+        [NotNull] TComparable? other,
+        [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThanOrEqualTo(value, other, paramName, customMessage);
 
     /// <summary>
@@ -331,9 +338,12 @@ public static class Arguments
     /// If <paramref name="value"/> is not greater than <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable GreaterThan<TComparable>([ValidatedNotNull] TComparable? value,
-        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName)
-        where TComparable : IComparable<TComparable>
+    [return: NotNull]
+    //TODO: Refactor tests for GreaterThanOrException
+    public static TComparable GreaterThanOrException<TComparable>(
+        [NotNull] TComparable? value,
+        [NotNull] TComparable? other,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThan(value, other, paramName);
 
     /// <summary>
@@ -351,9 +361,13 @@ public static class Arguments
     /// If <paramref name="value"/> is not greater than <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable GreaterThan<TComparable>([ValidatedNotNull] TComparable? value,
-        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string customMessage) where TComparable : IComparable<TComparable>
+    [return: NotNull]
+    //TODO: Refactor tests for GreaterThanOrExceptionWithMessage
+    public static TComparable GreaterThanOrExceptionWithMessage<TComparable>(
+        [NotNull] TComparable? value,
+        [NotNull] TComparable? other,
+        [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThan(value, other, paramName, customMessage);
 
     /// <summary>
@@ -371,8 +385,12 @@ public static class Arguments
     /// If <paramref name="value"/> is not greater than or equal to <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable? value,
-        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName)
+    [return: NotNull]
+    //TODO: Refactor tests for GreaterThanOrEqualToOrException
+    public static TComparable GreaterThanOrEqualToOrException<TComparable>(
+        [NotNull] TComparable? value,
+        [NotNull] TComparable? other, 
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
         where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThanOrEqualTo(value, other, paramName);
 
@@ -392,10 +410,39 @@ public static class Arguments
     /// If <paramref name="value"/> is not greater than or equal to <paramref name="other"/>
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable GreaterThanOrEqualTo<TComparable>([ValidatedNotNull] TComparable? value,
-        [ValidatedNotNull] TComparable? other, [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string customMessage) where TComparable : IComparable<TComparable>
+    [return: NotNull]
+    //TODO: Refactor tests for GreaterThanOrEqualToOrExceptionWithMessage
+    public static TComparable GreaterThanOrEqualToOrExceptionWithMessage<TComparable>(
+        [NotNull] TComparable? value,
+        [NotNull] TComparable? other, 
+        [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThanOrEqualTo(value, other, paramName, customMessage);
+
+    /// <summary>
+    /// <p>Checks that the given <paramref name="value"/> is between [<paramref name="fromInclusive"/>, 
+    /// <paramref name="toInclusive"/>] (closed range).</p>
+    /// <p>This method relies on the <see cref="IComparable{T}.CompareTo"/> contract.</p>
+    /// </summary>
+    /// <param name="value">Value to check, can not be <see langword="null"/></param>
+    /// <param name="fromInclusive">Lower bound, can not be <see langword="null"/></param>
+    /// <param name="toInclusive">Upper bound, can not be <see langword="null"/></param>
+    /// <param name="paramName">Parameter name, can not be <see langword="null"/></param>
+    /// <typeparam name="TComparable"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="value"/> is not between [<paramref name="fromInclusive"/>, 
+    /// <paramref name="toInclusive"/>]
+    /// </exception>
+    [DebuggerStepThrough]
+    [return: NotNull]
+    public static TComparable BetweenOrException<TComparable>(
+        [NotNull] TComparable? value,
+        [NotNull] TComparable? fromInclusive,
+        [NotNull] TComparable? toInclusive,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "") where TComparable : IComparable<TComparable>
+            => OutOfRangeChecks.Between(value, fromInclusive, toInclusive, paramName);
 
     /// <summary>
     /// <p>Checks that the given <paramref name="value"/> is between [<paramref name="fromInclusive"/>, 
@@ -415,12 +462,14 @@ public static class Arguments
     /// <paramref name="toInclusive"/>]
     /// </exception>
     [DebuggerStepThrough]
-    public static TComparable Between<TComparable>(
-        [ValidatedNotNull] TComparable? value,
-        [ValidatedNotNull] TComparable? fromInclusive,
-        [ValidatedNotNull] TComparable? toInclusive,
-        [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string customMessage) where TComparable : IComparable<TComparable>
+    [return: NotNull]
+    //TODO: Refactor tests for BetweenOrExceptionWithMessage
+    public static TComparable BetweenOrExceptionWithMessage<TComparable>(
+        [NotNull] TComparable? value,
+        [NotNull] TComparable? fromInclusive,
+        [NotNull] TComparable? toInclusive,
+        [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "") where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.Between(value, fromInclusive, toInclusive, paramName, customMessage);
 
     #endregion
@@ -445,12 +494,14 @@ public static class Arguments
     /// If <paramref name="value"/> is not valid as described by the Luhn algorithm.
     /// </exception>
     [DebuggerStepThrough]
-    public static string ValidLuhnChecksum([ValidatedNotNull] string? value,
-        [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage)
+    [return: NotNull]
+    //TODO: Refactor tests for ValidLuhnChecksum
+    public static string ValidLuhnChecksum([NotNull] string? value, [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
     {
         (string validParamName, string validCustomMessage) =
-            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
-             customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(customMessage)));
+            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(),
+             customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly());
 
         string notNullValue = NullAndEmptyChecks.NotNull(value, validParamName);
 
@@ -488,10 +539,11 @@ public static class Arguments
     /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
     /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
     [DebuggerStepThrough]
-    public static string ValidBase64([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName)
+    //TODO: Refactor tests for ValidBase64
+    public static string ValidBase64([NotNull] string? value, [NotNull, CallerArgumentExpression("value")] string paramName = "")
     {
         string validParamName =
-            paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
+            paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly();
 
         string notNullValue = value.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(validParamName);
 
@@ -509,12 +561,13 @@ public static class Arguments
     /// <exception cref="ArgumentNullException">When any parameter is <see langword="null"/></exception>
     /// <exception cref="FormatException">If <paramref name="value"/> is not a valid Base64 String.</exception>
     [DebuggerStepThrough]
-    public static string ValidBase64([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string customMessage)
+    //TODO: Refactor tests for ValidBase64
+    public static string ValidBase64([NotNull] string? value, [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
     {
         (string validParamName, string validCustomMessage) =
-            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
-             customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(customMessage)));
+            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(),
+             customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly());
 
         string notNullValue
             = value.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(validParamName, validCustomMessage);
@@ -535,28 +588,6 @@ public static class Arguments
     #region General Purpose Checks
 
     /// <summary>
-    /// Succeeds if <paramref name="precondition"/> (value or expression) is <see langword="true"/>.
-    /// </summary>
-    /// <param name="precondition">Boolean expression that must be <see langword="true"/> for the argument check to 
-    /// succeed.</param>
-    /// <param name="paramName">Parameter name, from caller's context.</param>
-    /// <param name="preconditionDescription">Description for the custom precondition.</param>
-    [Obsolete("Please stop using this method, it will be removed on mayor release 4.x. Use CompliesWith(T?, Func<T, bool>, string, string), or DoesNotComplyWith(T?, Func<T, bool>, string, string) instead.", error: false)]
-    [DebuggerStepThrough]
-    public static void CompliesWith(bool precondition, [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string preconditionDescription)
-    {
-        (string validParamName, string validPreconditionDescription) =
-            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
-             preconditionDescription.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(preconditionDescription)));
-
-        if (!precondition)
-        {
-            throw new ArgumentException(paramName: validParamName, message: validPreconditionDescription);
-        }
-    }
-
-    /// <summary>
     /// Checks the given value for <see langword="null"/> and then if the its complies with the validator function. 
     /// </summary>
     /// <param name="value">To be validated.</param>
@@ -566,11 +597,12 @@ public static class Arguments
     /// <param name="preconditionDescription">Description for the custom precondition.</param>
     /// <typeparam name="TNullable"></typeparam>
     [DebuggerStepThrough]
+    //TODO: Refactor tests for CompliesWith
     public static TNullable CompliesWith<TNullable>(
-        [ValidatedNotNull] TNullable? value,
-        [ValidatedNotNull] Func<TNullable, bool> validator,
-        [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string preconditionDescription)
+        [NotNull] TNullable? value,
+        [NotNull] Func<TNullable, bool> validator,
+        [NotNull] string preconditionDescription,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
             where TNullable : class
             => CompliesWithExpected(value, validator, paramName, preconditionDescription, true);
 
@@ -584,27 +616,28 @@ public static class Arguments
     /// <param name="preconditionDescription">Description for the custom precondition.</param>
     /// <typeparam name="TNullable"></typeparam>
     [DebuggerStepThrough]
+    //TODO: Refactor tests for DoesNotComplyWith
     public static TNullable DoesNotComplyWith<TNullable>(
-        [ValidatedNotNull] TNullable? value,
-        [ValidatedNotNull] Func<TNullable, bool> validator,
-        [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string preconditionDescription)
+        [NotNull] TNullable? value,
+        [NotNull] Func<TNullable, bool> validator,
+        [NotNull] string preconditionDescription,
+        [NotNull, CallerArgumentExpression("value")] string paramName = "")
             where TNullable : class
             => CompliesWithExpected(value, validator, paramName, preconditionDescription, false);
 
+    [return: NotNull]
     private static TNullable CompliesWithExpected<TNullable>(
-        [ValidatedNotNull] TNullable? value,
-        [ValidatedNotNull] Func<TNullable, bool> validator,
-        [ValidatedNotNull] string paramName,
-        [ValidatedNotNull] string preconditionDescription,
-        bool expected)
-            where TNullable : class
+        [NotNull] TNullable? value,
+        [NotNull] Func<TNullable, bool> validator,
+        [NotNull] string preconditionDescription,
+        [NotNull] string paramName,
+        bool expected) where TNullable : class
     {
         TNullable notNullValue = value.ValueOrThrowIfNull(nameof(value));
-        Func<TNullable, bool> notNullValidator = validator.ValueOrThrowIfNull(nameof(validator));
-        string notNullParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName));
+        Func<TNullable, bool> notNullValidator = validator.ValueOrThrowIfNull();
+        string notNullParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly();
         string notNullPreconditionDescription
-            = preconditionDescription.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(preconditionDescription));
+            = preconditionDescription.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly();
 
         if (notNullValidator(notNullValue) != expected)
         {
@@ -616,4 +649,3 @@ public static class Arguments
 
     #endregion //General Purpose Checks
 }
-#pragma warning restore CA1303 // Do not pass literals as localized parameters

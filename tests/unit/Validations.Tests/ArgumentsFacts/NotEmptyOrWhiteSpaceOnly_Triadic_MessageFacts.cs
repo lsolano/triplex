@@ -6,25 +6,30 @@ namespace Triplex.Validations.Tests.ArgumentsFacts;
 internal sealed class NotEmptyOrWhiteSpaceOnly_Triadic_MessageFacts
 {
     private const string CustomMessage = "Some error message, caller provided.";
+    private const string FakeParameterName = "veryFakeParameterName3";
 
     [Test]
-    public void With_Null_CustomError_Throws_ArgumentNullException()
+    public void With_Null_CustomMessage_Throws_ArgumentNullException([Values] bool useCustomParamName)
     {
         string? dummyParam = "Hello world!";
+        string finalParamName = useCustomParamName ? FakeParameterName : nameof(dummyParam);
 
-        Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam), null!),
-            Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName))
-                  .EqualTo("customMessage"));
+        Action act = useCustomParamName ?
+            () => Arguments.NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage(dummyParam, null!, finalParamName) :
+            () => Arguments.NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage(dummyParam, null!);
+
+        Assert.That(() => act(), Throws.ArgumentNullException
+            .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
     }
 
     [Test]
-    public void With_Empty_CustomError_Throws_ArgumentOutOfRangeException()
+    public void With_Empty_CustomMessage_Throws_ArgumentFormatException()
     {
         string? dummyParam = "Hello world!";
 
-        Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam), string.Empty),
-            Throws.InstanceOf<ArgumentOutOfRangeException>()
-            .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
+        Assert.That(() => Arguments.NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage(dummyParam, string.Empty, nameof(dummyParam)),
+            Throws.InstanceOf<ArgumentFormatException>()
+            .With.Property(nameof(ArgumentFormatException.ParamName)).EqualTo("customMessage"));
     }
 
     [TestCase(" ")]
@@ -32,12 +37,12 @@ internal sealed class NotEmptyOrWhiteSpaceOnly_Triadic_MessageFacts
     [TestCase("\r")]
     [TestCase("\t")]
     [TestCase("\n\r\t ")]
-    public void With_Common_White_Space_CustomError_Throws_ArgumentFormatException(string? someErrorMessage)
+    public void With_Common_White_Space_CustomMessage_Throws_ArgumentFormatException(string? someErrorMessage)
     {
         string? dummyParam = "Hello world!";
         string? someErrorMessageCopy = someErrorMessage;
 
-        Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam), someErrorMessageCopy!),
+        Assert.That(() => Arguments.NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage(dummyParam, someErrorMessageCopy!, nameof(dummyParam)),
             Throws.InstanceOf<ArgumentFormatException>()
             .With.Property(nameof(ArgumentException.ParamName)).EqualTo("customMessage"));
     }
@@ -47,7 +52,7 @@ internal sealed class NotEmptyOrWhiteSpaceOnly_Triadic_MessageFacts
     {
         string? dummyParam = null;
 
-        Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam), CustomMessage),
+        Assert.That(() => Arguments.NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage(dummyParam, CustomMessage, nameof(dummyParam)),
             Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName))
                                              .EqualTo(nameof(dummyParam)));
     }
@@ -57,9 +62,9 @@ internal sealed class NotEmptyOrWhiteSpaceOnly_Triadic_MessageFacts
     {
         string? dummyParam = string.Empty;
 
-        Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParam, nameof(dummyParam), CustomMessage),
-            Throws.InstanceOf<ArgumentOutOfRangeException>()
-            .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(nameof(dummyParam)));
+        Assert.That(() => Arguments.NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage(dummyParam, CustomMessage, nameof(dummyParam)),
+            Throws.InstanceOf<ArgumentFormatException>()
+            .With.Property(nameof(ArgumentFormatException.ParamName)).EqualTo(nameof(dummyParam)));
     }
 
     [TestCase(" ")]
@@ -70,9 +75,9 @@ internal sealed class NotEmptyOrWhiteSpaceOnly_Triadic_MessageFacts
     public void With_Common_White_Space_Value_Throws_ArgumentFormatException(string? dummyParam)
     {
         string? dummyParamValue = dummyParam;
-        Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly(dummyParamValue, nameof(dummyParam), CustomMessage),
+        Assert.That(() => Arguments.NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage(dummyParamValue, CustomMessage, nameof(dummyParam)),
             Throws.InstanceOf<ArgumentFormatException>()
-            .With.Property(nameof(ArgumentException.ParamName)).EqualTo(nameof(dummyParam)));
+            .With.Property(nameof(ArgumentFormatException.ParamName)).EqualTo(nameof(dummyParam)));
     }
 
     [TestCase("peter")]
@@ -80,7 +85,7 @@ internal sealed class NotEmptyOrWhiteSpaceOnly_Triadic_MessageFacts
     [TestCase(" Peter Parker Is Spiderman ")]
     public void With_Valid_Values_Returns_Input_Value(string? someValue)
     {
-        string validatedValue = Arguments.NotEmptyOrWhiteSpaceOnly(someValue, nameof(someValue), CustomMessage);
+        string validatedValue = Arguments.NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage(someValue, nameof(someValue), CustomMessage);
 
         Assert.That(validatedValue, Is.SameAs(someValue));
     }
@@ -88,7 +93,7 @@ internal sealed class NotEmptyOrWhiteSpaceOnly_Triadic_MessageFacts
     [Test]
     public void With_Null_ParamName_Throws_ArgumentNullException()
     {
-        Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly("dummyValue", null!, CustomMessage),
+        Assert.That(() => Arguments.NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage("dummyValue", CustomMessage, null!),
             Throws.ArgumentNullException
             .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("paramName"));
     }
@@ -96,10 +101,9 @@ internal sealed class NotEmptyOrWhiteSpaceOnly_Triadic_MessageFacts
     [Test]
     public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException()
     {
-        Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly("dummyValue", string.Empty, CustomMessage),
-            Throws.InstanceOf<ArgumentOutOfRangeException>()
-            .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("paramName")
-            .And.Property(nameof(ArgumentOutOfRangeException.ActualValue)).EqualTo(0));
+        Assert.That(() => Arguments.NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage("dummyValue", CustomMessage, string.Empty),
+            Throws.InstanceOf<ArgumentFormatException>()
+            .With.Property(nameof(ArgumentFormatException.ParamName)).EqualTo("paramName"));
     }
 
     [TestCase(" ")]
@@ -110,7 +114,7 @@ internal sealed class NotEmptyOrWhiteSpaceOnly_Triadic_MessageFacts
     public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException(string? paramName)
     {
         string? paramNameValue = paramName;
-        Assert.That(() => Arguments.NotEmptyOrWhiteSpaceOnly("dummyValue", paramNameValue!, CustomMessage),
+        Assert.That(() => Arguments.NotEmptyNorWhiteSpaceOnlyOrExceptionWithMessage("dummyValue", CustomMessage, paramNameValue!),
             Throws.InstanceOf<ArgumentFormatException>()
             .With.Property(nameof(ArgumentFormatException.ParamName)).EqualTo("paramName"));
     }

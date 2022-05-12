@@ -1,4 +1,6 @@
-﻿namespace Triplex.Validations.Tests.ArgumentsFacts;
+﻿using Triplex.Validations.Exceptions;
+
+namespace Triplex.Validations.Tests.ArgumentsFacts;
 
 internal static class NotEmptyMessageFacts
 {
@@ -11,7 +13,7 @@ internal static class NotEmptyMessageFacts
         public void With_Null_Throws_ArgumentNullException()
         {
             string someInput = "dummyValue";
-            Assert.That(() => Arguments.NotEmpty(someInput, nameof(someInput), null!),
+            Assert.That(() => Arguments.NotEmptyOrExceptionWithMessage(someInput, null!, nameof(someInput)),
                 Throws.ArgumentNullException
                 .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("customMessage"));
         }
@@ -20,9 +22,9 @@ internal static class NotEmptyMessageFacts
         public void With_Empty_Throws_ArgumentOutOfRangeException()
         {
             string someInput = "dummyValue";
-            Assert.That(() => Arguments.NotEmpty(someInput, nameof(someInput), string.Empty),
-                Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("customMessage"));
+            Assert.That(() => Arguments.NotEmptyOrExceptionWithMessage(someInput, string.Empty, nameof(someInput)),
+                Throws.InstanceOf<ArgumentFormatException>()
+                .With.Property(nameof(ArgumentFormatException.ParamName)).EqualTo("customMessage"));
         }
     }
 
@@ -44,9 +46,8 @@ internal static class NotEmptyMessageFacts
         public void With_Empty_ParamName_Throws_ArgumentOutOfRangeException()
         {
             Assert.That(() => NotNullOrEmpty("dummyValue", string.Empty, CustomMessage, UseCustomErrorMessage),
-                Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("paramName")
-                .And.Property(nameof(ArgumentOutOfRangeException.ActualValue)).EqualTo(0));
+                Throws.InstanceOf<ArgumentFormatException>()
+                .With.Property(nameof(ArgumentFormatException.ParamName)).EqualTo("paramName"));
         }
     }
 
@@ -76,8 +77,8 @@ internal static class NotEmptyMessageFacts
             string? dummyParam = string.Empty;
 
             Constraint exceptionConstraint = AddMessageConstraint(
-                Throws.InstanceOf<ArgumentOutOfRangeException>()
-                .With.Property(nameof(ArgumentNullException.ParamName)).EqualTo(nameof(dummyParam)),
+                Throws.InstanceOf<ArgumentFormatException>()
+                .With.Property(nameof(ArgumentFormatException.ParamName)).EqualTo(nameof(dummyParam)),
                 UseCustomErrorMessage);
 
             Assert.That(() => NotNullOrEmpty(dummyParam, nameof(dummyParam), CustomMessage, UseCustomErrorMessage),
@@ -122,6 +123,6 @@ internal static class NotEmptyMessageFacts
         string? paramName,
         string? customMessage,
         bool useCustomErrorMessage)
-        => useCustomErrorMessage ? Arguments.NotEmpty(value, paramName!, customMessage!)
-                                 : Arguments.NotEmpty(value, paramName!);
+        => useCustomErrorMessage ? Arguments.NotEmptyOrExceptionWithMessage(value, customMessage!, paramName!)
+                                 : Arguments.NotEmptyOrException(value, paramName!);
 }

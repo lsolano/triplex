@@ -1,35 +1,41 @@
-﻿using Triplex.Validations.Utilities;
-
-namespace Triplex.Validations.ArgumentsHelpers;
+﻿namespace Triplex.Validations.ArgumentsHelpers;
 
 internal static class NullAndEmptyChecks
 {
-    internal static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType? value,
-        [ValidatedNotNull] string paramName) where TParamType : class
+    [return: NotNull]
+    internal static TParamType NotNull<TParamType>([NotNull] TParamType? value,
+        [NotNull] string paramName) where TParamType : class
         => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)));
 
-    internal static TParamType NotNull<TParamType>([ValidatedNotNull] TParamType? value,
-        [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage) where TParamType : class
-        => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)), 
+    [return: NotNull]
+    internal static TParamType NotNull<TParamType>([NotNull] TParamType? value,
+        [NotNull] string paramName, [NotNull] string customMessage)
+            where TParamType : class
+        => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)),
             customMessage.ValueOrThrowIfNull(nameof(customMessage)));
 
-    internal static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] string? value, 
-        [ValidatedNotNull] string paramName)
-        => NotNullOrEmpty(value, paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)))
+    [return: NotNull]
+    internal static string NotNullEmptyOrWhiteSpaceOnly([NotNull] string? value,
+        [NotNull] string paramName)
+        => NotNullOrEmpty(value, paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly())
                 .ValueOrThrowIfWhiteSpaceOnly(paramName);
 
-    internal static string NotNullEmptyOrWhiteSpaceOnly([ValidatedNotNull] string? value, 
-        [ValidatedNotNull] string paramName, [ValidatedNotNull] string customMessage)
+    [return: NotNull]
+    internal static string NotNullEmptyOrWhiteSpaceOnly([NotNull] string? value,
+        [NotNull] string paramName, [NotNull] string customMessage)
         => NotNullOrEmpty(value, paramName, customMessage)
                 .ValueOrThrowIfWhiteSpaceOnly(paramName, customMessage);
 
-    internal static string NotNullOrEmpty([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName)
+    [return: NotNull]
+    internal static string NotNullOrEmpty([NotNull] string? value,
+        [NotNull] string paramName)
         => value.ValueOrThrowIfNullOrZeroLength(
-            paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)));
+            paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly());
 
-    internal static string NotNullOrEmpty([ValidatedNotNull] string? value, [ValidatedNotNull] string paramName, 
-        [ValidatedNotNull] string customMessage)
+    [return: NotNull]
+    internal static string NotNullOrEmpty([NotNull] string? value,
+        [NotNull] string paramName, [NotNull] string customMessage)
         => value.ValueOrThrowIfNullOrZeroLength(
-            paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(paramName)),
-            customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(nameof(customMessage)));
+            paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(),
+            customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly());
 }

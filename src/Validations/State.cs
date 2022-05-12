@@ -1,4 +1,4 @@
-using Triplex.Validations.Utilities;
+using System.Runtime.CompilerServices;
 
 namespace Triplex.Validations;
 
@@ -17,9 +17,9 @@ public static class State
     /// <param name="message">Can not be <see langword="null"/></param>
     /// <returns></returns>
     [DebuggerStepThrough]
-    public static void IsTrue(bool stateQuery, [ValidatedNotNull] string message)
+    public static void IsTrue(bool stateQuery, [NotNull] string message)
     {
-        Arguments.NotNull(message, nameof(message));
+        NullAndEmptyChecks.NotNull(message, nameof(message));
 
         if (!stateQuery)
         {
@@ -34,14 +34,37 @@ public static class State
     /// <param name="message">Can not be <see langword="null"/></param>
     /// <returns></returns>
     [DebuggerStepThrough]
-    public static void IsFalse(bool stateQuery, [ValidatedNotNull] string message)
+    public static void IsFalse(bool stateQuery, [NotNull] string message)
     {
-        Arguments.NotNull(message, nameof(message));
+        NullAndEmptyChecks.NotNull(message, nameof(message));
 
         if (stateQuery)
         {
             throw new InvalidOperationException(message);
         }
+    }
+
+    /// <summary>
+    /// Object state part null check.
+    /// </summary>
+    /// <param name="stateElement">State part to check for <see langword="null"/></param>
+    /// <param name="elementName">Can not be <see langword="null"/></param>
+    /// <returns> <paramref name="stateElement"/> or throws <see cref="ArgumentNullException"/> </returns>
+    /// <exception cref="ArgumentNullException">
+    /// When <paramref name="elementName"/> is <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// When <paramref name="stateElement"/> is <see langword="null"/>.
+    /// </exception>
+    [DebuggerStepThrough]
+    [return: NotNull]
+    public static T IsNotNull<T>(
+        [NotNull] T stateElement,
+        [NotNull, CallerArgumentExpression("stateElement")] string elementName = "")
+    {
+        NullAndEmptyChecks.NotNull(elementName, nameof(elementName));
+
+        return stateElement.ValueOrThrowInvalidOperationIfNull(elementName);
     }
 
     #endregion //Preconditions
@@ -55,9 +78,9 @@ public static class State
     /// <param name="invariant">Expected to be <code>true</code></param>
     /// <param name="message">Can not be <see langword="null"/></param>
     [DebuggerStepThrough]
-    public static void StillHolds(bool invariant, [ValidatedNotNull] string message)
+    public static void StillHolds(bool invariant, [NotNull] string message)
     {
-        Arguments.NotNull(message, nameof(message));
+        NullAndEmptyChecks.NotNull(message, nameof(message));
 
         if (!invariant)
         {
@@ -71,9 +94,9 @@ public static class State
     /// <param name="invariant">Expected to be <code>false</code></param>
     /// <param name="message">Can not be <see langword="null"/></param>
     [DebuggerStepThrough]
-    public static void StillNotHolds(bool invariant, [ValidatedNotNull] string message)
+    public static void StillNotHolds(bool invariant, [NotNull] string message)
     {
-        Arguments.NotNull(message, nameof(message));
+        NullAndEmptyChecks.NotNull(message, nameof(message));
 
         if (invariant)
         {

@@ -1,22 +1,23 @@
-﻿using Triplex.Validations.Exceptions;
-using Triplex.Validations.Utilities;
+﻿using System.Runtime.CompilerServices;
 
 namespace Triplex.Validations.ArgumentsHelpers;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
 internal static class Extensions
 {
-    internal static T ValueOrThrowIfNull<T>([ValidatedNotNull] this T? value, string paramName)
-    {
-        if (value is not null)
-        {
-            return value;
-        }
+    [return: NotNull]
+    internal static T ValueOrThrowIfNull<T>([NotNull] this T? value, 
+        [CallerArgumentExpression("value")] string paramName = "")
+        => value ?? throw new ArgumentNullException(paramName);
 
-        throw new ArgumentNullException(paramName);
-    }
+    [return: NotNull]
+    internal static T ValueOrThrowInvalidOperationIfNull<T>([NotNull] this T? stateElement,
+        string elementName)
+            => stateElement
+                ?? throw new InvalidOperationException($"Operation not allowed when {elementName} is null.");
 
-    internal static T ValueOrThrowIfNull<T>([ValidatedNotNull] this T? value, string paramName,
+    [return: NotNull]
+    internal static T ValueOrThrowIfNull<T>([NotNull] this T? value, string paramName,
         string customMessage)
     {
         if (value is not null)
@@ -27,9 +28,11 @@ internal static class Extensions
         throw new ArgumentNullException(paramName, customMessage);
     }
 
+    [return: NotNull]
     internal static string ValueOrThrowIfZeroLength(this string value, string paramName)
         => ValueOrThrowIfZeroLength(value, paramName, "Can not be empty (zero length).");
 
+    [return: NotNull]
     internal static string ValueOrThrowIfZeroLength(this string value, string paramName, string customMessage)
     {
         if (value.Length is not 0)
@@ -37,12 +40,14 @@ internal static class Extensions
             return value;
         }
 
-        throw new ArgumentOutOfRangeException(paramName, value.Length, customMessage);
+        throw new ArgumentFormatException(paramName: paramName, message: customMessage);
     }
 
+    [return: NotNull]
     internal static string ValueOrThrowIfWhiteSpaceOnly(this string value, string paramName)
         => ValueOrThrowIfWhiteSpaceOnly(value, paramName, "Can not be white-space only.");
 
+    [return: NotNull]
     internal static string ValueOrThrowIfWhiteSpaceOnly(this string value, string paramName, string customMessage)
     {
         if (value.Any(ch => ch.IsNotWhiteSpace()))
@@ -53,22 +58,28 @@ internal static class Extensions
         throw new ArgumentFormatException(paramName: paramName, message: customMessage);
     }
 
-    internal static string ValueOrThrowIfNullOrZeroLength([ValidatedNotNull] this string? value, string paramName)
+    [return: NotNull]
+    internal static string ValueOrThrowIfNullOrZeroLength([NotNull] this string? value,
+        string paramName)
         => ValueOrThrowIfNull(value, paramName)
             .ValueOrThrowIfZeroLength(paramName);
 
-    internal static string ValueOrThrowIfNullOrZeroLength([ValidatedNotNull] this string? value, string paramName,
-        string customMessage)
+    [return: NotNull]
+    internal static string ValueOrThrowIfNullOrZeroLength([NotNull] this string? value,
+        string paramName, string customMessage)
         => ValueOrThrowIfNull(value, paramName, customMessage)
             .ValueOrThrowIfZeroLength(paramName, customMessage);
 
-    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([ValidatedNotNull] this string? value,
-        string paramName)
+    [return: NotNull]
+    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(
+        [NotNull] this string? value,
+        [CallerArgumentExpression("value")] string paramName = "")
         => ValueOrThrowIfNull(value, paramName)
             .ValueOrThrowIfZeroLength(paramName)
                 .ValueOrThrowIfWhiteSpaceOnly(paramName);
 
-    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([ValidatedNotNull] this string? value,
+    [return: NotNull]
+    internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly([NotNull] this string? value,
         string paramName, string customMessage)
         => ValueOrThrowIfNull(value, paramName, customMessage)
             .ValueOrThrowIfZeroLength(paramName, customMessage)
@@ -100,8 +111,9 @@ internal static class Extensions
         throw new ArgumentOutOfRangeException(paramName, value, finalMessage);
     }
 
-    internal static TType[] ValueOrThrowIfNullOrWithLessThanElements<TType>([ValidatedNotNull] this TType[]? value,
-        int minimumElements, string paramName)
+    [return: NotNull]
+    internal static TType[] ValueOrThrowIfNullOrWithLessThanElements<TType>(
+        [NotNull] this TType[]? value, int minimumElements, string paramName)
     {
         OutOfRangeChecks.GreaterThanOrEqualTo(ValueOrThrowIfNull(value, paramName).Length, minimumElements, paramName);
 

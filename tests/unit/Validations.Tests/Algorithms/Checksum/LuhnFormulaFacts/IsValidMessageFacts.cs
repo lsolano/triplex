@@ -1,4 +1,5 @@
 ﻿using Triplex.Validations.Algorithms.Checksum;
+using Triplex.Validations.Exceptions;
 
 namespace Triplex.Validations.Tests.Algorithms.Checksum.LuhnFormulaFacts;
 
@@ -107,12 +108,12 @@ internal sealed class IsValidMessageFacts
     [TestCase("1+01")]
     [TestCase("ab")]
     public void With_Non_Digit_Characters_Throws_FormatException_As_String(string rawDigits)
-        => Assert.That(() => LuhnFormula.IsValid(rawDigits), Throws.InstanceOf<FormatException>());
+        => Assert.That(() => LuhnFormula.IsValid(rawDigits), Throws.InstanceOf<ArgumentFormatException>());
 
     [TestCase("")]
     [TestCase(" ")]
     [TestCase("a")]
     [TestCase("1")]
     public void With_Less_Than_Two_Elements_Throws_ArgumentOutOfRangeException(string rawDigits)
-        => Assert.That(() => LuhnFormula.IsValid(rawDigits), Throws.InstanceOf<ArgumentOutOfRangeException>());
+        => Assert.That(() => LuhnFormula.IsValid(rawDigits), Throws.InstanceOf<ArgumentFormatException>());
 }
