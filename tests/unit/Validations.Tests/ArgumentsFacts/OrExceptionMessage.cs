@@ -1,7 +1,7 @@
 ﻿namespace Triplex.Validations.Tests.ArgumentsFacts;
 
 [TestFixture]
-public sealed class OrExceptionMessage
+internal sealed class OrExceptionMessage
 {
     private const string FakeParameterName = "veryFakeParameterName";
 
