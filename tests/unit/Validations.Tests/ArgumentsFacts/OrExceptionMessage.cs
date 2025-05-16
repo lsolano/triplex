@@ -1,7 +1,7 @@
 ﻿namespace Triplex.Validations.Tests.ArgumentsFacts;
 
 [TestFixture]
-internal sealed class OrExceptionMessage
+public sealed class OrExceptionMessage
 {
     private const string FakeParameterName = "veryFakeParameterName";
 
@@ -56,7 +56,7 @@ internal sealed class OrExceptionMessage
     [Test]
     public void Returns_Value_When_No_Exception_For_List([Values] bool useCustomParamName)
     {
-        List<int> fibonacci = new() { 1, 1, 2, 3, 5 };
+        List<int> fibonacci = [1, 1, 2, 3, 5];
 
         Func<IList<int>> listCheck = BuildCheckForNotNull(fibonacci, useCustomParamName);
 

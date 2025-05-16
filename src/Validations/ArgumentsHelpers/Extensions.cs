@@ -2,11 +2,15 @@
 
 namespace Triplex.Validations.ArgumentsHelpers;
 
+#if (NETSTANDARD || NETCOREAPP)
+#pragma warning disable CS0436 //CallerArgumentExpressionAttribute type conflicts
+#endif
+
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
 internal static class Extensions
 {
     [return: NotNull]
-    internal static T ValueOrThrowIfNull<T>([NotNull] this T? value, 
+    internal static T ValueOrThrowIfNull<T>([NotNull] this T? value,
         [CallerArgumentExpression("value")] string paramName = "")
         => value ?? throw new ArgumentNullException(paramName);
 
@@ -121,3 +125,7 @@ internal static class Extensions
     }
 }
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
+
+#if (NETSTANDARD || NETCOREAPP)
+#pragma warning restore CS0436 //CallerArgumentExpressionAttribute type conflicts
+#endif

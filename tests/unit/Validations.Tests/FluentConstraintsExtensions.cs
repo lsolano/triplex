@@ -16,13 +16,13 @@ public static class FluentConstraintsExtensions
     public static Constraint WithMessageContainsAll(this TypeConstraint exceptionConstraint,
         IEnumerable<string> expectedParts)
     {
-        ConstraintExpression messageExpresion = exceptionConstraint.With;
-        string[] parts = expectedParts.ToArray();
+        ConstraintExpression messageExpression = exceptionConstraint.With;
+        string[] parts = [.. expectedParts];
         for (int i = 0; i < parts.Length - 1; i++)
         {
-            messageExpresion = messageExpresion.Message.Contains(parts[i]).And;
+            messageExpression = messageExpression.Message.Contains(parts[i]).And;
         }
 
-        return messageExpresion.Message.Contains(parts[^1]);
+        return messageExpression.Message.Contains(parts[^1]);
     }
 }
