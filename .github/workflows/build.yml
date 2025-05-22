@@ -81,7 +81,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
-          include-prerelease: false
+          dotnet-quality: preview
       - name: Cache SonarQube Cloud packages
         uses: actions/cache@v4
         with:
@@ -106,6 +106,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"lsolano_triplex" /o:"lsolano" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build
+          $workingDir=pwd
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"lsolano_triplex" /o:"lsolano" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.dotnet.excludeTestProjects=true /d:sonar.exclusions=tests/**,src/**/GlobalUsings.cs /d:sonar.cs.opencover.reportsPaths="$workingDir/test-results/coverage.net9.0.opencover.xml"
+          if ("$GITHUB_REF" -ceq "refs/heads/master") {$configuration="Release"} else {$configuration="Debug"}
+          dotnet clean -c "$configuration"
+          dotnet build -c "$configuration"
+          dotnet test --no-restore -c "$configuration" /p:CollectCoverage=true /p:CoverletOutputFormat=json%2copencover /p:MergeWith="$workingDir/test-results/coverage.json" /p:CoverletOutput="$workingDir/test-results/"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

@@ -98,7 +98,7 @@ public sealed class ComparableRange<TComparable> where TComparable : IComparable
     private bool MinInclusive { get; }
     private bool MaxInclusive { get; }
 
-    internal TComparable IsWithin(TComparable value, string paramName, string? customMessage)
+    internal TComparable Contains(TComparable value, string paramName, string? customMessage)
     {
         CheckLowerBoundary(value, paramName, customMessage);
 

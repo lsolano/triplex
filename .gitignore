@@ -357,3 +357,4 @@ MigrationBackup/
 *.orig
 
 coverage.*.json
+*.cobertura.xml

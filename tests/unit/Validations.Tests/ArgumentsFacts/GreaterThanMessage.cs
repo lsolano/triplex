@@ -15,7 +15,7 @@ internal sealed class GreaterThanMessage : BaseFixtureForOptionalCustomMessage
     [TestCase(2, -1)]
     public void With_Valid_Integers_Throws_Nothing(int theValue, int other)
     {
-        int validatedValue = Arguments.GreaterThanOrExceptionWithMessage(theValue, other, nameof(theValue), CustomError);
+        int validatedValue = GreaterThan(theValue, other, nameof(theValue), CustomError, UseCustomErrorMessage);
 
         Assert.That(validatedValue, Is.EqualTo(theValue));
     }

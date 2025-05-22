@@ -7,5 +7,10 @@
         "**/.project": true,
         "**/.settings": true,
         "**/.factorypath": true
-    }
+    },
+    "cSpell.words": [
+        "NETCOREAPP",
+        "NETSTANDARD",
+        "Parallelizable"
+    ]
 }

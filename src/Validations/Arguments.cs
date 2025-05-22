@@ -11,7 +11,7 @@ namespace Triplex.Validations;
 /// Utility class used to validate arguments. Useful to check constructor and public methods arguments.
 /// If checks are violated an instance of <see cref="ArgumentException" /> is thrown.
 /// All checks imply an initial Not-Null check for all values checked, 
-/// so <code>Arguments.OrException(someParam);</code> means "Give 'someParam' value or and exception if it is null."
+/// so <code>Arguments.OrException(someParam);</code> means "Give 'someParam' value back or throw exception if it is <see langword="null"/> ."
 /// </summary>
 public static class Arguments
 {
@@ -138,7 +138,7 @@ public static class Arguments
 
     #endregion
 
-    #region Emptyness
+    #region Emptiness
     /// <summary>
     /// Checks that the provided value is not empty.
     /// </summary>
@@ -190,7 +190,7 @@ public static class Arguments
 
     private static bool IsEmpty(Guid value) => value == default;
 
-    #endregion //Emptyness
+    #endregion //Emptiness
 
     #region Enumerations Checks
 
@@ -586,8 +586,6 @@ public static class Arguments
     }
 
     #endregion // Known Encodings
-
-
 
     #region General Purpose Checks
 

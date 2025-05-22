@@ -3,7 +3,9 @@
 /// </summary>
 [SetUpFixture]
 [Parallelizable(scope: ParallelScope.All)]
+#pragma warning disable CA1050 // Declare types in namespaces
 public class OneTimeSetupFixture
+#pragma warning restore CA1050 // Declare types in namespaces
 {
     /// <summary>
     /// Setup fixture

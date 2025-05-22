@@ -11,7 +11,7 @@ internal static class Extensions
 {
     [return: NotNull]
     internal static T ValueOrThrowIfNull<T>([NotNull] this T? value,
-        [CallerArgumentExpression("value")] string paramName = "")
+        [CallerArgumentExpression(nameof(value))] string paramName = "")
         => value ?? throw new ArgumentNullException(paramName);
 
     [return: NotNull]
@@ -77,7 +77,7 @@ internal static class Extensions
     [return: NotNull]
     internal static string ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(
         [NotNull] this string? value,
-        [CallerArgumentExpression("value")] string paramName = "")
+        [CallerArgumentExpression(nameof(value))] string paramName = "")
         => ValueOrThrowIfNull(value, paramName)
             .ValueOrThrowIfZeroLength(paramName)
                 .ValueOrThrowIfWhiteSpaceOnly(paramName);

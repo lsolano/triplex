@@ -1,3 +1,5 @@
+[assembly: System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+
 namespace Triplex.Validations.Tests;
 
 /// <summary>

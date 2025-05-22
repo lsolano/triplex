@@ -98,12 +98,12 @@ internal static class OutOfRangeChecks
         [NotNull] string paramName) where TComparable : IComparable<TComparable>
     {
         ComparableRange<TComparable> range = new(
-            SimpleOption.SomeNotNull(fromInclusive.ValueOrThrowIfNull(nameof(fromInclusive))),
-            SimpleOption.SomeNotNull(toInclusive.ValueOrThrowIfNull(nameof(toInclusive))));
+            SimpleOption.SomeNotNull(fromInclusive.ValueOrThrowIfNull()),
+            SimpleOption.SomeNotNull(toInclusive.ValueOrThrowIfNull()));
 
-        string notNullParamName = paramName.ValueOrThrowIfNull(nameof(paramName));
+        string notNullParamName = paramName.ValueOrThrowIfNull();
 
-        return range.IsWithin(
+        return range.Contains(
                     value.ValueOrThrowIfNull(notNullParamName),
                     notNullParamName,
                     customMessage: null!);
@@ -122,7 +122,7 @@ internal static class OutOfRangeChecks
             SimpleOption.SomeNotNull(fromInclusive.ValueOrThrowIfNull(nameof(fromInclusive))),
             SimpleOption.SomeNotNull(toInclusive.ValueOrThrowIfNull(nameof(toInclusive))));
 
-        return range.IsWithin(
+        return range.Contains(
                     value.ValueOrThrowIfNull(nameof(value)),
                     paramName.ValueOrThrowIfNull(nameof(customMessage)),
                     customMessage.ValueOrThrowIfNull(nameof(customMessage)));
@@ -136,7 +136,7 @@ internal static class OutOfRangeChecks
         [NotNull] string paramName,
         string? customMessage) where TComparable : IComparable<TComparable>
     {
-        return range.IsWithin(value.ValueOrThrowIfNull(nameof(value)), paramName.ValueOrThrowIfNull(nameof(paramName)),
+        return range.Contains(value.ValueOrThrowIfNull(nameof(value)), paramName.ValueOrThrowIfNull(nameof(paramName)),
             customMessage);
     }
 }

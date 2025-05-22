@@ -14,11 +14,17 @@ internal sealed class OrExceptionMessage
             () => Arguments.OrException(email, FakeParameterName) :
             () => Arguments.OrException(email);
 
-        string finalParamName = useCustomParamName ? FakeParameterName : nameof(email);
+        ArgumentNullException? exception = Assert.Throws<ArgumentNullException>(() => act());
 
-        Assert.That(() => act(),
-            Throws.ArgumentNullException.With
-                .Property(nameof(ArgumentNullException.ParamName)).EqualTo(finalParamName));
+        string finalParamName = useCustomParamName ? FakeParameterName : nameof(email);
+        (string messagePartOne, string messagePartTwo) = ExceptionMessagePartsFor(paramName: finalParamName);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(exception, Has.Property(nameof(ArgumentException.ParamName)).EqualTo(finalParamName));
+            Assert.That(exception, Has.Property(nameof(ArgumentException.Message)).Contains(messagePartOne));
+            Assert.That(exception, Has.Property(nameof(ArgumentException.Message)).Contains(messagePartTwo));
+        }
     }
 
     [Test]
@@ -31,11 +37,17 @@ internal sealed class OrExceptionMessage
             () => Arguments.OrException(user, FakeParameterName) :
             () => Arguments.OrException(user);
 
-        IEnumerable<string> exceptionParts = ExceptionMessagePartsFor(paramName: finalParamName);
+        ArgumentNullException? exception = Assert.Throws<ArgumentNullException>(() => act());
 
-        Assert.That(() => act(), Throws.ArgumentNullException.WithMessageContainsAll(exceptionParts));
+        (string messagePartOne, string messagePartTwo) = ExceptionMessagePartsFor(paramName: finalParamName);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(exception, Has.Property(nameof(ArgumentException.Message)).Contains(messagePartOne));
+            Assert.That(exception, Has.Property(nameof(ArgumentException.Message)).Contains(messagePartTwo));
+        }
     }
-
+   
     [Test]
     public void With_Peter_Throws_Nothing([Values] bool useCustomParamName)
     {
@@ -62,7 +74,7 @@ internal sealed class OrExceptionMessage
 
         Assert.That(listCheck(), Is.SameAs(fibonacci));
     }
-
+    
     private static Func<T> BuildCheckForNotNull<T>(T notNullValue, bool useCustomParamName) where T : class
     {
         return useCustomParamName ?
@@ -70,9 +82,6 @@ internal sealed class OrExceptionMessage
             () => Arguments.OrException(notNullValue);
     }
 
-    private static IEnumerable<string> ExceptionMessagePartsFor(string paramName)
-    {
-        yield return "Value cannot be null.";
-        yield return "Parameter '{paramName}'".Replace("{paramName}", paramName);
-    }
+    private static (string first, string second) ExceptionMessagePartsFor(string paramName)
+        => ("Value cannot be null.", "Parameter '{paramName}'".Replace("{paramName}", paramName));
 }
