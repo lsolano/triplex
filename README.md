@@ -141,7 +141,7 @@ We like to get help from everybody, if you want to contribute to this tool, foun
 1. Fork + Clone this repo
 2. Build and Run Tests locally
     1. Build only `dotnet build`
-    2. Full clean, build and test `dotnet clean && dotnet test /p:CollectCoverage=true`
+    2. Full clean, build and test `dotnet clean && dotnet test /p:ExcludeByAttribute=GeneratedCode /p:CollectCoverage=true`    
 3. Incremental build and test (regular dev workflow)
     1. `dotnet test /p:CollectCoverage=true`
 

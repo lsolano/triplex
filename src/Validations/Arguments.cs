@@ -3,17 +3,13 @@ using Triplex.Validations.Algorithms.Checksum;
 
 namespace Triplex.Validations;
 
-#if (NETSTANDARD || NETCOREAPP)
-#pragma warning disable CS0436 //CallerArgumentExpressionAttribute type conflicts
-#endif
-
 /// <summary>
 /// Utility class used to validate arguments. Useful to check constructor and public methods arguments.
 /// If checks are violated an instance of <see cref="ArgumentException" /> is thrown.
 /// All checks imply an initial Not-Null check for all values checked, 
 /// so <code>Arguments.OrException(someParam);</code> means "Give 'someParam' value back or throw exception if it is <see langword="null"/> ."
 /// </summary>
-public static class Arguments
+public static partial class Arguments
 {
     #region Null and Empty Checks
     /// <summary>
@@ -119,27 +115,6 @@ public static class Arguments
         => NullAndEmptyChecks.NotNullOrEmpty(value, paramName);
 
     /// <summary>
-    /// Checks that the provided value is not <see langword="null" /> or empty (zero length).
-    /// </summary>
-    /// <param name="value">Value to check</param>
-    /// <param name="paramName">Parameter's name, can not be <see langword="null" /></param>
-    /// <param name="customMessage">Custom message, can not be <see langword="null" /></param>
-    /// <returns><paramref name="value"/></returns>
-    /// <exception cref="ArgumentNullException">If any parameter is <see langword = "null" />.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
-    [DebuggerStepThrough]
-    [return: NotNull]
-    //TODO: Refactor tests for NotEmptyOrExceptionWithMessage
-    public static string NotEmptyOrExceptionWithMessage(
-        [NotNull] string? value,
-        [NotNull] string customMessage,
-        [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
-        => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
-
-    #endregion
-
-    #region Emptiness
-    /// <summary>
     /// Checks that the provided value is not empty.
     /// </summary>
     /// <param name="value">Value to check</param>
@@ -157,6 +132,24 @@ public static class Arguments
     }
 
     /// <summary>
+    /// Checks that the provided value is not <see langword="null" /> or empty (zero length).
+    /// </summary>
+    /// <param name="value">Value to check</param>
+    /// <param name="paramName">Parameter's name, can not be <see langword="null" /></param>
+    /// <param name="customMessage">Custom message, can not be <see langword="null" /></param>
+    /// <returns><paramref name="value"/></returns>
+    /// <exception cref="ArgumentNullException">If any parameter is <see langword = "null" />.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> length is zero.</exception>
+    [DebuggerStepThrough]
+    [return: NotNull]
+    //TODO: Refactor tests for NotEmptyOrExceptionWithMessage
+    public static string NotEmptyOrExceptionWithMessage(
+        [NotNull] string? value,
+        [NotNull] string customMessage,
+        [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
+        => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
+
+        /// <summary>
     /// Checks that the provided value is not empty.
     /// </summary>
     /// <remarks>
@@ -190,7 +183,7 @@ public static class Arguments
 
     private static bool IsEmpty(Guid value) => value == default;
 
-    #endregion //Emptiness
+    #endregion
 
     #region Enumerations Checks
 
@@ -480,7 +473,7 @@ public static class Arguments
 
     #region Checksum algorithms
 
-    private static readonly Regex LuhnDigitsRegex = new("[0-9]{2}", RegexOptions.Compiled);
+    private static readonly Regex LuhnDigitsRegex = TwoOrMoreDigitsRegex();
 
     /// <summary>
     /// Validates that the given argument (<paramref name="value" />) has a valid checksum digit as described by the 
@@ -649,9 +642,8 @@ public static class Arguments
         return notNullValue;
     }
 
+    [GeneratedRegex("[0-9]{2}"), ExcludeFromCodeCoverage]
+    private static partial Regex TwoOrMoreDigitsRegex();
+
     #endregion //General Purpose Checks
 }
-
-#if (NETSTANDARD || NETCOREAPP)
-#pragma warning restore CS0436 //CallerArgumentExpressionAttribute type conflicts
-#endif
