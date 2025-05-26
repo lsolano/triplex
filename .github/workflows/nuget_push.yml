@@ -7,6 +7,7 @@ on:
       - '1.*'
       - '2.*'
       - '3.*'
+      - '4.*'
 
 jobs:
   build:
@@ -19,15 +20,11 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: |
-          6.0.x
-          7.0.x
-          8.0.x
-          9.0.x
-        include-prerelease: false
+        dotnet-version: 9.0.x
+        dotnet-quality: preview
 
     - name: Clean Last Build
-      run: dotnet clean --framework net6.0 --configuration Release
+      run: dotnet clean --framework net9.0 --configuration Release
 
     - name: Clean old Packages
       run: rm --force src/Validations/bin/Release/Triplex.Validations*.nupkg
@@ -36,10 +33,10 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --framework net6.0 --configuration Release
+      run: dotnet build --framework net9.0 --configuration Release
 
     - name: Test
-      run: dotnet test --no-build --verbosity normal --framework net6.0 --configuration Release
+      run: dotnet test --no-build --verbosity normal --framework net9.0 --configuration Release
 
     - name: Package
       run: dotnet pack --configuration Release
