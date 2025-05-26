@@ -28,12 +28,9 @@ public static partial class LuhnFormula
             nameof(fullDigits));
 
         bool hasInvalidElements = validatedDigits.Any(d => d < 0 || d > 9);
-        if (hasInvalidElements)
-        {
-            throw new FormatException("Only values between zero and nine ( [0-9] ) are allowed as input.");
-        }
-
-        return DoDigitCheck(validatedDigits);
+        return hasInvalidElements
+            ? throw new FormatException("Only values between zero and nine ( [0-9] ) are allowed as input.")
+            : DoDigitCheck(validatedDigits);
     }
 
     /// <summary>
@@ -65,15 +62,15 @@ public static partial class LuhnFormula
     {
         string notNullDigits = fullDigits.ValueOrThrowIfNullOrZeroLength(nameof(fullDigits));
 
-        if (notNullDigits.Length < MinimumElements)
+        return notNullDigits.Length switch
         {
-            throw new ArgumentFormatException(nameof(fullDigits),
-                $"Length must be at least {MinimumElements} elements.");
-        }
-
-        return !DigitsRegex.IsMatch(notNullDigits)
-            ? throw new ArgumentFormatException(nameof(fullDigits), "Invalid input, only digits [0-9] are allowed.")
-            : notNullDigits;
+            < MinimumElements =>
+                throw new ArgumentFormatException(nameof(fullDigits),
+                                                  $"Length must be at least {MinimumElements} elements."),
+            _ => !DigitsRegex.IsMatch(notNullDigits)
+                ? throw new ArgumentFormatException(nameof(fullDigits), "Invalid input, only digits [0-9] are allowed.")
+                : notNullDigits
+        };
     }
 
     private static bool DoDigitCheck(int[] sanitizedDigits)
