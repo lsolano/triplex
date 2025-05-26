@@ -3,10 +3,10 @@
 /// <summary>
 /// Implementation of the Luhn algorithm in its two variants: as validation and as checksum generator.
 /// </summary>
-public static class LuhnFormula
+public static partial class LuhnFormula
 {
     private const int MinimumElements = 2;
-    private static readonly Regex DigitsRegex = new("^[0-9]+$", RegexOptions.Compiled);
+    private static readonly Regex DigitsRegex = BuildDigitsRegex();
 
     /// <summary>
     /// Indicates is a sequence of numbers is valid using the Luhn formula.
@@ -55,7 +55,7 @@ public static class LuhnFormula
     {
         string notNullDigits = ValidateDigitsAsString(fullDigits);
 
-        int[] validatedDigits = notNullDigits.Select(ch => ch - '0').ToArray();
+        int[] validatedDigits = [.. notNullDigits.Select(ch => ch - '0')];
 
         return DoDigitCheck(validatedDigits);
     }
@@ -71,12 +71,9 @@ public static class LuhnFormula
                 $"Length must be at least {MinimumElements} elements.");
         }
 
-        if (!DigitsRegex.IsMatch(notNullDigits))
-        {
-            throw new ArgumentFormatException(nameof(fullDigits), "Invalid input, only digits [0-9] are allowed.");
-        }
-
-        return notNullDigits;
+        return !DigitsRegex.IsMatch(notNullDigits)
+            ? throw new ArgumentFormatException(nameof(fullDigits), "Invalid input, only digits [0-9] are allowed.")
+            : notNullDigits;
     }
 
     private static bool DoDigitCheck(int[] sanitizedDigits)
@@ -133,4 +130,7 @@ public static class LuhnFormula
 
         return (10 - (sum % 10)) % 10;
     }
+
+    [GeneratedRegex("^[0-9]+$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)]
+    private static partial Regex BuildDigitsRegex();
 }

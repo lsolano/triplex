@@ -97,7 +97,7 @@ internal static class Extensions
     internal static TType[] ValueOrThrowIfNullOrWithLessThanElements<TType>(
         [NotNull] this TType[]? value, int minimumElements, string paramName)
     {
-        OutOfRangeChecks.GreaterThanOrEqualTo(ValueOrThrowIfNull(value, paramName).Length, minimumElements, paramName);
+        _ = OutOfRangeChecks.GreaterThanOrEqualTo(ValueOrThrowIfNull(value, paramName).Length, minimumElements, paramName);
 
         return value!;
     }
