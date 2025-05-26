@@ -147,9 +147,6 @@ We like to get help from everybody, if you want to contribute to this tool, foun
 
 At the end of a test run you should see something like 
 ```sh
-Calculating coverage result...
-  Generating report '~/tests/unit/Validations.Tests/coverage.net6.0.json'
-
 +---------------------+------+--------+--------+
 | Module              | Line | Branch | Method |
 +---------------------+------+--------+--------+
