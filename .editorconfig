@@ -18,3 +18,7 @@ dotnet_style_parentheses_in_other_operators = always_for_clarity
 dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity
 
 csharp_style_namespace_declarations = file_scoped
+
+# Expression-bodied members
+csharp_style_expression_bodied_local_functions = true
+csharp_style_expression_bodied_methods = true
