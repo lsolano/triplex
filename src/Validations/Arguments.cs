@@ -246,7 +246,7 @@ public static partial class Arguments
     //TODO: Refactor tests for LessThanOrException
     public static TComparable LessThanOrException<TComparable>(
         [NotNull] TComparable? value,
-        [NotNull] TComparable? other,
+        [NotNull] TComparable other,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThan(value, other, paramName);
 
@@ -269,7 +269,7 @@ public static partial class Arguments
     //TODO: Refactor tests for LessThanOrExceptionWithMessage
     public static TComparable LessThanOrExceptionWithMessage<TComparable>(
         [NotNull] TComparable? value,
-        [NotNull] TComparable? other,
+        [NotNull] TComparable other,
         [NotNull] string customMessage,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThan(value, other, paramName, customMessage);
@@ -293,7 +293,7 @@ public static partial class Arguments
     //TODO: Refactor tests for LessThanOrEqualToOrException
     public static TComparable LessThanOrEqualToOrException<TComparable>(
         [NotNull] TComparable? value,
-        [NotNull] TComparable? other,
+        [NotNull] TComparable other,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThanOrEqualTo(value, other, paramName);
 
@@ -316,7 +316,7 @@ public static partial class Arguments
     //TODO: Refactor tests for LessThanOrEqualToOrExceptionWithMessage
     public static TComparable LessThanOrEqualToOrExceptionWithMessage<TComparable>(
         [NotNull] TComparable? value,
-        [NotNull] TComparable? other,
+        [NotNull] TComparable other,
         [NotNull] string customMessage,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.LessThanOrEqualTo(value, other, paramName, customMessage);
@@ -339,7 +339,7 @@ public static partial class Arguments
     //TODO: Refactor tests for GreaterThanOrException
     public static TComparable GreaterThanOrException<TComparable>(
         [NotNull] TComparable? value,
-        [NotNull] TComparable? other,
+        [NotNull] TComparable other,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThan(value, other, paramName);
 
@@ -362,7 +362,7 @@ public static partial class Arguments
     //TODO: Refactor tests for GreaterThanOrExceptionWithMessage
     public static TComparable GreaterThanOrExceptionWithMessage<TComparable>(
         [NotNull] TComparable? value,
-        [NotNull] TComparable? other,
+        [NotNull] TComparable other,
         [NotNull] string customMessage,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThan(value, other, paramName, customMessage);
@@ -386,7 +386,7 @@ public static partial class Arguments
     //TODO: Refactor tests for GreaterThanOrEqualToOrException
     public static TComparable GreaterThanOrEqualToOrException<TComparable>(
         [NotNull] TComparable? value,
-        [NotNull] TComparable? other,
+        [NotNull] TComparable other,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
         where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThanOrEqualTo(value, other, paramName);
@@ -411,7 +411,7 @@ public static partial class Arguments
     //TODO: Refactor tests for GreaterThanOrEqualToOrExceptionWithMessage
     public static TComparable GreaterThanOrEqualToOrExceptionWithMessage<TComparable>(
         [NotNull] TComparable? value,
-        [NotNull] TComparable? other,
+        [NotNull] TComparable other,
         [NotNull] string customMessage,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "") where TComparable : IComparable<TComparable>
         => OutOfRangeChecks.GreaterThanOrEqualTo(value, other, paramName, customMessage);
@@ -436,8 +436,8 @@ public static partial class Arguments
     [return: NotNull]
     public static TComparable BetweenOrException<TComparable>(
         [NotNull] TComparable? value,
-        [NotNull] TComparable? fromInclusive,
-        [NotNull] TComparable? toInclusive,
+        [NotNull] TComparable fromInclusive,
+        [NotNull] TComparable toInclusive,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "") where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.Between(value, fromInclusive, toInclusive, paramName);
 
@@ -463,8 +463,8 @@ public static partial class Arguments
     //TODO: Refactor tests for BetweenOrExceptionWithMessage
     public static TComparable BetweenOrExceptionWithMessage<TComparable>(
         [NotNull] TComparable? value,
-        [NotNull] TComparable? fromInclusive,
-        [NotNull] TComparable? toInclusive,
+        [NotNull] TComparable fromInclusive,
+        [NotNull] TComparable toInclusive,
         [NotNull] string customMessage,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "") where TComparable : IComparable<TComparable>
             => OutOfRangeChecks.Between(value, fromInclusive, toInclusive, paramName, customMessage);
@@ -520,7 +520,7 @@ public static partial class Arguments
     private static int[] ToDigitsArray(string notNullValue)
     {
         const int zeroAsciiCode = '0';
-        return notNullValue.Select(ch => ch - zeroAsciiCode).ToArray();
+        return [.. notNullValue.Select(ch => ch - zeroAsciiCode)];
     }
 
     #endregion

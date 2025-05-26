@@ -127,7 +127,7 @@ internal sealed class GreaterThanOrEqualToMessage : BaseFixtureForOptionalCustom
         bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
     {
         return useCustomErrorMessage
-            ? Arguments.GreaterThanOrEqualToOrExceptionWithMessage(value, other, customError, paramName)
-            : Arguments.GreaterThanOrEqualToOrException(value, other, paramName);
+            ? Arguments.GreaterThanOrEqualToOrExceptionWithMessage(value, other!, customError, paramName)
+            : Arguments.GreaterThanOrEqualToOrException(value, other!, paramName);
     }
 }

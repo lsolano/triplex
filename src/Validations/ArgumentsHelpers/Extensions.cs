@@ -15,14 +15,7 @@ internal static class Extensions
         => value ?? throw new ArgumentNullException(paramName);
 
     [return: NotNull]
-    internal static T ValueOrThrowInvalidOperationIfNull<T>([NotNull] this T? stateElement,
-        string elementName)
-            => stateElement
-                ?? throw new InvalidOperationException($"Operation not allowed when {elementName} is null.");
-
-    [return: NotNull]
-    internal static T ValueOrThrowIfNull<T>([NotNull] this T? value, string paramName,
-        string customMessage)
+    internal static T ValueOrThrowIfNull<T>([NotNull] this T? value, string paramName, string customMessage)
     {
         if (value is not null)
         {
@@ -31,6 +24,12 @@ internal static class Extensions
 
         throw new ArgumentNullException(paramName, customMessage);
     }
+
+    [return: NotNull]
+    internal static T ValueOrThrowInvalidOperationIfNull<T>([NotNull] this T? stateElement,
+        string elementName)
+            => stateElement
+                ?? throw new InvalidOperationException($"Operation not allowed when {elementName} is null.");
 
     [return: NotNull]
     internal static string ValueOrThrowIfZeroLength(this string value, string paramName)
