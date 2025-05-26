@@ -16,14 +16,7 @@ internal static class Extensions
 
     [return: NotNull]
     internal static T ValueOrThrowIfNull<T>([NotNull] this T? value, string paramName, string customMessage)
-    {
-        if (value is not null)
-        {
-            return value;
-        }
-
-        throw new ArgumentNullException(paramName, customMessage);
-    }
+        => value ?? throw new ArgumentNullException(paramName, customMessage);
 
     [return: NotNull]
     internal static T ValueOrThrowInvalidOperationIfNull<T>([NotNull] this T? stateElement,
@@ -37,14 +30,9 @@ internal static class Extensions
 
     [return: NotNull]
     internal static string ValueOrThrowIfZeroLength(this string value, string paramName, string customMessage)
-    {
-        if (value.Length is not 0)
-        {
-            return value;
-        }
-
-        throw new ArgumentFormatException(paramName: paramName, message: customMessage);
-    }
+        => value.Length is not 0
+            ? value
+            : throw new ArgumentFormatException(paramName: paramName, message: customMessage);
 
     [return: NotNull]
     internal static string ValueOrThrowIfWhiteSpaceOnly(this string value, string paramName)
@@ -52,14 +40,9 @@ internal static class Extensions
 
     [return: NotNull]
     internal static string ValueOrThrowIfWhiteSpaceOnly(this string value, string paramName, string customMessage)
-    {
-        if (value.Any(ch => ch.IsNotWhiteSpace()))
-        {
-            return value;
-        }
-
-        throw new ArgumentFormatException(paramName: paramName, message: customMessage);
-    }
+        => value.Any(ch => ch.IsNotWhiteSpace())
+            ? value
+            : throw new ArgumentFormatException(paramName: paramName, message: customMessage);
 
     [return: NotNull]
     internal static string ValueOrThrowIfNullOrZeroLength([NotNull] this string? value,
