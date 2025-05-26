@@ -135,8 +135,8 @@ internal static class OutOfRangeChecks
         ComparableRange<TComparable> range,
         [NotNull] string paramName,
         string? customMessage) where TComparable : IComparable<TComparable>
-    {
-        return range.Contains(value.ValueOrThrowIfNull(nameof(value)), paramName.ValueOrThrowIfNull(nameof(paramName)),
-            customMessage);
-    }
+            => range.Contains(
+                value.ValueOrThrowIfNull(nameof(value)),
+                paramName.ValueOrThrowIfNull(nameof(paramName)),
+                customMessage);
 }

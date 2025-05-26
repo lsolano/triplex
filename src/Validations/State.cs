@@ -2,10 +2,6 @@ using System.Runtime.CompilerServices;
 
 namespace Triplex.Validations;
 
-#if (NETSTANDARD || NETCOREAPP)
-#pragma warning disable CS0436 //CallerArgumentExpressionAttribute type conflicts
-#endif
-
 /// <summary>
 /// Object internal state checks. Use it to check Preconditions and Invariants. 
 /// Always throw <see cref="InvalidOperationException"/> or some derivative.
@@ -40,11 +36,11 @@ public static class State
     [DebuggerStepThrough]
     public static void IsFalse(bool stateQuery, [NotNull] string message)
     {
-        NullAndEmptyChecks.NotNull(message, nameof(message));
+        string notNullMessage = NullAndEmptyChecks.NotNull(message, nameof(message));
 
         if (stateQuery)
         {
-            throw new InvalidOperationException(message);
+            throw new InvalidOperationException(notNullMessage);
         }
     }
 
@@ -64,11 +60,11 @@ public static class State
     [return: NotNull]
     public static T IsNotNull<T>(
         [NotNull] T stateElement,
-        [NotNull, CallerArgumentExpression("stateElement")] string elementName = "")
+        [NotNull, CallerArgumentExpression(nameof(stateElement))] string elementName = "")
     {
-        NullAndEmptyChecks.NotNull(elementName, nameof(elementName));
+        string notNullElementName = NullAndEmptyChecks.NotNull(elementName, nameof(elementName));
 
-        return stateElement.ValueOrThrowInvalidOperationIfNull(elementName);
+        return stateElement.ValueOrThrowInvalidOperationIfNull(notNullElementName);
     }
 
     #endregion //Preconditions
@@ -84,11 +80,11 @@ public static class State
     [DebuggerStepThrough]
     public static void StillHolds(bool invariant, [NotNull] string message)
     {
-        NullAndEmptyChecks.NotNull(message, nameof(message));
+        string notNullMessage = NullAndEmptyChecks.NotNull(message, nameof(message));
 
         if (!invariant)
         {
-            throw new InvalidOperationException(message);
+            throw new InvalidOperationException(notNullMessage);
         }
     }
 
@@ -100,17 +96,13 @@ public static class State
     [DebuggerStepThrough]
     public static void StillNotHolds(bool invariant, [NotNull] string message)
     {
-        NullAndEmptyChecks.NotNull(message, nameof(message));
+        string notNullMessage = NullAndEmptyChecks.NotNull(message, nameof(message));
 
         if (invariant)
         {
-            throw new InvalidOperationException(message);
+            throw new InvalidOperationException(notNullMessage);
         }
     }
 
     #endregion //Invariants
 }
-
-#if (NETSTANDARD || NETCOREAPP)
-#pragma warning restore CS0436 //CallerArgumentExpressionAttribute type conflicts
-#endif

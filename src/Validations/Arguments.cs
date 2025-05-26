@@ -149,7 +149,7 @@ public static partial class Arguments
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
         => NullAndEmptyChecks.NotNullOrEmpty(value, paramName, customMessage);
 
-        /// <summary>
+    /// <summary>
     /// Checks that the provided value is not empty.
     /// </summary>
     /// <remarks>
@@ -634,12 +634,9 @@ public static partial class Arguments
         string notNullPreconditionDescription
             = preconditionDescription.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly();
 
-        if (notNullValidator(notNullValue) != expected)
-        {
-            throw new ArgumentException(paramName: notNullParamName, message: notNullPreconditionDescription);
-        }
-
-        return notNullValue;
+        return notNullValidator(notNullValue) != expected
+            ? throw new ArgumentException(paramName: notNullParamName, message: notNullPreconditionDescription)
+            : notNullValue;
     }
 
     [GeneratedRegex("[0-9]{2}"), ExcludeFromCodeCoverage]
