@@ -23,11 +23,11 @@ public static class State
     [DebuggerStepThrough]
     public static void IsTrue(bool stateQuery, [NotNull] string message)
     {
-        NullAndEmptyChecks.NotNull(message, nameof(message));
+        string notNullMessage = NullAndEmptyChecks.NotNull(message, nameof(message));
 
         if (!stateQuery)
         {
-            throw new InvalidOperationException(message);
+            throw new InvalidOperationException(notNullMessage);
         }
     }
 

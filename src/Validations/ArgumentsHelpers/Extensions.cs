@@ -2,10 +2,6 @@
 
 namespace Triplex.Validations.ArgumentsHelpers;
 
-#if (NETSTANDARD || NETCOREAPP)
-#pragma warning disable CS0436 //CallerArgumentExpressionAttribute type conflicts
-#endif
-
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
 internal static class Extensions
 {
@@ -107,7 +103,3 @@ internal static class Extensions
     }
 }
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
-
-#if (NETSTANDARD || NETCOREAPP)
-#pragma warning restore CS0436 //CallerArgumentExpressionAttribute type conflicts
-#endif
