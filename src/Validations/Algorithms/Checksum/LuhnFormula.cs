@@ -27,7 +27,13 @@ public static partial class LuhnFormula
         int[] validatedDigits = fullDigits.ValueOrThrowIfNullOrWithLessThanElements(MinimumElements,
             nameof(fullDigits));
 
-        bool hasInvalidElements = validatedDigits.Any(d => d < 0 || d > 9);
+        bool hasInvalidElements = validatedDigits.Any(d => d switch
+        {
+            < 0 => true,
+            > 9 => true,
+            _ => false
+        });
+
         return hasInvalidElements
             ? throw new FormatException("Only values between zero and nine ( [0-9] ) are allowed as input.")
             : DoDigitCheck(validatedDigits);
