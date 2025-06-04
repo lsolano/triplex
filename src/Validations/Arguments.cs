@@ -176,7 +176,7 @@ public static partial class Arguments
             : value;
     }
 
-    private static bool IsEmpty(Guid value) => value == default;
+    private static bool IsEmpty(Guid value) => value == Guid.Empty;
 
     #endregion
 
@@ -579,7 +579,7 @@ public static partial class Arguments
         [NotNull] string preconditionDescription,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
             where TNullable : class
-            => CompliesWithExpected(value, validator, paramName, preconditionDescription, true);
+            => CompliesWithExpected(value, validator, preconditionDescription, paramName, true);
 
     /// <summary>
     /// Checks the given value for <see langword="null"/> and then if the its complies with the validator function. 
@@ -597,7 +597,7 @@ public static partial class Arguments
         [NotNull] string preconditionDescription,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
             where TNullable : class
-            => CompliesWithExpected(value, validator, paramName, preconditionDescription, false);
+            => CompliesWithExpected(value, validator, preconditionDescription, paramName, false);
 
     [return: NotNull]
     private static TNullable CompliesWithExpected<TNullable>(
