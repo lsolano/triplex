@@ -1,7 +1,7 @@
 name: .NET Core Tests and CodeQL Security Analysis
 
 on:
-  [ push, pull_request ]
+  [ pull_request ]
 
 jobs:
   build:
