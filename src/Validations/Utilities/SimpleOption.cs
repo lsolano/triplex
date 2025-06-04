@@ -28,7 +28,7 @@ public static class SimpleOption
 /// </summary>
 public record SimpleOption<T>(T Value, bool HasValue) : IEquatable<SimpleOption<T>>
 {
-    private const int DefaultHashcode = 31;
+    private const int DefaultHashCode = 31;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
     /// <summary>
@@ -40,8 +40,8 @@ public record SimpleOption<T>(T Value, bool HasValue) : IEquatable<SimpleOption<
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
 
     /// <summary>
-    /// Returns a hash comming from wrapped value or a default value for empty options.
+    /// Returns a hash coming from wrapped value or a default value for empty options.
     /// </summary>
     /// <returns></returns>
-    public override int GetHashCode() => HasValue ? ValueOrFailure!.GetHashCode() : DefaultHashcode;
+    public override int GetHashCode() => HasValue ? ValueOrFailure!.GetHashCode() : DefaultHashCode;
 }

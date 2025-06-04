@@ -1,60 +1,85 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <VersionPrefix>4.0.0</VersionPrefix>
+    <VersionSuffix>preview</VersionSuffix>
+    
+    <TargetFrameworks>net9.0</TargetFrameworks>
+    <LangVersion>13.0</LangVersion>
 
-    <PropertyGroup>
-        <TargetFrameworks>net6.0</TargetFrameworks>
-        <LangVersion>10.0</LangVersion>
-        <ImplicitUsings>disable</ImplicitUsings>
-        <IsTestProject>false</IsTestProject>
-        <RootNamespace>Triplex.Validations</RootNamespace>
-        <AssemblyName>Triplex.Validations</AssemblyName>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-        <Authors>Lorenzo Solano Martinez</Authors>
-        <Description>Validation library inspired by the concepts of Secure by Design, by Dan Bergh Johnsson, Daniel Deogun, and Daniel Sawano (MEAP 2019 Manning Publications).</Description>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <Year>$([System.DateTime]::Now.Year.ToString("####"))</Year>
-        <CopyrightStartYear>2019</CopyrightStartYear>
-        <CopyrightEndYear Condition="$(Year) != '$(CopyrightStartYear)'">-$(Year)</CopyrightEndYear>
-        <Copyright>(C) Lorenzo Solano Martinez (https://lorenzosolano.com/) $(CopyrightStartYear)$(CopyrightEndYear). All Rights Reserved.</Copyright>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/lsolano/triplex</RepositoryUrl>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
-        <PackageIcon>icon.png</PackageIcon>
-        <Version>3.0.5-alpha</Version>
-        <Nullable>enable</Nullable>
-        <EnableNETAnalyzers>true</EnableNETAnalyzers>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-        <PackageReleaseNotes>
+    <RootNamespace>Triplex.Validations</RootNamespace>
+    <AssemblyName>$(RootNamespace)</AssemblyName>
+    <IsPackable>true</IsPackable>
+    <IsTestProject>false</IsTestProject>
+    <PackageId>$(RootNamespace)</PackageId>
+
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+
+    <Nullable>enable</Nullable>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/lsolano/triplex</RepositoryUrl>
+    
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Year>$([System.DateTime]::Now.Year.ToString("####"))</Year>
+    <CopyrightStartYear>2019</CopyrightStartYear>
+    <CopyrightEndYear Condition="$(Year) != '$(CopyrightStartYear)'">-$(Year)</CopyrightEndYear>
+    <Copyright>(C) Lorenzo Solano Martinez (https://lorenzosolano.com/) $(CopyrightStartYear)$(CopyrightEndYear). All Rights Reserved.</Copyright>
+    <Authors>Lorenzo Solano Martinez</Authors>
+    <Description>Validation library inspired by the concepts of Secure by Design, by Dan Bergh Johnsson, Daniel Deogun, and Daniel Sawano (MEAP 2019 Manning Publications).</Description>
+    
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>Preconditions;Postconditions;Invariants;DDD;Domain Driven Design</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    
+    <PackageReleaseNotes>
 Breaking Changes
-  - Obsolete members from Triplex.Validations.Arguments:
-    - string NotNullEmptyOrWhiteSpaceOnly(in string?, in string)
-    - string NotNullEmptyOrWhiteSpaceOnly(in string?, in string, in string)
-    - string NotNullOrEmpty(in string?, in string)
-    - string NotNullOrEmpty(in string?, in string, in string)
-    - void CompliesWith(in bool, in string, in string)
+  - Obsolete members removed
+  - Out-of-range Checks signature now do not allow null on other, min, and max parameters
 
 Features
   - Introduce implicit null check for NotNullEmptyOrWhiteSpaceOnly (now NotEmptyOrWhiteSpaceOnly) and NotNullOrEmpty (now NotEmpty).
   - T CompliesWith(T?, Func&lt;T, bool&gt;, string, string)
   - T DoesNotComplyWith(T?, Func&lt;T, bool&gt;, string, string)
+  - Add System.Diagnostics.CodeAnalysis.NotNull attribute to suitable parameters and method's return.
+  - Remove small quality gate status badge and leave only the big one (#16)
 
 Improvements
-  - Migrate to .NET 6
+  - Migrate to .NET 9
   - Increase test coverage to 100 percent
-  - Analyse project using sonarcloud.io (see https://sonarcloud.io/project/overview?id=lsolano_triplex)
-        </PackageReleaseNotes>
-    </PropertyGroup>
+  - Analyze project using sonarcloud.io (see https://sonarcloud.io/project/overview?id=lsolano_triplex)
+    </PackageReleaseNotes>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <None Include="..\..\LICENSE">
-        <Pack>True</Pack>
-        <PackagePath></PackagePath>
-      </None>
-      <None Include="..\..\icon.png" Pack="true" PackagePath="/" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\icon.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
 
 </Project>

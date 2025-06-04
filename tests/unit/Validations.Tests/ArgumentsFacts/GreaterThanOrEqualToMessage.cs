@@ -17,7 +17,7 @@ internal sealed class GreaterThanOrEqualToMessage : BaseFixtureForOptionalCustom
     [TestCase(2, -2)]
     public void With_Valid_Integers_Throws_Nothing(int theValue, int other)
     {
-        int validatedValue = Arguments.GreaterThanOrEqualTo(theValue, other, nameof(theValue), CustomError);
+        int validatedValue = Arguments.GreaterThanOrEqualToOrExceptionWithMessage(theValue, other, nameof(theValue), CustomError);
 
         Assert.That(validatedValue, Is.EqualTo(theValue));
     }
@@ -127,7 +127,7 @@ internal sealed class GreaterThanOrEqualToMessage : BaseFixtureForOptionalCustom
         bool useCustomErrorMessage) where TComparable : IComparable<TComparable>
     {
         return useCustomErrorMessage
-            ? Arguments.GreaterThanOrEqualTo(value, other, paramName, customError)
-            : Arguments.GreaterThanOrEqualTo(value, other, paramName);
+            ? Arguments.GreaterThanOrEqualToOrExceptionWithMessage(value, other!, customError, paramName)
+            : Arguments.GreaterThanOrEqualToOrException(value, other!, paramName);
     }
 }
