@@ -109,7 +109,7 @@ internal static class Extensions
         => CheckWithParamName(value, paramName)
             .CheckNotZeroLength(paramName)
                 .CheckNotWhiteSpaceOnly(paramName);
-    
+
     [return: NotNull]
     internal static string CheckExceptionMessage(
         [NotNull] this string? value,
