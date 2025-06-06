@@ -25,7 +25,7 @@ internal static class Extensions
                 ?? throw new InvalidOperationException($"Operation not allowed when {elementName} is null.");
 
     [return: NotNull]
-    internal static string CheckNotZeroLength([NotNull] this string? value, [CallerArgumentExpression(nameof(value))] string paramName = "")
+    internal static string CheckNotZeroLength([NotNull] this string? value, string paramName)
         => CheckWithParamName(value, paramName)
             .DoCheckNotZeroLength(paramName, "Can not be empty (zero length).");
 
