@@ -25,7 +25,7 @@ public static partial class Arguments
     public static TParamType OrException<TParamType>(
         [NotNull] TParamType? value,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "") where TParamType : class
-        => NullAndEmptyChecks.NotNull(value, paramName);
+        => NullAndEmptyChecks.Check(value, paramName);
 
     /// <summary>
     /// Checks that the provided value is not <see langword="null" />.
@@ -52,7 +52,7 @@ public static partial class Arguments
         [NotNull] string customMessage,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
             where TParamType : class
-        => NullAndEmptyChecks.NotNull(value, paramName, customMessage);
+        => NullAndEmptyChecks.Check(value, paramName, customMessage);
 
     /// <summary>
     /// Checks that the provided value is not <see langword="null" />, empty (zero length), or contains white-space 
@@ -123,7 +123,7 @@ public static partial class Arguments
     public static Guid NotEmptyOrException(Guid value,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
     {
-        string validParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly();
+        string validParamName = paramName.CheckNotZeroLengthOrWhiteSpaceOnly();
 
         return IsEmpty(value) ? throw new ArgumentException(validParamName) : value;
     }
@@ -168,8 +168,8 @@ public static partial class Arguments
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
     {
         (string validParamName, string validCustomMessage) =
-            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(),
-             customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly());
+            (paramName.CheckNotZeroLengthOrWhiteSpaceOnly(),
+             customMessage.CheckNotZeroLengthOrWhiteSpaceOnly());
 
         return IsEmpty(value) ?
             throw new ArgumentException(paramName: validParamName, message: validCustomMessage)
@@ -480,10 +480,10 @@ public static partial class Arguments
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
     {
         (string validParamName, string validCustomMessage) =
-            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(),
-             customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly());
+            (paramName.CheckNotZeroLengthOrWhiteSpaceOnly(),
+             customMessage.CheckNotZeroLengthOrWhiteSpaceOnly());
 
-        string notNullValue = NullAndEmptyChecks.NotNull(value, validParamName);
+        string notNullValue = NullAndEmptyChecks.Check(value, validParamName);
 
         ValidateLuhnSequenceFormat(notNullValue, validCustomMessage);
 
@@ -522,9 +522,9 @@ public static partial class Arguments
     public static string ValidBase64([NotNull] string? value, [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
     {
         string validParamName =
-            paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly();
+            paramName.CheckNotZeroLengthOrWhiteSpaceOnly();
 
-        string notNullValue = value.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(validParamName);
+        string notNullValue = value.CheckNotZeroLengthOrWhiteSpaceOnly(validParamName);
 
         return IsBase64String(notNullValue) ? notNullValue
             : throw new FormatException($"{validParamName} is not a valid Base64 String.");
@@ -544,8 +544,8 @@ public static partial class Arguments
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
     {
         (string validParamName, string validCustomMessage) =
-            (paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(),
-             customMessage.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly());
+            (paramName.CheckNotZeroLengthOrWhiteSpaceOnly(),
+             customMessage.CheckNotZeroLengthOrWhiteSpaceOnly());
 
         string notNullValue
             = value.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(validParamName, validCustomMessage);
@@ -607,11 +607,11 @@ public static partial class Arguments
         [NotNull] string paramName,
         bool expected) where TNullable : class
     {
-        TNullable notNullValue = value.ValueOrThrowIfNull(nameof(value));
-        Func<TNullable, bool> notNullValidator = validator.ValueOrThrowIfNull();
-        string notNullParamName = paramName.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly();
+        TNullable notNullValue = value.Check(nameof(value));
+        Func<TNullable, bool> notNullValidator = validator.Check();
+        string notNullParamName = paramName.CheckNotZeroLengthOrWhiteSpaceOnly();
         string notNullPreconditionDescription
-            = preconditionDescription.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly();
+            = preconditionDescription.CheckNotZeroLengthOrWhiteSpaceOnly();
 
         return notNullValidator(notNullValue) != expected
             ? throw new ArgumentException(paramName: notNullParamName, message: notNullPreconditionDescription)

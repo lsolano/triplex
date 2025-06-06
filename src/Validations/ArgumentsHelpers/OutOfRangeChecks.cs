@@ -8,7 +8,7 @@ internal static class OutOfRangeChecks
         where TComparable : IComparable<TComparable>
     {
         ComparableRange<TComparable> range = ComparableRangeFactory.WithMaxExclusiveOnly(
-                SimpleOption.SomeNotNull(other.ValueOrThrowIfNull()));
+                SimpleOption.SomeNotNull(other.Check()));
         return CheckBoundaries(value, range, paramName, null);
     }
 
@@ -18,9 +18,9 @@ internal static class OutOfRangeChecks
         [NotNull] string customMessage) where TComparable : IComparable<TComparable>
     {
         ComparableRange<TComparable> range = ComparableRangeFactory.WithMaxExclusiveOnly(
-                SimpleOption.SomeNotNull(other.ValueOrThrowIfNull()));
+                SimpleOption.SomeNotNull(other.Check()));
 
-        return CheckBoundaries(value, range, paramName, customMessage.ValueOrThrowIfNull());
+        return CheckBoundaries(value, range, paramName, customMessage.CheckExceptionMessage());
     }
 
     [return: NotNull]
@@ -29,7 +29,7 @@ internal static class OutOfRangeChecks
         where TComparable : IComparable<TComparable>
     {
         ComparableRange<TComparable> range = ComparableRangeFactory.WithMaxInclusiveOnly(
-                SimpleOption.SomeNotNull(other.ValueOrThrowIfNull()));
+                SimpleOption.SomeNotNull(other.Check()));
 
         return CheckBoundaries(value, range, paramName, null);
     }
@@ -41,9 +41,9 @@ internal static class OutOfRangeChecks
         where TComparable : IComparable<TComparable>
     {
         ComparableRange<TComparable> range = ComparableRangeFactory.WithMaxInclusiveOnly(
-                SimpleOption.SomeNotNull(other.ValueOrThrowIfNull()));
+                SimpleOption.SomeNotNull(other.Check()));
 
-        return CheckBoundaries(value, range, paramName, customMessage.ValueOrThrowIfNull());
+        return CheckBoundaries(value, range, paramName, customMessage.CheckExceptionMessage());
     }
 
     [return: NotNull]
@@ -52,7 +52,7 @@ internal static class OutOfRangeChecks
         where TComparable : IComparable<TComparable>
     {
         ComparableRange<TComparable> range = ComparableRangeFactory.WithMinExclusiveOnly(
-                SimpleOption.SomeNotNull(other.ValueOrThrowIfNull()));
+                SimpleOption.SomeNotNull(other.Check()));
 
         return CheckBoundaries(value, range, paramName, null);
     }
@@ -63,9 +63,9 @@ internal static class OutOfRangeChecks
         [NotNull] string customMessage) where TComparable : IComparable<TComparable>
     {
         ComparableRange<TComparable> range = ComparableRangeFactory.WithMinExclusiveOnly(
-            SimpleOption.SomeNotNull(other.ValueOrThrowIfNull()));
+            SimpleOption.SomeNotNull(other.Check()));
 
-        return CheckBoundaries(value, range, paramName, customMessage.ValueOrThrowIfNull());
+        return CheckBoundaries(value, range, paramName, customMessage.CheckExceptionMessage());
     }
 
     [return: NotNull]
@@ -74,7 +74,7 @@ internal static class OutOfRangeChecks
         where TComparable : IComparable<TComparable>
     {
         ComparableRange<TComparable> range = ComparableRangeFactory.WithMinInclusiveOnly(
-            SimpleOption.SomeNotNull(other.ValueOrThrowIfNull()));
+            SimpleOption.SomeNotNull(other.Check()));
 
         return CheckBoundaries(value, range, paramName, null);
     }
@@ -85,9 +85,9 @@ internal static class OutOfRangeChecks
         [NotNull] string customMessage) where TComparable : IComparable<TComparable>
     {
         ComparableRange<TComparable> range = ComparableRangeFactory.WithMinInclusiveOnly(
-            SimpleOption.SomeNotNull(other.ValueOrThrowIfNull()));
+            SimpleOption.SomeNotNull(other.Check()));
 
-        return CheckBoundaries(value, range, paramName, customMessage.ValueOrThrowIfNull());
+        return CheckBoundaries(value, range, paramName, customMessage.CheckExceptionMessage());
     }
 
     [return: NotNull]
@@ -98,13 +98,13 @@ internal static class OutOfRangeChecks
         [NotNull] string paramName) where TComparable : IComparable<TComparable>
     {
         ComparableRange<TComparable> range = new(
-            SimpleOption.SomeNotNull(fromInclusive.ValueOrThrowIfNull()),
-            SimpleOption.SomeNotNull(toInclusive.ValueOrThrowIfNull()));
+            SimpleOption.SomeNotNull(fromInclusive.Check()),
+            SimpleOption.SomeNotNull(toInclusive.Check()));
 
-        string notNullParamName = paramName.ValueOrThrowIfNull();
+        string notNullParamName = paramName.CheckParamName();
 
         return range.Contains(
-                    value.ValueOrThrowIfNull(notNullParamName),
+                    value.Check(notNullParamName),
                     notNullParamName,
                     customMessage: null!);
 
@@ -119,13 +119,13 @@ internal static class OutOfRangeChecks
         [NotNull] string customMessage) where TComparable : IComparable<TComparable>
     {
         ComparableRange<TComparable> range = new(
-            SimpleOption.SomeNotNull(fromInclusive.ValueOrThrowIfNull()),
-            SimpleOption.SomeNotNull(toInclusive.ValueOrThrowIfNull()));
+            SimpleOption.SomeNotNull(fromInclusive.Check()),
+            SimpleOption.SomeNotNull(toInclusive.Check()));
 
         return range.Contains(
-                    value.ValueOrThrowIfNull(),
-                    paramName.ValueOrThrowIfNull(),
-                    customMessage.ValueOrThrowIfNull());
+                    value.Check(),
+                    paramName.CheckParamName(),
+                    customMessage.CheckExceptionMessage());
 
     }
 
@@ -136,7 +136,7 @@ internal static class OutOfRangeChecks
         [NotNull] string paramName,
         string? customMessage) where TComparable : IComparable<TComparable>
             => range.Contains(
-                value.ValueOrThrowIfNull(),
-                paramName.ValueOrThrowIfNull(),
+                value.Check(),
+                paramName.CheckParamName(),
                 customMessage);
 }

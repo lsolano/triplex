@@ -66,7 +66,7 @@ public static partial class LuhnFormula
     [return: NotNull]
     private static string ValidateDigitsAsString([NotNull] string? fullDigits)
     {
-        string notNullDigits = fullDigits.ValueOrThrowIfNullOrZeroLength(nameof(fullDigits));
+        string notNullDigits = fullDigits.CheckNotZeroLength(nameof(fullDigits));
 
         return notNullDigits.Length switch
         {

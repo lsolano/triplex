@@ -19,7 +19,7 @@ public static class State
     [DebuggerStepThrough]
     public static void IsTrue(bool stateQuery, [NotNull] string message)
     {
-        string notNullMessage = NullAndEmptyChecks.NotNull(message, nameof(message));
+        string notNullMessage = NullAndEmptyChecks.Check(message, nameof(message));
 
         if (!stateQuery)
         {
@@ -36,7 +36,7 @@ public static class State
     [DebuggerStepThrough]
     public static void IsFalse(bool stateQuery, [NotNull] string message)
     {
-        string notNullMessage = NullAndEmptyChecks.NotNull(message, nameof(message));
+        string notNullMessage = NullAndEmptyChecks.Check(message, nameof(message));
 
         if (stateQuery)
         {
@@ -62,9 +62,9 @@ public static class State
         [NotNull] T stateElement,
         [NotNull, CallerArgumentExpression(nameof(stateElement))] string elementName = "")
     {
-        string notNullElementName = NullAndEmptyChecks.NotNull(elementName, nameof(elementName));
+        string notNullElementName = NullAndEmptyChecks.Check(elementName, nameof(elementName));
 
-        return stateElement.ValueOrThrowInvalidOperationIfNull(notNullElementName);
+        return stateElement.CheckOrInvalidOperationException(notNullElementName);
     }
 
     #endregion //Preconditions
@@ -80,7 +80,7 @@ public static class State
     [DebuggerStepThrough]
     public static void StillHolds(bool invariant, [NotNull] string message)
     {
-        string notNullMessage = NullAndEmptyChecks.NotNull(message, nameof(message));
+        string notNullMessage = NullAndEmptyChecks.Check(message, nameof(message));
 
         if (!invariant)
         {
@@ -96,7 +96,7 @@ public static class State
     [DebuggerStepThrough]
     public static void StillNotHolds(bool invariant, [NotNull] string message)
     {
-        string notNullMessage = NullAndEmptyChecks.NotNull(message, nameof(message));
+        string notNullMessage = NullAndEmptyChecks.Check(message, nameof(message));
 
         if (invariant)
         {
