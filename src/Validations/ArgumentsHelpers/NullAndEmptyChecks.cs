@@ -5,14 +5,14 @@ internal static class NullAndEmptyChecks
     [return: NotNull]
     internal static TParamType NotNull<TParamType>([NotNull] TParamType? value,
         [NotNull] string paramName) where TParamType : class
-        => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)));
+        => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull());
 
     [return: NotNull]
     internal static TParamType NotNull<TParamType>([NotNull] TParamType? value,
         [NotNull] string paramName, [NotNull] string customMessage)
             where TParamType : class
-        => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(nameof(paramName)),
-            customMessage.ValueOrThrowIfNull(nameof(customMessage)));
+        => value.ValueOrThrowIfNull(paramName.ValueOrThrowIfNull(),
+            customMessage.ValueOrThrowIfNull());
 
     [return: NotNull]
     internal static string NotNullEmptyOrWhiteSpaceOnly([NotNull] string? value,
