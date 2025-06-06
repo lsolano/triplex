@@ -27,8 +27,8 @@ internal sealed class CompliesWithUsingLambdaMessageFacts
     public void With_False_Throws_ArgumentException()
     {
         const string? someString = "Hello World 1234";
-        Assert.That(() => Arguments.CompliesWith(someString, val => val.Length > 100, nameof(someString),
-            PreconditionDescription),
+        Assert.That(() => Arguments.CompliesWith(someString, val => val.Length > 100, PreconditionDescription,
+            nameof(someString)),
             Throws.ArgumentException
                   .With.Property(nameof(ArgumentException.ParamName)).EqualTo(nameof(someString))
                   .And.Message.Contains(PreconditionDescription));
@@ -40,18 +40,18 @@ internal sealed class CompliesWithUsingLambdaMessageFacts
     {
         const string? someString = "Hello World 1235";
 
-        Assert.That(() => Arguments.CompliesWith(someString, val => precondition, paramName!, PreconditionDescription),
+        Assert.That(() => Arguments.CompliesWith(someString, val => precondition, PreconditionDescription, paramName!),
             Throws.InstanceOf<ArgumentException>()
                   .With.Property(nameof(ArgumentException.ParamName)).EqualTo("paramName"));
     }
 
     [Test]
-    public void With_Invalid_Description_ParamName_Throws_ArgumentException(
+    public void With_Invalid_Description_Throws_ArgumentException(
         [Values(null, "", " ", "\n\r\t ")] string? description, [Values] bool precondition)
     {
         const string? someString = "Hello World 1235";
 
-        Assert.That(() => Arguments.CompliesWith(someString, val => precondition, nameof(someString), description!),
+        Assert.That(() => Arguments.CompliesWith(someString, val => precondition, description!, nameof(someString)),
             Throws.InstanceOf<ArgumentException>()
                   .With.Property(nameof(ArgumentException.ParamName)).EqualTo("preconditionDescription"));
     }
