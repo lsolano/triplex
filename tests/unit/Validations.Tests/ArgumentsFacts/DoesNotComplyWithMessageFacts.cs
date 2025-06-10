@@ -27,8 +27,8 @@ internal sealed class DoesNotComplyWithMessageFacts
     public void With_True_Throws_ArgumentException()
     {
         const string? someString = "123456789";
-        Assert.That(() => Arguments.DoesNotComplyWith(someString, val => val.Length == 9, nameof(someString),
-            PreconditionDescription),
+        Assert.That(() => Arguments.DoesNotComplyWith(someString, val => val.Length == 9, PreconditionDescription,
+        nameof(someString)),
             Throws.ArgumentException
                   .With.Property(nameof(ArgumentException.ParamName)).EqualTo(nameof(someString))
                   .And.Message.Contains(PreconditionDescription));
@@ -40,8 +40,8 @@ internal sealed class DoesNotComplyWithMessageFacts
     {
         const string? someString = "Hello World 1235";
 
-        Assert.That(() => Arguments.DoesNotComplyWith(someString, val => precondition, paramName!,
-            PreconditionDescription),
+        Assert.That(() => Arguments.DoesNotComplyWith(someString, val => precondition,
+            PreconditionDescription, paramName!),
             Throws.InstanceOf<ArgumentException>()
                   .With.Property(nameof(ArgumentException.ParamName)).EqualTo("paramName"));
     }
@@ -52,7 +52,7 @@ internal sealed class DoesNotComplyWithMessageFacts
     {
         const string? someString = "Hello World 1235";
 
-        Assert.That(() => Arguments.DoesNotComplyWith(someString, val => precondition, nameof(someString), description!),
+        Assert.That(() => Arguments.DoesNotComplyWith(someString, val => precondition, description!, nameof(someString)),
             Throws.InstanceOf<ArgumentException>()
                   .With.Property(nameof(ArgumentException.ParamName)).EqualTo("preconditionDescription"));
     }
@@ -61,8 +61,8 @@ internal sealed class DoesNotComplyWithMessageFacts
     public void With_Null_Value_Throws_ArgumentNullException()
     {
         const string? someString = null;
-        Assert.That(() => Arguments.DoesNotComplyWith(someString, val => val.Length > 100, nameof(someString),
-            PreconditionDescription),
+        Assert.That(() => Arguments.DoesNotComplyWith(someString, val => val.Length > 100,
+            PreconditionDescription, nameof(someString)),
             Throws.ArgumentNullException
                   .With.Property(nameof(ArgumentException.ParamName)).EqualTo("value")
                   .And.Message.Contains("cannot be null"));

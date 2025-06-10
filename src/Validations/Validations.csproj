@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>4.0.0</VersionPrefix>
+    <VersionPrefix>4.1.0</VersionPrefix>
     <VersionSuffix>preview</VersionSuffix>
     
     <TargetFrameworks>net9.0</TargetFrameworks>
@@ -60,6 +60,7 @@ Improvements
   - Migrate to .NET 9
   - Increase test coverage to 100 percent
   - Analyze project using sonarcloud.io (see https://sonarcloud.io/project/overview?id=lsolano_triplex)
+  - Removed all compiler warnings
     </PackageReleaseNotes>
   </PropertyGroup>
 

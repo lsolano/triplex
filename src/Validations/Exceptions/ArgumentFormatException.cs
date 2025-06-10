@@ -2,7 +2,7 @@
 
 /// <summary>
 /// The exception that is thrown when one of the arguments provided to a method is not valid due to a format
-/// problem, usually refering to a <see cref="string"/> or similar.
+/// problem, usually referring to a <see cref="string"/> or similar.
 /// </summary>
 public sealed class ArgumentFormatException : ArgumentException //NOSONAR
 {
