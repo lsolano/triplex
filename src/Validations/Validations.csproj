@@ -60,6 +60,7 @@ Improvements
   - Migrate to .NET 9
   - Increase test coverage to 100 percent
   - Analyze project using sonarcloud.io (see https://sonarcloud.io/project/overview?id=lsolano_triplex)
+  - Removed all compiler warnings
     </PackageReleaseNotes>
   </PropertyGroup>
 
