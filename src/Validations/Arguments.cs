@@ -123,7 +123,7 @@ public static partial class Arguments
     public static Guid NotEmptyOrException(Guid value,
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
     {
-        string validParamName = paramName.CheckNotZeroLengthOrWhiteSpaceOnly();
+        string validParamName = paramName.CheckParamName();
 
         return IsEmpty(value) ? throw new ArgumentException(validParamName) : value;
     }
@@ -168,8 +168,8 @@ public static partial class Arguments
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
     {
         (string validParamName, string validCustomMessage) =
-            (paramName.CheckNotZeroLengthOrWhiteSpaceOnly(),
-             customMessage.CheckNotZeroLengthOrWhiteSpaceOnly());
+            (paramName.CheckParamName(),
+             customMessage.CheckExceptionMessage());
 
         return IsEmpty(value) ?
             throw new ArgumentException(paramName: validParamName, message: validCustomMessage)
@@ -480,8 +480,8 @@ public static partial class Arguments
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
     {
         (string validParamName, string validCustomMessage) =
-            (paramName.CheckNotZeroLengthOrWhiteSpaceOnly(),
-             customMessage.CheckNotZeroLengthOrWhiteSpaceOnly());
+            (paramName.CheckParamName(),
+             customMessage.CheckExceptionMessage());
 
         string notNullValue = NullAndEmptyChecks.Check(value, validParamName);
 
@@ -521,8 +521,7 @@ public static partial class Arguments
     [DebuggerStepThrough]
     public static string ValidBase64([NotNull] string? value, [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
     {
-        string validParamName =
-            paramName.CheckNotZeroLengthOrWhiteSpaceOnly();
+        string validParamName = paramName.CheckParamName();
 
         string notNullValue = value.CheckNotZeroLengthOrWhiteSpaceOnly(validParamName);
 
@@ -544,8 +543,8 @@ public static partial class Arguments
         [NotNull, CallerArgumentExpression(nameof(value))] string paramName = "")
     {
         (string validParamName, string validCustomMessage) =
-            (paramName.CheckNotZeroLengthOrWhiteSpaceOnly(),
-             customMessage.CheckNotZeroLengthOrWhiteSpaceOnly());
+            (paramName.CheckParamName(),
+             customMessage.CheckExceptionMessage());
 
         string notNullValue
             = value.ValueOrThrowIfNullZeroLengthOrWhiteSpaceOnly(validParamName, validCustomMessage);
@@ -609,9 +608,9 @@ public static partial class Arguments
     {
         TNullable notNullValue = value.Check(nameof(value));
         Func<TNullable, bool> notNullValidator = validator.Check();
-        string notNullParamName = paramName.CheckNotZeroLengthOrWhiteSpaceOnly();
+        string notNullParamName = paramName.CheckParamName();
         string notNullPreconditionDescription
-            = preconditionDescription.CheckNotZeroLengthOrWhiteSpaceOnly();
+            = preconditionDescription.CheckExceptionMessage();
 
         return notNullValidator(notNullValue) != expected
             ? throw new ArgumentException(paramName: notNullParamName, message: notNullPreconditionDescription)

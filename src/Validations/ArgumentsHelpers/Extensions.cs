@@ -52,8 +52,7 @@ internal static class Extensions
 
     [return: NotNull]
     internal static string CheckNotZeroLengthOrWhiteSpaceOnly(
-        [NotNull] this string? value,
-        [CallerArgumentExpression(nameof(value))] string paramName = "")
+        [NotNull] this string? value, string paramName = "")
         => Check(value, paramName)
             .CheckNotZeroLength(paramName)
                 .CheckNotWhiteSpaceOnly(paramName);
