@@ -606,7 +606,7 @@ public static partial class Arguments
         [NotNull] string paramName,
         bool expected) where TNullable : class
     {
-        TNullable notNullValue = value.Check(nameof(value));
+        TNullable notNullValue = value.Check();
         Func<TNullable, bool> notNullValidator = validator.Check();
         string notNullParamName = paramName.CheckParamName();
         string notNullPreconditionDescription

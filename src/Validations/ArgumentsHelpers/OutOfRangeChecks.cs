@@ -104,7 +104,7 @@ internal static class OutOfRangeChecks
         string notNullParamName = paramName.CheckParamName();
 
         return range.Contains(
-                    value.Check(notNullParamName),
+                    value.CheckWithParamName(notNullParamName),
                     notNullParamName,
                     customMessage: null!);
 

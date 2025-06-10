@@ -53,7 +53,7 @@ internal static class Extensions
     [return: NotNull]
     internal static string CheckNotZeroLengthOrWhiteSpaceOnly(
         [NotNull] this string? value, string paramName = "")
-        => Check(value, paramName)
+        => CheckWithParamName(value, paramName)
             .CheckNotZeroLength(paramName)
                 .CheckNotWhiteSpaceOnly(paramName);
 
@@ -94,7 +94,7 @@ internal static class Extensions
     internal static TType[] ValueOrThrowIfNullOrWithLessThanElements<TType>(
         [NotNull] this TType[]? value, int minimumElements, string paramName)
     {
-        _ = OutOfRangeChecks.GreaterThanOrEqualTo(Check(value, paramName).Length, minimumElements, paramName);
+        _ = OutOfRangeChecks.GreaterThanOrEqualTo(CheckWithParamName(value, paramName).Length, minimumElements, paramName);
 
         return value!;
     }
